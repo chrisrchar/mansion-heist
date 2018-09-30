@@ -3,6 +3,8 @@
 */
 var pad1, jumpButton, leftButton, rightButton, atkButton;
 
+var playerStates, grounded;
+
 var playerGlobals = {
     lastX: 64,
     lastY: 64,
@@ -36,9 +38,14 @@ function createPlayer() {
     leftButton = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
     rightButton = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    atkButton = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+    atkButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
     
-    //atkButton.onPressCallback = test;
+    jumpButton.onDown.add(jump, this);
+    
+    atkButton.onDown.add(function()
+    {
+        console.log('attacking');
+    }, this);
     
     pad1.onConnectCallback = function () {
         console.log('gamepad connected');
@@ -47,7 +54,7 @@ function createPlayer() {
     cursors = game.input.keyboard.createCursorKeys();
     
     // Player States
-    var playerStates = {
+    playerStates = {
         IDLE: "IDLE",
         WALKING: "WALKING",
         JUMPING: "JUMPING"
@@ -71,7 +78,7 @@ function createPlayer() {
         
         //var clipping = game.physics.arcade.overlap(player, platforms);
         
-        var grounded = player.body.blocked.down;
+        grounded = player.body.blocked.down;
         
         // Left Right Movement
         if (firstCheck)
@@ -100,37 +107,10 @@ function createPlayer() {
             player.body.velocity.x = 0
         }
 
-        //Variable Jumping
-
-        if (jumpButton.isDown && grounded && playerGlobals.jumps < 1)
-        {
-            player.body.velocity.y = jumpHeight;
-            playerGlobals.jumps++;
-            player.state = playerStates.JUMPING;
-        }
-
+        // variable jumping
         if (!jumpButton.isDown && player.body.velocity.y < 0)
         {
             player.body.velocity.y = Math.max(player.body.velocity.y, jumpHeight/4);
-        }
-
-        if (!jumpButton.isDown && !grounded)
-        {
-            if (playerGlobals.jumps == 1)
-            {
-                playerGlobals.canDoubleJump = true;
-            }
-            else if (playerGlobals.jumps < 1)
-            {
-                playerGlobals.jumps = 1;
-            }
-        }
-
-        if (jumpButton.isDown && !grounded && playerGlobals.canDoubleJump)
-        {
-            player.body.velocity.y = jumpHeight;
-            playerGlobals.jumps++;
-            playerGlobals.canDoubleJump = false;
         }
 
         // Adjust gravity for faster falling
@@ -144,7 +124,7 @@ function createPlayer() {
         }
         
         // Reset playerGlobals.jumps
-        if (grounded && !jumpButton.isDown)
+        if (grounded)
         {
             playerGlobals.jumps = 0;
             if (player.body.velocity.x == 0)
@@ -166,4 +146,16 @@ function createPlayer() {
 function checkButtons (pad)
 {
     return jumpButton == pad.getButton(Phaser.Gamepad.XBOX360_A) && leftButton == pad.getButton(Phaser.Gamepad.XBOX360_DPAD_LEFT) && rightButton == pad.getButton(Phaser.Gamepad.XBOX360_DPAD_RIGHT);
+}
+
+function jump ()
+{
+    //Variable Jumping
+
+    if (playerGlobals.jumps < 2)
+    {
+        player.body.velocity.y = jumpHeight;
+        playerGlobals.jumps++;
+        player.state = playerStates.JUMPING;
+    }
 }
