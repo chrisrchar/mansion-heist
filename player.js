@@ -21,11 +21,13 @@ function createPlayer() {
     game.physics.enable(player, Phaser.Physics.ARCADE);
     player.anchor.x = .5;
     player.anchor.y = .5;
-    //player.body.collideWorldBounds = true;
+    
+    player.body.setSize(player.width/3, player.height, 30, 0);
+    
     player.body.gravity.y = gravity;
     player.body.maxVelocity = 925;
     
-    player.animations.add('walk', [0, 1, 2, 3], 10, true);
+    player.animations.add('walk', [1, 2, 3, 4, 5, 6], 10, true);
     
     player.body.velocity.x = playerGlobals.xVel;
     player.body.velocity.y = playerGlobals.yVel;
@@ -104,7 +106,7 @@ function createPlayer() {
         {
             facing = xDir;
             player.body.velocity.x = xDir * speed;
-            player.scale.setTo(-1 * xDir, 1);
+            player.scale.setTo(xDir, 1);
             if (grounded)
             {
                 player.state = playerStates.WALKING;
