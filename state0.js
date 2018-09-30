@@ -1,6 +1,6 @@
 /* global
     game, Phaser
-*/
+
 
 var state0 = {};
 
@@ -10,16 +10,6 @@ state0.preload = function () {
     game.load.image('tiles', 'assets/tilemaps/simples_pimples.png');
     game.load.image('coin', 'assets/sprites/coin.png');
 }
-
-// assign physics variables
-var speed = 300;
-var gravity = 1000;
-var jumpHeight = -450;
-var player;
-var platforms, coins, jumpthru, scoreText;
-
-// assign control variables
-var cursors;
 
 state0.create = function () {
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -33,9 +23,6 @@ state0.create = function () {
     
     coins = game.add.group();
     coins.enableBody = true;
-    
-    jumpthru = game.add.group();
-    jumpthru.enableBody = true;
     
     map.createFromObjects('coins', 952, 'coin', 0, true, false, coins);
     
@@ -70,14 +57,4 @@ state0.update = function () {
         playerGlobals.xDir = cursors.right.isDown - cursors.left.isDown;
         game.state.start('state1');
     }
-}
-
-function collectStar (player, star) 
-{
-    // Removes the star from the screen
-    star.kill();
-    
-    score += 10;
-    scoreText.text = 'Score: '+score;
-
-}
+}*/

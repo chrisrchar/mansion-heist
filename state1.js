@@ -1,6 +1,6 @@
 /* global
     game, Phaser
-*/
+
 
 var state1 = {};
 
@@ -41,12 +41,6 @@ state1.create = function () {
     platforms = map.createLayer('platforms');
     
     map.createFromObjects('coins', 952, 'coin', 0, true, false, coins);
-    
-    /*for (var i = 0; i < 12; i++)
-    {
-        //  Create a star inside of the 'stars' group
-        var coin = coins.create(i * 70, 400, 'coin');
-    }*/
     
     background.resizeWorld();
     
@@ -90,4 +84,4 @@ function startScene()
     {
         callScene(sampleDialogue);
     }
-}
+}*/
