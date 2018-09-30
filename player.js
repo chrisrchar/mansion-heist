@@ -1,7 +1,7 @@
 /* global
     Phaser, game, player:true, gravity, speed, cursors, jumpHeight
 */
-var pad1, jumpButton, leftButton, rightButton;
+var pad1, jumpButton, leftButton, rightButton, atkButton;
 
 var playerGlobals = {
     lastX: 64,
@@ -36,6 +36,9 @@ function createPlayer() {
     leftButton = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
     rightButton = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    atkButton = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+    
+    //atkButton.onPressCallback = test;
     
     pad1.onConnectCallback = function () {
         console.log('gamepad connected');
@@ -59,6 +62,7 @@ function createPlayer() {
         {
             console.log('setting controller buttons');
             jumpButton = pad1.getButton(Phaser.Gamepad.XBOX360_A);
+            atkButton = pad1.getButton(Phaser.Gamepad.XBOX360_X);
             leftButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_LEFT);
             rightButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_RIGHT);
         }
