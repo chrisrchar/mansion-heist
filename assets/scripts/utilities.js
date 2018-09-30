@@ -70,6 +70,12 @@ function addMap (mapName, tilemapName, exits)
         exits.forEach(checkExits);
     }
     
+    // Hitbox Debugging
+    tempMap.render = function () {
+        game.debug.body(hitbox1);
+        //game.debug.body(player);
+    }
+    
     // Push the state object to the array of maps
     maps.push(tempMap);
 }
@@ -173,7 +179,6 @@ function setTileCollision(mapLayer, idxOrArray, dirs) {
     }
  
 }
-
 
 // Object Collection
 function collectStar (player, star) 

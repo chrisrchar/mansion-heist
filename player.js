@@ -3,7 +3,7 @@
 */
 var pad1, jumpButton, leftButton, rightButton, atkButton;
 
-var playerStates, grounded;
+var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer;
 
 var playerGlobals = {
     lastX: 64,
@@ -20,7 +20,7 @@ function createPlayer() {
     player = game.add.sprite(playerGlobals.lastX, playerGlobals.lastY + 48, 'dude');
     game.physics.enable(player, Phaser.Physics.ARCADE);
     player.anchor.x = .5;
-    player.anchor.y = 1;
+    player.anchor.y = .5;
     //player.body.collideWorldBounds = true;
     player.body.gravity.y = gravity;
     player.body.maxVelocity = 925;
@@ -32,6 +32,15 @@ function createPlayer() {
     
     game.input.resetLocked = true;
     
+    hitboxes = game.add.group();
+    hitboxes.enableBody = true;
+    player.addChild(hitboxes);
+    
+    hitbox1 = hitboxes.create(0,0,null);
+    hitbox1.anchor.setTo(.5,.5);
+    hitbox1.body.setSize(32, 32);
+    
+    // PLAYER CONTROLS
     game.input.gamepad.start();
     pad1 = game.input.gamepad.pad1;
     
@@ -40,18 +49,16 @@ function createPlayer() {
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     atkButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
     
+    // ADDING CONTROL CALLBACKS
     jumpButton.onDown.add(jump, this);
     
-    atkButton.onDown.add(function()
-    {
-        console.log('attacking');
-    }, this);
+    atkButton.onDown.add(attack);
     
     pad1.onConnectCallback = function () {
         console.log('gamepad connected');
     };
     
-    cursors = game.input.keyboard.createCursorKeys();
+    atkTimer = game.time.create(false);
     
     // Player States
     playerStates = {
@@ -76,6 +83,8 @@ function createPlayer() {
         
         game.physics.arcade.collide(player, platforms);
         
+        hitbox1.body.setSize(32,32,32*facing,0);
+        
         //var clipping = game.physics.arcade.overlap(player, platforms);
         
         grounded = player.body.blocked.down;
@@ -93,6 +102,7 @@ function createPlayer() {
         
         if (xDir != 0)
         {
+            facing = xDir;
             player.body.velocity.x = xDir * speed;
             player.scale.setTo(-1 * xDir, 1);
             if (grounded)
@@ -159,3 +169,29 @@ function jump ()
         player.state = playerStates.JUMPING;
     }
 }
+
+function attack ()
+{
+    console.log('attacking');
+    hitbox1.body.enable = true;
+    atkTimer.add(1000, atkCallback, this);
+    atkTimer.start();
+    
+}
+
+function atkCallback ()
+{
+    console.log('attack end');
+    hitbox1.body.enable = false;
+    atkTimer.removeAll();
+}
+
+/*function invisDown ()
+{
+    
+}
+
+function invisUp ()
+{
+    
+}*/
