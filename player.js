@@ -3,7 +3,9 @@
 */
 var pad1, jumpButton, leftButton, rightButton, atkButton, ablButton;
 
-var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible;
+var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible, attacking;
+
+var jumpsfx;
 
 var playerGlobals = {
     lastX: 328,
@@ -74,6 +76,8 @@ function createPlayer() {
     };
     var firstCheck = true;
     var xDir;
+    
+    jumpsfx = game.add.audio('jumpsfx');
         
     // PLAYER UPDATE
     player.update = function () {
@@ -170,12 +174,16 @@ function checkButtons (pad)
     return jumpButton == pad.getButton(Phaser.Gamepad.XBOX360_A) && leftButton == pad.getButton(Phaser.Gamepad.XBOX360_DPAD_LEFT) && rightButton == pad.getButton(Phaser.Gamepad.XBOX360_DPAD_RIGHT);
 }
 
+//==================
+// JUMP FUNCTIONS
+
 function jump ()
 {
     //Variable Jumping
 
     if (playerGlobals.jumps < 2)
     {
+        jumpsfx.play();
         player.body.velocity.y = jumpHeight;
         playerGlobals.jumps++;
         player.state = playerStates.JUMPING;
@@ -188,8 +196,9 @@ function jump ()
 function attack ()
 {
     console.log('attacking');
+    attacking = true;
     hitbox1.body.enable = true;
-    atkTimer.add(1000, atkCallback, this);
+    atkTimer.add(200, atkCallback, this);
     atkTimer.start();
     
 }
@@ -197,6 +206,7 @@ function attack ()
 function atkCallback ()
 {
     console.log('attack end');
+    attacking = false;
     hitbox1.body.enable = false;
     atkTimer.removeAll();
 }

@@ -21,7 +21,7 @@ addMap('state1', 'map1', [{
 }]);
 
 // start new phaser game
-var game = new Phaser.Game(1280, 720, Phaser.AUTO, '', maps[0]);
+var game = new Phaser.Game(1280, 720, Phaser.AUTO, '', preload);
 
 var score = 0;
 

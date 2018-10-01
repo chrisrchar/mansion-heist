@@ -24,13 +24,6 @@ function addMap (mapName, tilemapName, exits)
     
     tempMap.mapName = mapName;
     
-    tempMap.preload = function () {
-        game.load.spritesheet('dude', 'assets/spritesheets/fox_walk_80x124.png', 80, 124);
-        game.load.tilemap(tilemapName, 'assets/tilemaps/'+tilemapName+'.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('tiles', 'assets/tilemaps/simples_pimples.png');
-        game.load.image('coin', 'assets/sprites/coin.png');
-    }
-    
     tempMap.create = function () {
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -72,8 +65,11 @@ function addMap (mapName, tilemapName, exits)
     
     // Hitbox Debugging
     tempMap.render = function () {
-        //game.debug.body(hitbox1);
-        //game.debug.body(player);
+        if (attacking)
+            {
+             game.debug.body(hitbox1);   
+            }
+        game.debug.body(player);
     }
     
     // Push the state object to the array of maps
