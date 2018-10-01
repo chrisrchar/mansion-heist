@@ -5,7 +5,7 @@ var maps = [];
 // PHYSICS VARIABLES
 var speed = 300;
 var gravity = 1000;
-var jumpHeight = -450;
+var jumpHeight = -650;
 var player;
 
 // GAME OBJECTS
@@ -72,8 +72,8 @@ function addMap (mapName, tilemapName, exits)
     
     // Hitbox Debugging
     tempMap.render = function () {
-        game.debug.body(hitbox1);
-        game.debug.body(player);
+        //game.debug.body(hitbox1);
+        //game.debug.body(player);
     }
     
     // Push the state object to the array of maps

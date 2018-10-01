@@ -1,13 +1,13 @@
 /* global
     Phaser, game, player:true, gravity, speed, cursors, jumpHeight
 */
-var pad1, jumpButton, leftButton, rightButton, atkButton;
+var pad1, jumpButton, leftButton, rightButton, atkButton, ablButton;
 
-var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer;
+var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible;
 
 var playerGlobals = {
-    lastX: 64,
-    lastY: 64,
+    lastX: 328,
+    lastY: 128,
     xVel: 600,
     yVel: -500,
     jumps: 0,
@@ -49,12 +49,14 @@ function createPlayer() {
     leftButton = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
     rightButton = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    atkButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
+    atkButton = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+    ablButton = game.input.keyboard.addKey(Phaser.Keyboard.CONTROL);
     
     // ADDING CONTROL CALLBACKS
-    jumpButton.onDown.add(jump, this);
-    
+    jumpButton.onDown.add(jump);
     atkButton.onDown.add(attack);
+    ablButton.onDown.add(abilityDown);
+    ablButton.onUp.add(abilityUp);
     
     pad1.onConnectCallback = function () {
         console.log('gamepad connected');
@@ -66,7 +68,9 @@ function createPlayer() {
     playerStates = {
         IDLE: "IDLE",
         WALKING: "WALKING",
-        JUMPING: "JUMPING"
+        JUMPING: "JUMPING",
+        INVISIBLE: "INVISIBLE",
+        ATTACKING: "ATTACKING"
     };
     var firstCheck = true;
     var xDir;
@@ -77,10 +81,16 @@ function createPlayer() {
         if (pad1.connected && !checkButtons(pad1))
         {
             console.log('setting controller buttons');
+            ablButton = pad1.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
             jumpButton = pad1.getButton(Phaser.Gamepad.XBOX360_A);
             atkButton = pad1.getButton(Phaser.Gamepad.XBOX360_X);
             leftButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_LEFT);
             rightButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_RIGHT);
+            
+            jumpButton.onDown.add(jump);
+            atkButton.onDown.add(attack);
+            ablButton.onDown.add(abilityDown);
+            ablButton.onUp.add(abilityUp);
         }
         
         game.physics.arcade.collide(player, platforms);
@@ -172,6 +182,9 @@ function jump ()
     }
 }
 
+//==================
+// ATTACK FUNCTIONS
+
 function attack ()
 {
     console.log('attacking');
@@ -188,12 +201,17 @@ function atkCallback ()
     atkTimer.removeAll();
 }
 
-/*function invisDown ()
+//===================
+// ABILITY FUNCTIONS
+
+function abilityDown ()
 {
-    
+    invisible = true;
+    player.alpha = 0.5;
 }
 
-function invisUp ()
+function abilityUp ()
 {
-    
-}*/
+    invisible = false;
+    player.alpha = 1;
+}
