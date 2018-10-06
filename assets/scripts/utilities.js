@@ -1,6 +1,16 @@
 // GAME GLOBALS
 //====================================
 var maps = [];
+var mapVisited = [[],[],[],[],[],[],[],[],[],[]];
+var mapSize = 10;
+
+for (var i = 0; i < mapSize; i++)
+{
+    for (var j = 0; j < mapSize; j++)
+    {
+        mapVisited[i][j] = false;
+    }
+}
 
 // PHYSICS VARIABLES
 var speed = 300;
@@ -12,12 +22,12 @@ var player;
 var platforms, coins;
 
 // DRAWN OBJECTS
-var scoreText;
+var scoreText, minimap;
 
 //====================================
 
 // Map creation
-function addMap (mapName, tilemapName, exits)
+function addMap (mapName, tilemapName, exits, gridX, gridY)
 {
     // Create empty state object to add to
     var tempMap = {}
@@ -25,6 +35,14 @@ function addMap (mapName, tilemapName, exits)
     tempMap.mapName = mapName;
     
     tempMap.create = function () {
+        if (!mapVisited[gridY][gridX])
+        {
+            console.log(gridY+" "+gridX);
+            mapVisited[gridY][gridX] = true;
+        }
+        
+        console.log(mapVisited);
+        
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -37,7 +55,7 @@ function addMap (mapName, tilemapName, exits)
         coins = game.add.group();
         coins.enableBody = true;
 
-        map.createFromObjects('coins', 952, 'coin', 0, true, false, coins);
+        //map.createFromObjects('coins', 952, 'coin', 0, true, false, coins);
 
         map.setCollisionBetween(1, 1000, true, 'platforms');
 
@@ -48,12 +66,15 @@ function addMap (mapName, tilemapName, exits)
             right: false
         });
 
-        //background.resizeWorld();
-
-        scoreText = game.add.text(16, 16, 'Score: '+score, { fontSize: '32px', fill: '#fff', stroke: 'black', strokeThickness: 8 });
+        platforms.resizeWorld();
 
         createPlayer();
+        
+        // MINI MAP
 
+        drawMiniMap(gridX, gridY);
+
+        game.camera.follow(player);
     }
     
     tempMap.update = function () {
@@ -66,10 +87,12 @@ function addMap (mapName, tilemapName, exits)
     // Hitbox Debugging
     tempMap.render = function () {
         if (attacking)
-            {
-             game.debug.body(hitbox1);   
-            }
+        {
+            game.debug.body(hitbox1);   
+        }
         game.debug.body(player);
+        
+        game.debug.cameraInfo(game.camera, 32, 32);
     }
     
     // Push the state object to the array of maps
@@ -116,7 +139,7 @@ function goToMap (mapName, spawn)
         playerGlobals.lastY = spawn.y;
     }
     else {
-        playerGlobals.lastY = player.body.y;
+        playerGlobals.lastY = player.body.y + player.height/2;
     }
     if (spawn.x > 0)
     {
@@ -174,6 +197,53 @@ function setTileCollision(mapLayer, idxOrArray, dirs) {
         }
     }
  
+}
+
+// MINI MAP
+function drawMiniMap (gridX, gridY)
+{
+    var mmap_size = 180;
+    var mmap_units = 5;
+    var mmap_unit_size = mmap_size/mmap_units;
+    var minimap = game.add.graphics(game.camera.width - mmap_size - 25, 25);
+    minimap.fixedToCamera = true;
+
+    minimap.beginFill(0x000000, 1);
+    minimap.drawRect(0, 0, mmap_size, mmap_size);
+    minimap.endFill();
+
+    minimap.lineStyle(2, 0xffffff, 1);
+
+    for (var i = 0; i < mmap_units+1; i++)
+    {
+        minimap.moveTo(i*mmap_unit_size,0);
+        minimap.lineTo(i*mmap_unit_size, mmap_size);
+    }
+    
+    for (var i = 0; i < mmap_units+1; i++)
+    {
+        minimap.moveTo(0, i*mmap_unit_size);
+        minimap.lineTo(mmap_size, i*mmap_unit_size);
+    }
+    
+    minimap.lineStyle(0, 0xffffff, 0);
+    minimap.beginFill(0xffffff, 1);
+    
+    for (var i = -1*Math.floor(mmap_units/2); i < Math.ceil(mmap_units/2); i++)
+    {
+        for (var j = -1*Math.floor(mmap_units/2); j < Math.ceil(mmap_units/2); j++)
+        {
+            if (mapVisited[(gridY+i)][(gridX+j)])
+            {
+                console.log(mmap_unit_size*(i+2));
+                minimap.drawRect(mmap_unit_size*(j+2),mmap_unit_size*(i+2),mmap_unit_size,mmap_unit_size);
+            }
+        }
+    }
+    
+    minimap.endFill();
+    
+    minimap.alpha = 0.5;
 }
 
 // Object Collection

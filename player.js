@@ -19,7 +19,10 @@ var playerGlobals = {
 
 function createPlayer() {
     // create player object and enable physics
-    player = game.add.sprite(playerGlobals.lastX, playerGlobals.lastY + 48, 'dude');
+    player = game.add.sprite(playerGlobals.lastX, playerGlobals.lastY, 'boss_run');
+    
+    player.animations.add('run', [1, 2, 3, 4, 5], 10, true);
+    
     game.physics.enable(player, Phaser.Physics.ARCADE);
     player.anchor.x = .5;
     player.anchor.y = .5;
@@ -28,8 +31,6 @@ function createPlayer() {
     
     player.body.gravity.y = gravity;
     player.body.maxVelocity = 925;
-    
-    player.animations.add('walk', [1, 2, 3, 4, 5, 6], 10, true);
     
     player.body.velocity.x = playerGlobals.xVel;
     player.body.velocity.y = playerGlobals.yVel;
@@ -125,7 +126,7 @@ function createPlayer() {
             {
                 player.state = playerStates.WALKING;
             }
-            player.animations.play('walk');
+            player.animations.play('run');
         }
         else 
         {
