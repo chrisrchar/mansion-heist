@@ -19,10 +19,14 @@ var jumpHeight = -650;
 var player;
 
 // GAME OBJECTS
-var platforms, coins;
+var platforms, coins, enemies, vases;
 
 // DRAWN OBJECTS
-var healthHUD, minimap;
+var healthHUD, moneyHUD, minimap;
+
+// GAME VARIABLES
+
+var money  = 0;
 
 //====================================
 
@@ -56,6 +60,35 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
 
         map.createFromObjects('sprites', 3305, 'spikes', 0, true, false, spikes);
         spikes.setAll('body.immovable', true);
+        
+        // SPAWN ENEMIES
+        
+        enemies = game.add.group();
+        enemies.enableBody = true;
+        enemies.physicsBodyType = Phaser.Physics.ARCADE;
+        
+        map.createFromObjects('enemies', 403, 'enemy', 0, true, false, enemies);
+        
+        enemies.setAll('body.gravity.y', gravity);
+        enemies.setAll('body.drag.x', 500);
+        
+        //===============
+        
+        // COIN GROUP
+        
+        coins = game.add.group();
+        coins.enableBody = true;
+        coins.physicsBodyType = Phaser.Physics.ARCADE;
+        
+        // SPAWN VASES
+        
+        vases = game.add.group();
+        vases.enableBody = true;
+        vases.physicsBodyType = Phaser.Physics.ARCADE;
+        
+        map.createFromObjects('vases', 511, 'vase', 0, true, false, vases);
+        
+        //===============
 
         map.setCollisionBetween(1, 1000, true, 'platforms');
 
@@ -83,7 +116,10 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
     
     tempMap.update = function () {
     
-        game.physics.arcade.overlap(player, coins, collectStar, null, this);
+        game.physics.arcade.overlap(player, coins, collectCoins, null, this);
+        
+        game.physics.arcade.collide(enemies, platforms);
+        game.physics.arcade.collide(coins, platforms);
         
         healthHUD.text = "HP: "+playerGlobals.hp;
 
@@ -95,9 +131,11 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         /*if (attacking)
         {
             game.debug.body(hitbox1);   
-        }*/
+        }
         
-        //game.debug.body(player);
+        enemies.forEachAlive(renderGroup, this);
+        function renderGroup(member) 
+        {    game.debug.body(member);}*/
         
         //game.debug.cameraInfo(game.camera, 32, 32);
     }
@@ -265,6 +303,9 @@ function drawHUD()
 {
     healthHUD = game.add.text(16, 16, 'HP: '+playerGlobals.hp, { fontSize: '32px', fill: '#fff', stroke: 'black', strokeThickness: 8 });
     healthHUD.fixedToCamera = true;
+    
+    moneyHUD = game.add.text(16, 64, '$: '+money, { fontSize: '32px', fill: '#fff', stroke: 'black', strokeThickness: 8 });
+    moneyHUD.fixedToCamera = true;
 }
 
 var hurtTimer;
@@ -285,12 +326,12 @@ function hurtEnd ()
 }
 
 // Object Collection
-function collectStar (player, star) 
+function collectCoins (player, coin) 
 {
     // Removes the star from the screen
-    star.kill();
+    coin.kill();
     
-    score += 10;
-    scoreText.text = 'Score: '+score;
+    money += 10;
+    moneyHUD.text = '$: '+money;
 
 }

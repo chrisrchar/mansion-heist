@@ -49,6 +49,7 @@ function createPlayer() {
     hitbox1.anchor.setTo(.5,.5);
     hitbox1.body.setSize(32, 32);
     
+    
     // PLAYER CONTROLS
     game.input.gamepad.start();
     pad1 = game.input.gamepad.pad1;
@@ -84,8 +85,13 @@ function createPlayer() {
     
     jumpsfx = game.add.audio('jumpsfx');
     
-    player.body.onCollide = new Phaser.Signal()
+    player.body.onCollide = new Phaser.Signal();
     player.body.onCollide.add(collide);
+    
+    hitbox1.body.onOverlap = new Phaser.Signal();
+    hitbox1.body.onOverlap.add(attackHit);
+    
+    hitbox1.body.enable = false;
         
     // PLAYER UPDATE
     player.update = function () {
@@ -107,6 +113,10 @@ function createPlayer() {
         
         game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(player, spikes);
+        //game.physics.arcade.collide(player, enemies);
+        
+        game.physics.arcade.overlap(hitbox1, enemies);
+        game.physics.arcade.overlap(hitbox1, vases);
         
         hitbox1.body.setSize(32,32,32*facing,0);
         
@@ -215,7 +225,7 @@ function attack ()
     attacking = true;
     hitbox1.body.enable = true;
     player.animations.play('attack');
-    atkTimer.add(200, atkCallback, this);
+    atkTimer.add(100, atkCallback, this);
     atkTimer.start();
     
 }
@@ -263,5 +273,25 @@ function collide (collider, other)
                 hurt(other);   
             }
             break;
+    }
+}
+
+function attackHit (atkHitbox, other)
+{
+    console.log('hit '+other.key)
+    if (!other.hurt && other.key == 'enemy')
+    {
+        other.hurt = true;
+        other.tint = 0xff0000;
+        other.body.velocity.x = 300 * Math.sign(other.body.x - player.body.x);
+        other.body.velocity.y = jumpHeight*.5;
+    }
+    if (other.key == 'vase')
+    {
+        var spoils = coins.create(other.body.x, other.body.y, 'coin');
+        spoils.body.gravity.y = gravity;
+        spoils.body.drag.x = 500;
+        spoils.body.velocity.x = 150 * Math.sign(other.body.x - player.body.x);
+        other.destroy();
     }
 }

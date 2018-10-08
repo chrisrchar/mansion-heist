@@ -165,8 +165,32 @@
          "width":120,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":45,
+         "name":"vases",
+         "objects":[
+                {
+                 "gid":511,
+                 "height":16,
+                 "id":28,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":80,
+                 "y":624
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":120,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":27,
+ "nextobjectid":29,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":16,

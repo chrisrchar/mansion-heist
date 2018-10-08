@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="120" height="45" tilewidth="16" tileheight="16" nextobjectid="27">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="120" height="45" tilewidth="16" tileheight="16" nextobjectid="29">
  <tileset firstgid="1" name="blocks" tilewidth="16" tileheight="16" tilecount="4000" columns="50">
   <image source="../../../../../Desktop/Phaser/phasertest/assets/tilemaps/simples_pimples.png" width="800" height="1280"/>
  </tileset>
@@ -117,5 +117,8 @@
  </objectgroup>
  <objectgroup name="enemies">
   <object id="26" gid="403" x="886.454" y="471.74" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup name="vases">
+  <object id="28" gid="511" x="80" y="624" width="16" height="16"/>
  </objectgroup>
 </map>

@@ -8,6 +8,10 @@ var preload = {
         game.load.audio('jumpsfx', 'assets/sound/jump.wav');
         game.load.image('wall', 'assets/tilemaps/testtile.png');
         
+        game.load.image('enemy', 'assets/sprites/guarddog.png');
+        game.load.image('coin', 'assets/sprites/coin.png');
+        game.load.image('vase', 'assets/sprites/vase.png');
+        
         game.load.tilemap('map0', 'assets/tilemaps/map0.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.tilemap('map1', 'assets/tilemaps/map1.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.tilemap('map2', 'assets/tilemaps/map2.json', null, Phaser.Tilemap.TILED_JSON);
