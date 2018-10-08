@@ -22,7 +22,7 @@ var player;
 var platforms, coins;
 
 // DRAWN OBJECTS
-var scoreText, minimap;
+var healthHUD, minimap;
 
 //====================================
 
@@ -41,21 +41,21 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
             mapVisited[gridY][gridX] = true;
         }
         
-        console.log(mapVisited);
-        
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         var map = game.add.tilemap(tilemapName);
         map.addTilesetImage('blocks', 'tiles');
+        map.addTilesetImage('wall', 'wall');
 
         var background = map.createLayer('background');
         platforms = map.createLayer('platforms');
 
-        coins = game.add.group();
-        coins.enableBody = true;
+        spikes = game.add.group();
+        spikes.enableBody = true;
 
-        //map.createFromObjects('coins', 952, 'coin', 0, true, false, coins);
+        map.createFromObjects('sprites', 3305, 'spikes', 0, true, false, spikes);
+        spikes.setAll('body.immovable', true);
 
         map.setCollisionBetween(1, 1000, true, 'platforms');
 
@@ -73,6 +73,10 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         // MINI MAP
 
         drawMiniMap(gridX, gridY);
+        
+        // HUD
+        
+        drawHUD();
 
         game.camera.follow(player);
     }
@@ -80,19 +84,22 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
     tempMap.update = function () {
     
         game.physics.arcade.overlap(player, coins, collectStar, null, this);
+        
+        healthHUD.text = "HP: "+playerGlobals.hp;
 
         exits.forEach(checkExits);
     }
     
     // Hitbox Debugging
     tempMap.render = function () {
-        if (attacking)
+        /*if (attacking)
         {
             game.debug.body(hitbox1);   
-        }
-        game.debug.body(player);
+        }*/
         
-        game.debug.cameraInfo(game.camera, 32, 32);
+        //game.debug.body(player);
+        
+        //game.debug.cameraInfo(game.camera, 32, 32);
     }
     
     // Push the state object to the array of maps
@@ -227,7 +234,7 @@ function drawMiniMap (gridX, gridY)
     }
     
     minimap.lineStyle(0, 0xffffff, 0);
-    minimap.beginFill(0xffffff, 1);
+    minimap.beginFill(0xffffff, .6);
     
     for (var i = -1*Math.floor(mmap_units/2); i < Math.ceil(mmap_units/2); i++)
     {
@@ -235,15 +242,46 @@ function drawMiniMap (gridX, gridY)
         {
             if (mapVisited[(gridY+i)][(gridX+j)])
             {
-                console.log(mmap_unit_size*(i+2));
-                minimap.drawRect(mmap_unit_size*(j+2),mmap_unit_size*(i+2),mmap_unit_size,mmap_unit_size);
+                if (i == 0 && j == 0)
+                {
+                    minimap.beginFill(0xffffff, 1);
+                    minimap.drawRect(mmap_unit_size*(j+2),mmap_unit_size*(i+2),mmap_unit_size,mmap_unit_size);
+                }
+                else
+                {
+                    minimap.beginFill(0xffffff, .6);
+                    minimap.drawRect(mmap_unit_size*(j+2),mmap_unit_size*(i+2),mmap_unit_size,mmap_unit_size);
+                }
             }
         }
     }
     
     minimap.endFill();
     
-    minimap.alpha = 0.5;
+    minimap.alpha = 0.8;
+}
+
+function drawHUD()
+{
+    healthHUD = game.add.text(16, 16, 'HP: '+playerGlobals.hp, { fontSize: '32px', fill: '#fff', stroke: 'black', strokeThickness: 8 });
+    healthHUD.fixedToCamera = true;
+}
+
+var hurtTimer;
+
+function hurt (painInducer) 
+{
+    hurtTimer = game.time.create(true);
+    hurtTimer.add(500, hurtEnd, this);
+    hurtTimer.start();
+    console.log(painInducer.key);
+}
+
+function hurtEnd ()
+{
+    playerGlobals.hurt = false;
+    player.tint = 0xffffff;
+    hurtTimer.removeAll();
 }
 
 // Object Collection

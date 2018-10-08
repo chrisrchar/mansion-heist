@@ -12,16 +12,20 @@ var playerGlobals = {
     lastY: 128,
     xVel: 600,
     yVel: -500,
+    hp: 4,
     jumps: 0,
     canDoubleJump: false,
-    xDir: 0
+    xDir: 0,
+    hurt: false
 };
 
 function createPlayer() {
     // create player object and enable physics
-    player = game.add.sprite(playerGlobals.lastX, playerGlobals.lastY, 'boss_run');
+    player = game.add.sprite(playerGlobals.lastX, playerGlobals.lastY, 'fox');
     
     player.animations.add('run', [1, 2, 3, 4, 5], 10, true);
+    player.animations.add('jump', [6, 7], 10, false);
+    player.animations.add('attack', [8, 9, 10], 20, false);
     
     game.physics.enable(player, Phaser.Physics.ARCADE);
     player.anchor.x = .5;
@@ -79,6 +83,9 @@ function createPlayer() {
     var xDir;
     
     jumpsfx = game.add.audio('jumpsfx');
+    
+    player.body.onCollide = new Phaser.Signal()
+    player.body.onCollide.add(collide);
         
     // PLAYER UPDATE
     player.update = function () {
@@ -99,6 +106,7 @@ function createPlayer() {
         }
         
         game.physics.arcade.collide(player, platforms);
+        game.physics.arcade.collide(player, spikes);
         
         hitbox1.body.setSize(32,32,32*facing,0);
         
@@ -117,25 +125,31 @@ function createPlayer() {
             xDir = rightButton.isDown - leftButton.isDown;
         }
         
-        if (xDir != 0)
+        if (!playerGlobals.hurt)
         {
-            facing = xDir;
-            player.body.velocity.x = xDir * speed;
-            player.scale.setTo(xDir, 1);
-            if (grounded)
+            if (xDir != 0)
             {
-                player.state = playerStates.WALKING;
+                facing = xDir;
+                player.body.velocity.x = xDir * speed;
+                player.scale.setTo(xDir, 1);
+                if (grounded && !attacking)
+                {
+                    player.animations.play('run');
+                    player.state = playerStates.WALKING;
+                }
             }
-            player.animations.play('run');
-        }
-        else 
-        {
-            player.frame = 0;
-            player.body.velocity.x = 0
+            else 
+            {
+                if (grounded && !attacking)
+                {
+                    player.frame = 0;
+                }
+                player.body.velocity.x = 0
+            }
         }
 
         // variable jumping
-        if (!jumpButton.isDown && player.body.velocity.y < 0)
+        if (!jumpButton.isDown && player.body.velocity.y < 0 && !playerGlobals.hurt)
         {
             player.body.velocity.y = Math.max(player.body.velocity.y, jumpHeight/4);
         }
@@ -158,7 +172,7 @@ function createPlayer() {
             {
                 player.state = playerStates.IDLE;
             }
-            else 
+            else
             {
                 player.state = playerStates.WALKING;
             }
@@ -185,6 +199,7 @@ function jump ()
     if (playerGlobals.jumps < 2)
     {
         jumpsfx.play();
+        player.animations.play('jump');
         player.body.velocity.y = jumpHeight;
         playerGlobals.jumps++;
         player.state = playerStates.JUMPING;
@@ -199,6 +214,7 @@ function attack ()
     console.log('attacking');
     attacking = true;
     hitbox1.body.enable = true;
+    player.animations.play('attack');
     atkTimer.add(200, atkCallback, this);
     atkTimer.start();
     
@@ -225,4 +241,27 @@ function abilityUp ()
 {
     invisible = false;
     player.alpha = 1;
+}
+
+//===================
+// COLLISION
+
+function collide (collider, other)
+{
+    switch(other.key)
+    {
+        case 'spikes':
+            if (playerGlobals.hurt != true)
+            {
+                game.camera.shake(0.005, 100);
+                playerGlobals.hp -= 1;
+                player.tint = 0xff0000;
+                player.body.velocity.x = player.body.velocity.x * -1;
+                player.body.velocity.y = jumpHeight*.75;
+                console.log(player.body.velocity.y);
+                playerGlobals.hurt = true;
+                hurt(other);   
+            }
+            break;
+    }
 }
