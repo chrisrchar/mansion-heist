@@ -52,10 +52,14 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         var map = game.add.tilemap(tilemapName);
-        map.addTilesetImage('blocks', 'tiles');
+        map.addTilesetImage('solids', 'tiles');
         map.addTilesetImage('wall', 'wall');
+        map.addTilesetImage('window', 'window');
+        map.addTilesetImage('shelf', 'shelf');
+        map.addTilesetImage('pedestal', 'pedestal');
 
         var background = map.createLayer('background');
+        var background2 = map.createLayer('background2');
         platforms = map.createLayer('platforms');
 
         spikes = game.add.group();
@@ -63,37 +67,6 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
 
         map.createFromObjects('sprites', 3305, 'spikes', 0, true, false, spikes);
         spikes.setAll('body.immovable', true);
-        
-        // SPAWN ENEMIES
-        
-        enemies = game.add.group();
-        enemies.enableBody = true;
-        enemies.physicsBodyType = Phaser.Physics.ARCADE;
-        
-        map.createFromObjects('enemies', 403, 'enemy', 0, true, false, enemies);
-        
-        enemies.setAll('body.gravity.y', gravity);
-        enemies.setAll('body.drag.x', 500);
-        enemies.setAll('body.immovable', true);
-        
-        enemies.forEach(function (obj) {
-            obj.hp = 3;
-            obj.facing = 1;
-            obj.update = function ()
-            {
-                if (!obj.hurt)
-                {
-                    obj.body.velocity.x = 300*obj.facing;
-                }
-
-            }
-            
-            var walkTimer = game.time.create(false);
-            walkTimer.loop(1000, switchDir, this, obj);
-            walkTimer.start();
-        }, this);
-        
-        //===============
         
         // COIN GROUP
         
@@ -107,13 +80,50 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         vases.enableBody = true;
         vases.physicsBodyType = Phaser.Physics.ARCADE;
         
-        map.createFromObjects('vases', 511, 'vase', 0, true, false, vases);
+        map.createFromObjects('vases', 66, 'vase', 0, true, false, vases);
+        
+        //===============
+        
+        // SPAWN ENEMIES
+        
+        enemies = game.add.group();
+        enemies.enableBody = true;
+        enemies.physicsBodyType = Phaser.Physics.ARCADE;
+        
+        map.createFromObjects('enemies', 73, 'enemy', 0, true, false, enemies);
+        
+        enemies.setAll('body.gravity.y', gravity);
+        enemies.setAll('body.drag.x', 500);
+        enemies.setAll('body.immovable', true);
+        
+        enemies.forEach(function (obj) {
+            obj.anchor.x = .5;
+            obj.anchor.y = .5;
+            obj.animations.add('walk', [1, 2, 3, 4], 10, true);
+            obj.animations.play('walk');
+            
+            obj.hp = 3;
+            obj.facing = 1;
+            obj.update = function ()
+            {
+                if (!obj.hurt)
+                {
+                    obj.body.velocity.x = 300*obj.facing;
+                    obj.scale.setTo(obj.facing, 1);
+                }
+
+            }
+            
+            var walkTimer = game.time.create(false);
+            walkTimer.loop(1000, switchDir, this, obj);
+            walkTimer.start();
+        }, this);
         
         //===============
 
         map.setCollisionBetween(1, 1000, true, 'platforms');
 
-        setTileCollision(platforms, 708, {
+        setTileCollision(platforms, [67, 68, 69], {
             top: true,
             bottom: false,
             left: false,
@@ -123,6 +133,10 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         platforms.resizeWorld();
 
         createPlayer();
+        
+        powerup = game.add.group();
+        powerup.enableBody = true;
+        map.createFromObjects('sprites', 68, 'powerup', 0, true, false, powerup);
         
         // MINI MAP
 
@@ -138,6 +152,7 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
     tempMap.update = function () {
     
         game.physics.arcade.overlap(player, coins, collectCoins, null, this);
+        game.physics.arcade.overlap(player, powerup, powerUp, null, this);
         
         game.physics.arcade.collide(enemies, platforms);
         game.physics.arcade.collide(coins, platforms);
@@ -362,4 +377,10 @@ function collectCoins (player, coin)
 function switchDir (ref)
 {
     ref.facing = ref.facing * -1;
+}
+
+function powerUp (player, power)
+{
+    power.kill();
+    playerGlobals.maxJumps += 1;
 }

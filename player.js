@@ -8,12 +8,13 @@ var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible, atta
 var jumpsfx;
 
 var playerGlobals = {
-    lastX: 328,
-    lastY: 128,
+    lastX: 300,
+    lastY: 300,
     xVel: 600,
     yVel: -500,
     hp: 4,
     jumps: 0,
+    maxJumps: 1,
     canDoubleJump: false,
     xDir: 0,
     hurt: false
@@ -218,7 +219,7 @@ function jump ()
 {
     //Variable Jumping
 
-    if (playerGlobals.jumps < 2)
+    if (playerGlobals.jumps < playerGlobals.maxJumps)
     {
         jumpsfx.play();
         player.animations.play('jump');
