@@ -45,6 +45,9 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
             mapVisited[gridY][gridX] = true;
         }
         
+        // Make sure the input doesn't reset when changing rooms
+        game.input.resetLocked = true;
+        
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -71,6 +74,24 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         
         enemies.setAll('body.gravity.y', gravity);
         enemies.setAll('body.drag.x', 500);
+        enemies.setAll('body.immovable', true);
+        
+        enemies.forEach(function (obj) {
+            obj.hp = 3;
+            obj.facing = 1;
+            obj.update = function ()
+            {
+                if (!obj.hurt)
+                {
+                    obj.body.velocity.x = 300*obj.facing;
+                }
+
+            }
+            
+            var walkTimer = game.time.create(false);
+            walkTimer.loop(1000, switchDir, this, obj);
+            walkTimer.start();
+        }, this);
         
         //===============
         
@@ -128,11 +149,13 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
     
     // Hitbox Debugging
     tempMap.render = function () {
+        //game.debug.body(player);  
         /*if (attacking)
         {
             game.debug.body(hitbox1);   
-        }
+        }*/
         
+        /*
         enemies.forEachAlive(renderGroup, this);
         function renderGroup(member) 
         {    game.debug.body(member);}*/
@@ -308,21 +331,21 @@ function drawHUD()
     moneyHUD.fixedToCamera = true;
 }
 
-var hurtTimer;
-
-function hurt (painInducer) 
+function hurt (painReceiver) 
 {
-    hurtTimer = game.time.create(true);
-    hurtTimer.add(500, hurtEnd, this);
+    var hurtTimer = game.time.create(true);
+    hurtTimer.add(500, hurtEnd, this, painReceiver);
     hurtTimer.start();
-    console.log(painInducer.key);
+    console.log(painReceiver.key);
 }
 
-function hurtEnd ()
+function hurtEnd (ref)
 {
-    playerGlobals.hurt = false;
-    player.tint = 0xffffff;
-    hurtTimer.removeAll();
+    if (ref.key == 'fox')
+        playerGlobals.hurt = false;
+    else
+        ref.hurt = false;
+    ref.tint = 0xffffff;
 }
 
 // Object Collection
@@ -334,4 +357,9 @@ function collectCoins (player, coin)
     money += 10;
     moneyHUD.text = '$: '+money;
 
+}
+
+function switchDir (ref)
+{
+    ref.facing = ref.facing * -1;
 }

@@ -22,35 +22,43 @@ var playerGlobals = {
 function createPlayer() {
     // create player object and enable physics
     player = game.add.sprite(playerGlobals.lastX, playerGlobals.lastY, 'fox');
-    
-    player.animations.add('run', [1, 2, 3, 4, 5], 10, true);
-    player.animations.add('jump', [6, 7], 10, false);
-    player.animations.add('attack', [8, 9, 10], 20, false);
-    
     game.physics.enable(player, Phaser.Physics.ARCADE);
+    
+    // Add player animations based on sprite sheet
+    player.animations.add('run', [1, 2, 3, 4, 5, 6], 10, true);
+    player.animations.add('jump', [7, 9], 10, false);
+    player.animations.add('land', [11, 0], 10, false);
+    player.animations.add('attack', [12, 13, 14, 15], 20, false);
+    
+    // Center the player
     player.anchor.x = .5;
     player.anchor.y = .5;
+
+    // Adjust player hitbox
+    player.body.setSize(player.width/6, player.height, player.width/3+20, 0);
     
-    player.body.setSize(player.width/3, player.height, 30, 0);
-    
+    // Set player physics variables
     player.body.gravity.y = gravity;
     player.body.maxVelocity = 925;
     
+    // Adjust player velocity for a new room
     player.body.velocity.x = playerGlobals.xVel;
     player.body.velocity.y = playerGlobals.yVel;
     
-    game.input.resetLocked = true;
-    
+    // Make a group for other hitboxes (such as attacks)
     hitboxes = game.add.group();
     hitboxes.enableBody = true;
     player.addChild(hitboxes);
     
+    // Make the hitbox for the weapon swing
     hitbox1 = hitboxes.create(0,0,null);
     hitbox1.anchor.setTo(.5,.5);
     hitbox1.body.setSize(32, 32);
     
-    
+    //================
     // PLAYER CONTROLS
+    
+    // Gamepad integration
     game.input.gamepad.start();
     pad1 = game.input.gamepad.pad1;
     
@@ -113,12 +121,12 @@ function createPlayer() {
         
         game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(player, spikes);
-        //game.physics.arcade.collide(player, enemies);
+        game.physics.arcade.collide(player, enemies);
+        
+        hitbox1.body.setSize(64,64,64*facing - 16,-40);
         
         game.physics.arcade.overlap(hitbox1, enemies);
         game.physics.arcade.overlap(hitbox1, vases);
-        
-        hitbox1.body.setSize(32,32,32*facing,0);
         
         //var clipping = game.physics.arcade.overlap(player, platforms);
         
@@ -167,6 +175,10 @@ function createPlayer() {
         // Adjust gravity for faster falling
         if (!grounded && player.body.velocity.y > -100) 
         {
+            if (!attacking)
+            {
+                player.frame = 9;
+            }
             player.body.gravity.y = 1.8*gravity;
         }
         else 
@@ -221,18 +233,16 @@ function jump ()
 
 function attack ()
 {
-    console.log('attacking');
     attacking = true;
     hitbox1.body.enable = true;
     player.animations.play('attack');
-    atkTimer.add(100, atkCallback, this);
+    atkTimer.add(200, atkCallback, this);
     atkTimer.start();
     
 }
 
 function atkCallback ()
 {
-    console.log('attack end');
     attacking = false;
     hitbox1.body.enable = false;
     atkTimer.removeAll();
@@ -266,11 +276,24 @@ function collide (collider, other)
                 game.camera.shake(0.005, 100);
                 playerGlobals.hp -= 1;
                 player.tint = 0xff0000;
-                player.body.velocity.x = player.body.velocity.x * -1;
+                player.body.velocity.x = Math.sign(player.body.velocity.x) * -1 * 50;
                 player.body.velocity.y = jumpHeight*.75;
                 console.log(player.body.velocity.y);
                 playerGlobals.hurt = true;
-                hurt(other);   
+                hurt(collider);   
+            }
+            break;
+        case 'enemy':
+            if (playerGlobals.hurt != true)
+            {
+                game.camera.shake(0.005, 100);
+                playerGlobals.hp -= 1;
+                player.tint = 0xff0000;
+                playerGlobals.hurt = true;
+                player.body.velocity.x = 200 * Math.sign(player.body.x - other.body.x);
+                player.body.velocity.y = jumpHeight*.75;
+                console.log(player.body.velocity.y);
+                hurt(collider);   
             }
             break;
     }
@@ -281,10 +304,15 @@ function attackHit (atkHitbox, other)
     console.log('hit '+other.key)
     if (!other.hurt && other.key == 'enemy')
     {
+        other.hp -= 1;
+        console.log(other.hp);
+        if (other.hp < 1)
+            other.kill();
         other.hurt = true;
         other.tint = 0xff0000;
         other.body.velocity.x = 300 * Math.sign(other.body.x - player.body.x);
         other.body.velocity.y = jumpHeight*.5;
+        hurt(other);
     }
     if (other.key == 'vase')
     {

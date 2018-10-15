@@ -2,7 +2,7 @@ var preload = {
 
     preload: function ()
     {
-        game.load.spritesheet('fox', 'assets/spritesheets/fox_animations_110x140.png', 110, 140);
+        game.load.spritesheet('fox', 'assets/spritesheets/fox_animations_200x140.png', 200, 140);
         game.load.image('tiles', 'assets/tilemaps/simples_pimples.png');
         game.load.image('spikes', 'assets/sprites/spikes.png');
         game.load.audio('jumpsfx', 'assets/sound/jump.wav');

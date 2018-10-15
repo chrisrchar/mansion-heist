@@ -8,7 +8,7 @@ addMap('state0', 'map0', [{
     point: 1280,
     bound1: 320,
     bound2: 528,
-    spawn: {x: 16, y: -1}
+    spawn: {x: 32, y: -1}
 }],4,5);
 
 addMap('state1', 'map1', [{
@@ -17,7 +17,7 @@ addMap('state1', 'map1', [{
     point: 0,
     bound1: 320,
     bound2: 528,
-    spawn: {x: 1264, y: -1}
+    spawn: {x: 1248, y: -1}
 },
 {
     map: 'state2',
@@ -25,7 +25,7 @@ addMap('state1', 'map1', [{
     point: 1280,
     bound1: 32,
     bound2: 336,
-    spawn: {x: 16, y: -1}
+    spawn: {x: 32, y: -1}
 }],5,5);
 
 addMap('state2', 'map2', [{
