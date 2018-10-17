@@ -17,15 +17,13 @@ var preload = {
         game.load.image('coin', 'assets/sprites/coin.png');
         game.load.image('vase', 'assets/tilemaps/tiles/vase.png');
         
-        game.load.tilemap('map0', 'assets/tilemaps/map0.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('map1', 'assets/tilemaps/map1.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('map2', 'assets/tilemaps/map2.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.tilemap('10x10', 'assets/tilemaps/10x10.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.tilemap('11x10', 'assets/tilemaps/11x10.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('10x11', 'assets/tilemaps/10x11.json', null, Phaser.Tilemap.TILED_JSON);
     },
 
     create: function ()
     {
-        game.state.start('10x10');
+        game.state.start('10x11');
     }
 };

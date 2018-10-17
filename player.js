@@ -3,7 +3,7 @@
 */
 var pad1, jumpButton, leftButton, rightButton, atkButton, ablButton;
 
-var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible, attacking;
+var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible, attacking, jumpDown;
 
 var jumpsfx;
 
@@ -54,7 +54,6 @@ function createPlayer() {
     // Make the hitbox for the weapon swing
     hitbox1 = hitboxes.create(0,0,null);
     hitbox1.anchor.setTo(.5,.5);
-    hitbox1.body.setSize(32, 32);
     
     //================
     // PLAYER CONTROLS
@@ -65,6 +64,7 @@ function createPlayer() {
     
     leftButton = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
     rightButton = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+    downButton = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     atkButton = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
     ablButton = game.input.keyboard.addKey(Phaser.Keyboard.CONTROL);
@@ -78,8 +78,6 @@ function createPlayer() {
     pad1.onConnectCallback = function () {
         console.log('gamepad connected');
     };
-    
-    atkTimer = game.time.create(false);
     
     // Player States
     playerStates = {
@@ -121,13 +119,23 @@ function createPlayer() {
         }
         
         game.physics.arcade.collide(player, platforms);
+        if (!jumpDown)
+        {
+            game.physics.arcade.collide(player, jumpthruPlatforms);
+        }
+        
+        
         game.physics.arcade.collide(player, spikes);
         game.physics.arcade.collide(player, enemies);
         
-        hitbox1.body.setSize(64,64,64*facing - 16,-40);
         
         game.physics.arcade.overlap(hitbox1, enemies);
         game.physics.arcade.overlap(hitbox1, vases);
+        
+        if (attacking)
+        {
+            hitbox1.body.setSize(64,64,64*facing - 16,-40);
+        }
         
         //var clipping = game.physics.arcade.overlap(player, platforms);
         
@@ -176,6 +184,10 @@ function createPlayer() {
         // Adjust gravity for faster falling
         if (!grounded && player.body.velocity.y > -100) 
         {
+            if (playerGlobals.jumps < 1)
+            {
+                playerGlobals.jumps = 1;
+            }
             if (!attacking)
             {
                 player.frame = 9;
@@ -218,14 +230,23 @@ function checkButtons (pad)
 function jump ()
 {
     //Variable Jumping
-
-    if (playerGlobals.jumps < playerGlobals.maxJumps)
+    if (downButton.isDown && grounded)
     {
-        jumpsfx.play();
-        player.animations.play('jump');
-        player.body.velocity.y = jumpHeight;
-        playerGlobals.jumps++;
-        player.state = playerStates.JUMPING;
+        jumpDown = true
+        var groundTimer = game.time.create(true);
+        groundTimer.add(200, function () {jumpDown = false;} , this);
+        groundTimer.start();
+    }
+    else
+    {
+        if (playerGlobals.jumps < playerGlobals.maxJumps)
+        {
+            jumpsfx.play();
+            player.animations.play('jump');
+            player.body.velocity.y = jumpHeight;
+            playerGlobals.jumps++;
+            player.state = playerStates.JUMPING;
+        }
     }
 }
 
@@ -234,19 +255,19 @@ function jump ()
 
 function attack ()
 {
-    attacking = true;
-    hitbox1.body.enable = true;
-    player.animations.play('attack');
-    atkTimer.add(200, atkCallback, this);
-    atkTimer.start();
-    
-}
-
-function atkCallback ()
-{
-    attacking = false;
-    hitbox1.body.enable = false;
-    atkTimer.removeAll();
+    if (!attacking)
+    {
+        attacking = true;
+        hitbox1.body.enable = true;
+        player.animations.play('attack');
+        var atkTimer = game.time.create(true);
+        atkTimer.add(200, function () 
+        {
+            attacking = false;
+            hitbox1.body.enable = false;
+        }, this);
+        atkTimer.start();
+    }
 }
 
 //===================
@@ -308,7 +329,13 @@ function attackHit (atkHitbox, other)
         other.hp -= 1;
         console.log(other.hp);
         if (other.hp < 1)
+        {
             other.kill();
+            var spoils = coins.create(other.body.x, other.body.y, 'coin');
+            spoils.body.gravity.y = gravity;
+            spoils.body.drag.x = 500;
+            spoils.body.velocity.x = 150 * Math.sign(other.body.x - player.body.x);
+        }
         other.hurt = true;
         other.tint = 0xff0000;
         other.body.velocity.x = 300 * Math.sign(other.body.x - player.body.x);

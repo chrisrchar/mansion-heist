@@ -19,7 +19,7 @@ var jumpHeight = -650;
 var player;
 
 // GAME OBJECTS
-var platforms, coins, enemies, vases;
+var platforms, jumpthruPlatforms, coins, enemies, vases;
 
 // DRAWN OBJECTS
 var healthHUD, moneyHUD, minimap;
@@ -61,6 +61,7 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         var background = map.createLayer('background');
         var background2 = map.createLayer('background2');
         platforms = map.createLayer('platforms');
+        jumpthruPlatforms = map.createLayer('jumpthru');
 
         spikes = game.add.group();
         spikes.enableBody = true;
@@ -122,8 +123,9 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         //===============
 
         map.setCollisionBetween(1, 1000, true, 'platforms');
+        map.setCollisionBetween(1, 1000, true, 'jumpthru');
 
-        setTileCollision(platforms, [67, 68, 69], {
+        setTileCollision(jumpthruPlatforms, [67, 68, 69], {
             top: true,
             bottom: false,
             left: false,
@@ -156,6 +158,8 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         
         game.physics.arcade.collide(enemies, platforms);
         game.physics.arcade.collide(coins, platforms);
+        game.physics.arcade.collide(enemies, jumpthruPlatforms);
+        game.physics.arcade.collide(coins, jumpthruPlatforms);
         
         healthHUD.text = "HP: "+playerGlobals.hp;
 
@@ -165,10 +169,10 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
     // Hitbox Debugging
     tempMap.render = function () {
         //game.debug.body(player);  
-        /*if (attacking)
+        if (attacking)
         {
             game.debug.body(hitbox1);   
-        }*/
+        }
         
         /*
         enemies.forEachAlive(renderGroup, this);
@@ -200,7 +204,7 @@ function checkExits (exit)
             }
             break;
         case "up":
-            if (player.body.y > exit.point && player.body.x > exit.bound1 && player.body.x < exit.bound2)
+            if (player.body.y < exit.point && player.body.x > exit.bound1 && player.body.x < exit.bound2)
             {
                 goToMap(exit.map, exit.spawn);
             }
