@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="22" tilewidth="32" tileheight="32" nextobjectid="7">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="22" tilewidth="32" tileheight="32" nextobjectid="9">
  <tileset firstgid="1" name="wall" tilewidth="32" tileheight="32" tilecount="4" columns="2">
   <image source="testtile.png" width="64" height="64"/>
  </tileset>
@@ -20,6 +20,9 @@
  </tileset>
  <tileset firstgid="70" name="pedestal" tilewidth="32" tileheight="32" tilecount="4" columns="2">
   <image source="tiles/pedestal.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="74" name="lasers" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="tiles/laserTop.png" width="32" height="32"/>
  </tileset>
  <layer name="background" width="40" height="22">
   <data encoding="csv">
@@ -128,7 +131,14 @@
  <objectgroup name="enemies">
   <object id="6" gid="73" x="536" y="512" width="32" height="32"/>
  </objectgroup>
- <objectgroup name="sprites"/>
+ <objectgroup name="sprites">
+  <object id="7" gid="74" x="416" y="96" width="32" height="32"/>
+  <object id="8" gid="74" x="1224" y="352" width="32" height="32">
+   <properties>
+    <property name="timer" type="int" value="500"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup name="vases">
   <object id="3" gid="66" x="232" y="453" width="46" height="52"/>
   <object id="4" gid="66" x="1032" y="454" width="46" height="52"/>

@@ -12,6 +12,7 @@ var preload = {
         game.load.image('pedestal', 'assets/tilemaps/tiles/pedestal.png');
         game.load.image('shelf', 'assets/tilemaps/tiles/shelf.png');
         game.load.image('window', 'assets/tilemaps/tiles/window_dark.png');
+        game.load.image('laser', 'assets/tilemaps/tiles/laserTop.png');
         
         game.load.spritesheet('enemy', 'assets/spritesheets/final_sheets/guard_100x150.png', 100, 200);
         game.load.image('coin', 'assets/sprites/coin.png');
@@ -24,6 +25,6 @@ var preload = {
 
     create: function ()
     {
-        game.state.start('10x11');
+        game.state.start('10x10');
     }
 };

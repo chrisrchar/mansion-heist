@@ -19,7 +19,7 @@ var jumpHeight = -650;
 var player;
 
 // GAME OBJECTS
-var platforms, jumpthruPlatforms, coins, enemies, vases;
+var platforms, jumpthruPlatforms, coins, enemies, vases, spikes, vases;
 
 // DRAWN OBJECTS
 var healthHUD, moneyHUD, minimap;
@@ -63,11 +63,56 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         platforms = map.createLayer('platforms');
         jumpthruPlatforms = map.createLayer('jumpthru');
 
+        // HAZARDS
         spikes = game.add.group();
         spikes.enableBody = true;
+        
+        lasers = game.add.group();
+        lasers.enableBody = true;
 
         map.createFromObjects('sprites', 3305, 'spikes', 0, true, false, spikes);
         spikes.setAll('body.immovable', true);
+        
+        map.createFromObjects('sprites', 74, 'laser', 0, true, false, lasers);
+        lasers.setAll('body.immovable', true);
+        
+        lasers.forEach(function (laserBase)
+        {
+            laserBase.anchor.x = 0.5;
+            
+            laserBase.ray = new Phaser.Line(laserBase.x, laserBase.y, laserBase.x, 2000);
+            var intersection = getWallIntersection(laserBase.ray);
+            var endSet = false;
+            
+            laserBase.update = function ()
+            {
+                if (intersection && !endSet)
+                {
+                    console.log(intersection.x)
+                    endSet = true;
+                    laserBase.ray = laserBase.ray.setTo(laserBase.ray.start.x, laserBase.ray.start.y, laserBase.ray.end.x, intersection.y);
+                    
+                    var laserWidth = 8;
+                    
+                    laserBase.laserRect = game.add.graphics(laserBase.x, laserBase.y);
+                    laserBase.laserRect.beginFill(0xff0000, .6);
+                    laserBase.laserRect.drawRect(0 - laserWidth/2, 10, laserWidth, laserBase.ray.height - 10);
+                    laserBase.laserRect.endFill();
+                    
+                    game.physics.enable(laserBase, Phaser.Physics.ARCADE);
+                    laserBase.body.setSize(laserWidth, laserBase.ray.height, -1*laserWidth/2 + 16, 0);
+                    if (laserBase.timer)
+                    {
+                        var laserTimer = game.time.create(false);
+                        laserTimer.loop(laserBase.timer, function () {
+                            laserBase.body.enable = !laserBase.body.enable;
+                            laserBase.laserRect.visible = !laserBase.laserRect.visible;
+                        }, this);
+                        laserTimer.start();
+                    }
+                }
+            }
+        });
         
         // COIN GROUP
         
@@ -168,11 +213,16 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
     
     // Hitbox Debugging
     tempMap.render = function () {
+        /*lasers.forEachAlive(function (obj)
+        {
+            game.debug.body(obj);
+        });*/
+        
         //game.debug.body(player);  
-        if (attacking)
+        /*if (attacking)
         {
             game.debug.body(hitbox1);   
-        }
+        }*/
         
         /*
         enemies.forEachAlive(renderGroup, this);
@@ -387,4 +437,49 @@ function powerUp (player, power)
 {
     power.kill();
     playerGlobals.maxJumps += 1;
+}
+
+// LASER COLLISION WITH WALL
+function getWallIntersection (ray) {
+    var distanceToWall = Number.POSITIVE_INFINITY;
+    var closestIntersection = null;
+
+    // For each of the walls...
+    var tiles = platforms.getTiles(ray.x, ray.y, 32, ray.height);
+    console.log(tiles);
+    
+    tiles.forEach(function(tile) {
+        if (tile.index != -1)
+        {
+        // Create an array of lines that represent the four edges of each wall
+        var tileTop = new Phaser.Line(tile.x*32, tile.y*32, tile.x*32+32, tile.y*32);
+
+        // Test each of the edges in this wall against the ray.
+        // If the ray intersects any of the edges then the wall must be in the way.
+        var intersect = ray.intersects(tileTop);
+        //console.log(tileTop.y);
+        if (intersect) {
+            // Find the closest intersection
+            distance = this.game.math.distance(ray.start.x, ray.start.y, intersect.x, intersect.y);
+            if (distance < distanceToWall) {
+                distanceToWall = distance;
+                closestIntersection = intersect;
+            }
+        }
+        }
+    }, this);
+
+    return closestIntersection;
+};
+
+//SAVE AND LOAD
+function saveGame ()
+{
+    localStorage.setItem("savegame", JSON.stringify(playerGlobals));
+}
+
+function loadGame ()
+{
+    console.log(localStorage.savegame);
+    playerGlobals = JSON.parse(localStorage.savegame);
 }

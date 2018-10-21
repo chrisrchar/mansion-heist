@@ -72,7 +72,39 @@
          "draworder":"topdown",
          "height":0,
          "name":"sprites",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":74,
+                 "height":32,
+                 "id":7,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":416,
+                 "y":96
+                }, 
+                {
+                 "gid":74,
+                 "height":32,
+                 "id":8,
+                 "name":"",
+                 "properties":
+                    {
+                     "timer":500
+                    },
+                 "propertytypes":
+                    {
+                     "timer":"int"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1224,
+                 "y":352
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -116,7 +148,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":7,
+ "nextobjectid":9,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
@@ -209,6 +241,19 @@
          "name":"pedestal",
          "spacing":0,
          "tilecount":4,
+         "tileheight":32,
+         "tilewidth":32
+        }, 
+        {
+         "columns":1,
+         "firstgid":74,
+         "image":"tiles\/laserTop.png",
+         "imageheight":32,
+         "imagewidth":32,
+         "margin":0,
+         "name":"lasers",
+         "spacing":0,
+         "tilecount":1,
          "tileheight":32,
          "tilewidth":32
         }],

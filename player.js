@@ -68,12 +68,16 @@ function createPlayer() {
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     atkButton = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
     ablButton = game.input.keyboard.addKey(Phaser.Keyboard.CONTROL);
+    saveTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
+    loadTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FIVE);
     
     // ADDING CONTROL CALLBACKS
     jumpButton.onDown.add(jump);
     atkButton.onDown.add(attack);
     ablButton.onDown.add(abilityDown);
     ablButton.onUp.add(abilityUp);
+    saveTestBtn.onDown.add(saveGame);
+    loadTestBtn.onDown.add(loadGame);
     
     pad1.onConnectCallback = function () {
         console.log('gamepad connected');
@@ -127,7 +131,10 @@ function createPlayer() {
         
         game.physics.arcade.collide(player, spikes);
         game.physics.arcade.collide(player, enemies);
-        
+        if (!invisible)
+        {
+            game.physics.arcade.collide(player, lasers);
+        }
         
         game.physics.arcade.overlap(hitbox1, enemies);
         game.physics.arcade.overlap(hitbox1, vases);
@@ -181,13 +188,16 @@ function createPlayer() {
             player.body.velocity.y = Math.max(player.body.velocity.y, jumpHeight/4);
         }
 
-        // Adjust gravity for faster falling
+        // Check to see if the player is falling up or down
         if (!grounded && player.body.velocity.y > -100) 
         {
+            // If the player is falling but hasn't jumped, make it so they can't jump
             if (playerGlobals.jumps < 1)
             {
                 playerGlobals.jumps = 1;
             }
+            
+            // Show jumping animation if player isn't attacking
             if (!attacking)
             {
                 player.frame = 9;
@@ -195,7 +205,7 @@ function createPlayer() {
             player.body.gravity.y = 1.8*gravity;
         }
         else 
-        {
+        {   
             player.body.gravity.y = gravity;
         }
         
@@ -306,6 +316,19 @@ function collide (collider, other)
             }
             break;
         case 'enemy':
+            if (playerGlobals.hurt != true)
+            {
+                game.camera.shake(0.005, 100);
+                playerGlobals.hp -= 1;
+                player.tint = 0xff0000;
+                playerGlobals.hurt = true;
+                player.body.velocity.x = 200 * Math.sign(player.body.x - other.body.x);
+                player.body.velocity.y = jumpHeight*.75;
+                console.log(player.body.velocity.y);
+                hurt(collider);   
+            }
+            break;
+        case 'laser':
             if (playerGlobals.hurt != true)
             {
                 game.camera.shake(0.005, 100);
