@@ -76,23 +76,11 @@
                 {
                  "gid":74,
                  "height":32,
-                 "id":7,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":416,
-                 "y":96
-                }, 
-                {
-                 "gid":74,
-                 "height":32,
                  "id":8,
                  "name":"",
                  "properties":
                     {
-                     "timer":500
+                     "timer":1000
                     },
                  "propertytypes":
                     {

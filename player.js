@@ -55,6 +55,11 @@ function createPlayer() {
     hitbox1 = hitboxes.create(0,0,null);
     hitbox1.anchor.setTo(.5,.5);
     
+    // If the player was hurt then change their state back
+    if (playerGlobals.hurt)
+    {
+        playerGlobals.hurt = false;
+    }
     //================
     // PLAYER CONTROLS
     
