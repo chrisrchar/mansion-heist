@@ -96,12 +96,27 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
                     laserBase.body.setSize(laserWidth, laserBase.ray.height, -1*laserWidth/2 + 16, 0);
                     if (laserBase.timer)
                     {
-                        var laserTimer = game.time.create(false);
-                        laserTimer.loop(laserBase.timer, function () {
-                            laserBase.body.enable = !laserBase.body.enable;
-                            laserBase.laserRect.visible = !laserBase.laserRect.visible;
-                        }, this);
-                        laserTimer.start();
+                        if (laserBase.delay)
+                        {
+                            var delayTimer = game.time.create(true);
+                            delayTimer.add(laserBase.delay, function () {
+                                var laserTimer = game.time.create(false);
+                                laserTimer.loop(laserBase.timer, function () {
+                                    laserBase.body.enable = !laserBase.body.enable;
+                                    laserBase.laserRect.visible = !laserBase.laserRect.visible;
+                                }, this);
+                                laserTimer.start();
+                            }, this);
+                            delayTimer.start();
+                        }
+                        else {
+                            var laserTimer = game.time.create(false);
+                            laserTimer.loop(laserBase.timer, function () {
+                                laserBase.body.enable = !laserBase.body.enable;
+                                laserBase.laserRect.visible = !laserBase.laserRect.visible;
+                            }, this);
+                            laserTimer.start();
+                        }
                     }
                 }
             }
@@ -183,7 +198,7 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         }
         if (!playerGlobals.powerUps[1])
         {
-            //map.createFromObjects('sprites', 29, 'invisPowerup', 0, true, false, powerup);
+            map.createFromObjects('sprites', 9, 'invisPowerup', 0, true, false, powerup);
         }
         
         // MINI MAP
@@ -446,6 +461,7 @@ function powerUp (player, power)
         playerGlobals.maxJumps += 1;
     }
     playerGlobals.powerUps[power.ability] = true;
+    console.log(playerGlobals.powerUps[1]);
     power.kill();
 }
 
@@ -486,6 +502,8 @@ function getWallIntersection (ray) {
 function saveGame ()
 {
     localStorage.setItem("savegame", JSON.stringify(playerGlobals));
+    playerGlobals.maxJumps += 1;
+    console.log('game saved');
 }
 
 function loadGame ()

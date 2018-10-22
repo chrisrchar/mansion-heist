@@ -50,26 +50,6 @@
          "name":"sprites",
          "objects":[
                 {
-                 "gid":86,
-                 "height":32,
-                 "id":14,
-                 "name":"",
-                 "properties":
-                    {
-                     "timer":1200
-                    },
-                 "propertytypes":
-                    {
-                     "timer":"int"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":1184,
-                 "y":384
-                }, 
-                {
                  "gid":45,
                  "height":32,
                  "id":16,

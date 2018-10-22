@@ -125,11 +125,13 @@ function createPlayer() {
             leftButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_LEFT);
             rightButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_RIGHT);
             downButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_DOWN);
+            saveTestBtn = pad1.getButton(Phaser.Gamepad.XBOX360_START);
             
             jumpButton.onDown.add(jump);
             atkButton.onDown.add(attack);
             ablButton.onDown.add(abilityDown);
             ablButton.onUp.add(abilityUp);
+            saveTestBtn.onDown.add(saveGame);
         }
         
         game.physics.arcade.collide(player, platforms);

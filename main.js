@@ -9,7 +9,7 @@ addMap('9x10', '9x10', [{
     bound1: 356,
     bound2: 516,
     spawn: {x: 32, y: -1}
-},
+}
 ],9,10);
 
 addMap('10x10', '10x10', [{
@@ -21,11 +21,11 @@ addMap('10x10', '10x10', [{
     spawn: {x: 32, y: -1}
 },
 {
-    map: '10x11',
+    map: '10x9',
     direction: 'up',
-    point: -64,
+    point: -100,
     bound1: 578,
-    bound2: 770,
+    bound2: 740,
     spawn: {x: -1, y: 1260}
 },
 {
@@ -64,14 +64,53 @@ addMap('12x10', '12x10', [{
     spawn: {x: 2524, y: -1}
 }],12,10);
 
-addMap('10x11', '10x11', [{
+addMap('10x9', '10x9', [{
     map: '10x10',
     direction: 'down',
     point: 1280,
     bound1: 578,
-    bound2: 770,
-    spawn: {x: -1, y: 64}
+    bound2: 740,
+    spawn: {x: -1, y: 16}
+},
+{
+    map: '10x8',
+    direction: 'up',
+    point: -64,
+    bound1: 578,
+    bound2: 740,
+    spawn: {x: 1036, y: 700}
 }],10,9);
+
+addMap('10x8', '10x8', [
+{
+    map: '10x9',
+    direction: 'down',
+    point: 710,
+    bound1: 960,
+    bound2: 1122,
+    spawn: {x: 650, y: 16}
+},
+{
+    map: '9x8',
+    direction: 'left',
+    point: 0,
+    bound1: 330,
+    bound2: 516,
+    spawn: {x: 2020, y: -1}
+}
+],10,8);
+
+addMap('9x8', '9x8', [
+{
+    map: '10x8',
+    direction: 'right',
+    point: 2080,
+    bound1: 330,
+    bound2: 516,
+    spawn: {x: 32, y: -1}
+}
+],9,8);
+
 
 // start new phaser game
 var game = new Phaser.Game(1280, 720, Phaser.AUTO, '', preload);

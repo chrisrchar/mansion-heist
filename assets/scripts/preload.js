@@ -19,6 +19,9 @@ var preload = {
         game.load.tilemap('11x10', 'assets/tilemaps/11x10.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.tilemap('12x10', 'assets/tilemaps/12x10.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.tilemap('10x9', 'assets/tilemaps/10x9.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('10x8', 'assets/tilemaps/10x8.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('9x8', 'assets/tilemaps/9x8.json', null, Phaser.Tilemap.TILED_JSON);
+        
     },
 
     create: function ()
