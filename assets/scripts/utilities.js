@@ -1,8 +1,8 @@
 // GAME GLOBALS
 //====================================
 var maps = [];
-var mapVisited = [[],[],[],[],[],[],[],[],[],[]];
-var mapSize = 10;
+var mapVisited = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
+var mapSize = 20;
 
 for (var i = 0; i < mapSize; i++)
 {
@@ -23,10 +23,6 @@ var platforms, jumpthruPlatforms, coins, enemies, vases, spikes, vases;
 
 // DRAWN OBJECTS
 var healthHUD, moneyHUD, minimap;
-
-// GAME VARIABLES
-
-var money  = 0;
 
 //====================================
 
@@ -52,11 +48,7 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         var map = game.add.tilemap(tilemapName);
-        map.addTilesetImage('solids', 'tiles');
-        map.addTilesetImage('wall', 'wall');
-        map.addTilesetImage('window', 'window');
-        map.addTilesetImage('shelf', 'shelf');
-        map.addTilesetImage('pedestal', 'pedestal');
+        map.addTilesetImage('tileset', 'tiles');
 
         var background = map.createLayer('background');
         var background2 = map.createLayer('background2');
@@ -70,15 +62,16 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         lasers = game.add.group();
         lasers.enableBody = true;
 
-        map.createFromObjects('sprites', 3305, 'spikes', 0, true, false, spikes);
+        map.createFromObjects('sprites', 84, 'spikes', 0, true, false, spikes);
         spikes.setAll('body.immovable', true);
         
-        map.createFromObjects('sprites', 74, 'laser', 0, true, false, lasers);
+        map.createFromObjects('sprites', 86, 'laser', 0, true, false, lasers);
         lasers.setAll('body.immovable', true);
         
         lasers.forEach(function (laserBase)
         {
             laserBase.anchor.x = 0.5;
+            laserBase.x += 16;
             
             laserBase.ray = new Phaser.Line(laserBase.x, laserBase.y, laserBase.x, 2000);
             var intersection = getWallIntersection(laserBase.ray);
@@ -126,7 +119,7 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         vases.enableBody = true;
         vases.physicsBodyType = Phaser.Physics.ARCADE;
         
-        map.createFromObjects('vases', 66, 'vase', 0, true, false, vases);
+        map.createFromObjects('sprites', 45, 'vase', 0, true, false, vases);
         
         //===============
         
@@ -136,7 +129,7 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         enemies.enableBody = true;
         enemies.physicsBodyType = Phaser.Physics.ARCADE;
         
-        map.createFromObjects('enemies', 73, 'enemy', 0, true, false, enemies);
+        map.createFromObjects('sprites', 47, 'enemy', 0, true, false, enemies);
         
         enemies.setAll('body.gravity.y', gravity);
         enemies.setAll('body.drag.x', 500);
@@ -170,7 +163,7 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         map.setCollisionBetween(1, 1000, true, 'platforms');
         map.setCollisionBetween(1, 1000, true, 'jumpthru');
 
-        setTileCollision(jumpthruPlatforms, [67, 68, 69], {
+        setTileCollision(jumpthruPlatforms, [5, 6, 7], {
             top: true,
             bottom: false,
             left: false,
@@ -183,7 +176,15 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         
         powerup = game.add.group();
         powerup.enableBody = true;
-        map.createFromObjects('sprites', 68, 'powerup', 0, true, false, powerup);
+        
+        if (!playerGlobals.powerUps[0])
+        {
+            map.createFromObjects('sprites', 29, 'djPowerup', 0, true, false, powerup);
+        }
+        if (!playerGlobals.powerUps[1])
+        {
+            //map.createFromObjects('sprites', 29, 'invisPowerup', 0, true, false, powerup);
+        }
         
         // MINI MAP
 
@@ -207,6 +208,11 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         game.physics.arcade.collide(coins, jumpthruPlatforms);
         
         healthHUD.text = "HP: "+playerGlobals.hp;
+        
+        if (playerGlobals.hp < 1)
+        {
+            resetGame();
+        }
 
         exits.forEach(checkExits);
     }
@@ -396,7 +402,7 @@ function drawHUD()
     healthHUD = game.add.text(16, 16, 'HP: '+playerGlobals.hp, { fontSize: '32px', fill: '#fff', stroke: 'black', strokeThickness: 8 });
     healthHUD.fixedToCamera = true;
     
-    moneyHUD = game.add.text(16, 64, '$: '+money, { fontSize: '32px', fill: '#fff', stroke: 'black', strokeThickness: 8 });
+    moneyHUD = game.add.text(16, 64, '$: '+playerGlobals.money, { fontSize: '32px', fill: '#fff', stroke: 'black', strokeThickness: 8 });
     moneyHUD.fixedToCamera = true;
 }
 
@@ -423,8 +429,8 @@ function collectCoins (player, coin)
     // Removes the star from the screen
     coin.kill();
     
-    money += 10;
-    moneyHUD.text = '$: '+money;
+    playerGlobals.money += 10;
+    moneyHUD.text = '$: '+playerGlobals.money;
 
 }
 
@@ -435,8 +441,12 @@ function switchDir (ref)
 
 function powerUp (player, power)
 {
+    if (power.ability == 0)
+    {
+        playerGlobals.maxJumps += 1;
+    }
+    playerGlobals.powerUps[power.ability] = true;
     power.kill();
-    playerGlobals.maxJumps += 1;
 }
 
 // LASER COLLISION WITH WALL
@@ -482,4 +492,24 @@ function loadGame ()
 {
     console.log(localStorage.savegame);
     playerGlobals = JSON.parse(localStorage.savegame);
+}
+
+// RESET GAME
+function resetGame ()
+{
+    playerGlobals = {
+        lastX: 300,
+        lastY: 300,
+        xVel: 600,
+        yVel: -500,
+        hp: 4,
+        money: 0,
+        jumps: 0,
+        maxJumps: 1,
+        xDir: 0,
+        hurt: false,
+        powerUps: [false, false], // 0 - Double Jump 1 - Invisibility
+        lastSave: null
+    };
+    game.state.start('9x10');
 }

@@ -7,22 +7,26 @@ var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible, atta
 
 var jumpsfx;
 
+var playerHeight = 124;
+
 var playerGlobals = {
     lastX: 300,
     lastY: 300,
     xVel: 600,
     yVel: -500,
     hp: 4,
+    money: 0,
     jumps: 0,
     maxJumps: 1,
-    canDoubleJump: false,
     xDir: 0,
-    hurt: false
+    hurt: false,
+    powerUps: [false, false], // 0 - Double Jump 1 - Invisibility
+    lastSave: null
 };
 
 function createPlayer() {
     // create player object and enable physics
-    player = game.add.sprite(playerGlobals.lastX, playerGlobals.lastY, 'fox');
+    player = game.add.sprite(playerGlobals.lastX, playerGlobals.lastY - 8, 'fox');
     game.physics.enable(player, Phaser.Physics.ARCADE);
     
     // Add player animations based on sprite sheet
@@ -36,7 +40,7 @@ function createPlayer() {
     player.anchor.y = .5;
 
     // Adjust player hitbox
-    player.body.setSize(player.width/6, player.height, player.width/3+20, 0);
+    player.body.setSize(player.width/6, player.height-16, player.width/3+20, 16);
     
     // Set player physics variables
     player.body.gravity.y = gravity;
@@ -120,6 +124,7 @@ function createPlayer() {
             atkButton = pad1.getButton(Phaser.Gamepad.XBOX360_X);
             leftButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_LEFT);
             rightButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_RIGHT);
+            downButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_DOWN);
             
             jumpButton.onDown.add(jump);
             atkButton.onDown.add(attack);
@@ -290,14 +295,20 @@ function attack ()
 
 function abilityDown ()
 {
-    invisible = true;
-    player.alpha = 0.5;
+    if (playerGlobals.powerUps[1])
+    {
+        invisible = true;
+        player.alpha = 0.5;
+    }
 }
 
 function abilityUp ()
 {
-    invisible = false;
-    player.alpha = 1;
+    if (playerGlobals.powerUps[1])
+    {
+        invisible = false;
+        player.alpha = 1;
+    }
 }
 
 //===================
