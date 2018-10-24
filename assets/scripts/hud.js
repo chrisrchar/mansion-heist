@@ -47,8 +47,6 @@ function drawHUD()
     
     moneyHUD = game.add.text(16, 64, '$: '+playerGlobals.money, { fontSize: '32px', fill: '#fff', stroke: 'black', strokeThickness: 8 });
     hud.addChild(moneyHUD);
-    
-    console.log(hud);
 }
 
 function updateHPHUD ()
@@ -87,6 +85,9 @@ function drawMiniMap (gridX, gridY)
     var mmap_size = 180;
     var mmap_units = 5;
     var mmap_unit_size = mmap_size/mmap_units;
+    
+    var exitOffset = 6;
+    
     minimap = game.add.graphics(game.camera.width - mmap_size - 25, 25);
     minimap.fixedToCamera = true;
 
@@ -127,6 +128,39 @@ function drawMiniMap (gridX, gridY)
                     minimap.beginFill(0xffffff, .6);
                     minimap.drawRect(mmap_unit_size*(j+2),mmap_unit_size*(i+2),mmap_unit_size,mmap_unit_size);
                 }
+                
+                mapVisited[(gridY+i)][(gridX+j)].exits.forEach(function (exit) {
+                    minimap.lineStyle(2, 0x000000, .7);
+                    
+                    switch (exit) {
+                        case 'up':
+                            minimap.moveTo(mmap_unit_size*(j+2)+exitOffset,mmap_unit_size*(i+2));
+                            minimap.lineTo(mmap_unit_size*(j+3)-exitOffset,mmap_unit_size*(i+2));
+                            console.log('drawing up');
+                            break;
+                            
+                        case 'down':
+                            minimap.moveTo(mmap_unit_size*(j+2)+exitOffset,mmap_unit_size*(i+3));
+                            minimap.lineTo(mmap_unit_size*(j+3)-exitOffset,mmap_unit_size*(i+3));
+                            console.log('drawing down');
+                            break;
+                            
+                        case 'left':
+                            minimap.moveTo(mmap_unit_size*(j+2),mmap_unit_size*(i+2)+exitOffset);
+                            minimap.lineTo(mmap_unit_size*(j+2),mmap_unit_size*(i+3)-exitOffset);
+                            console.log('drawing left');
+                            break;
+                            
+                        case 'right':
+                            minimap.moveTo(mmap_unit_size*(j+3),mmap_unit_size*(i+2)+exitOffset);
+                            minimap.lineTo(mmap_unit_size*(j+3),mmap_unit_size*(i+3)-exitOffset);
+                            console.log('drawing right');
+                            break;
+                    }
+                    
+                });
+                
+                minimap.lineStyle(0, 0xffffff, 0);
             }
         }
     }

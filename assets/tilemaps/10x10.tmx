@@ -128,18 +128,18 @@
     <property name="toMap" value="9x10"/>
    </properties>
   </object>
-  <object id="25" gid="89" x="24" y="440" width="32" height="32">
+  <object id="25" gid="89" x="24" y="424" width="32" height="32">
    <properties>
     <property name="fromMap" value="9x10"/>
    </properties>
   </object>
-  <object id="26" gid="87" x="552" y="8" width="32" height="32">
+  <object id="26" gid="87" x="552" y="-16" width="32" height="32">
    <properties>
     <property name="side" value="up"/>
     <property name="toMap" value="10x9"/>
    </properties>
   </object>
-  <object id="27" gid="88" x="728" y="8" width="32" height="32">
+  <object id="27" gid="88" x="728" y="-16" width="32" height="32">
    <properties>
     <property name="toMap" value="10x9"/>
    </properties>
@@ -160,7 +160,7 @@
     <property name="toMap" value="11x10"/>
    </properties>
   </object>
-  <object id="31" gid="89" x="1216" y="440" width="32" height="32">
+  <object id="31" gid="89" x="1216" y="432" width="32" height="32">
    <properties>
     <property name="fromMap" value="11x10"/>
    </properties>

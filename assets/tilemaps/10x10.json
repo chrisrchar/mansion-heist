@@ -142,7 +142,7 @@
         }, 
         {
          "draworder":"topdown",
-         "height":22,
+         "height":0,
          "name":"transitions",
          "objects":[
                 {
@@ -205,7 +205,7 @@
                  "visible":true,
                  "width":32,
                  "x":24,
-                 "y":440
+                 "y":424
                 }, 
                 {
                  "gid":87,
@@ -227,7 +227,7 @@
                  "visible":true,
                  "width":32,
                  "x":552,
-                 "y":8
+                 "y":-16
                 }, 
                 {
                  "gid":88,
@@ -247,7 +247,7 @@
                  "visible":true,
                  "width":32,
                  "x":728,
-                 "y":8
+                 "y":-16
                 }, 
                 {
                  "gid":89,
@@ -329,12 +329,12 @@
                  "visible":true,
                  "width":32,
                  "x":1216,
-                 "y":440
+                 "y":432
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":40,
+         "width":0,
          "x":0,
          "y":0
         }],

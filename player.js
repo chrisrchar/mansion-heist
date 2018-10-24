@@ -70,6 +70,9 @@ function createPlayer(spawn) {
     {
         playerGlobals.hurt = false;
     }
+
+    attacking = false;
+    
     //================
     // PLAYER CONTROLS
     
@@ -438,7 +441,7 @@ function attackHit (atkHitbox, other)
         spoils.body.velocity.x = 150 * Math.sign(other.body.x - player.body.x);
         brokeVase.x = other.body.x;
         brokeVase.y = other.body.y;
-        brokeVase.start(true, 2000, null, 10);
+        brokeVase.start(true, 2000, null, 4);
         other.destroy();
     }
 }

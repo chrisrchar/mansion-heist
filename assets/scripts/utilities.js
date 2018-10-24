@@ -8,7 +8,7 @@ for (var i = 0; i < mapSize; i++)
 {
     for (var j = 0; j < mapSize; j++)
     {
-        mapVisited[i][j] = false;
+        mapVisited[i][j] = null;
     }
 }
 
@@ -35,11 +35,6 @@ function addMap (gridX, gridY)
     tempMap.exits = [];
     
     tempMap.create = function () {
-        if (!mapVisited[gridY][gridX])
-        {
-            console.log(gridY+" "+gridX);
-            mapVisited[gridY][gridX] = true;
-        }
         
         // Make sure the input doesn't reset when changing rooms
         game.input.resetLocked = true;
@@ -75,6 +70,20 @@ function addMap (gridX, gridY)
                 }
             );
         });
+        
+        if (!mapVisited[gridY][gridX])
+        {
+            console.log(gridY+" "+gridX);
+            mapVisited[gridY][gridX] = {
+                exits: []
+            };
+            
+            tempMap.exits.forEach(function (exit) {
+                mapVisited[gridY][gridX].exits.push(exit.side);
+            });
+            
+            console.log(mapVisited[gridY][gridX].exits);
+        }
         
         var roomSpawn;
         
@@ -213,14 +222,15 @@ function addMap (gridX, gridY)
         game.camera.follow(player);
         game.camera.lerp.x = .1;
         
-        brokeVase = game.add.emitter(0, 0, 16);
-        brokeVase.makeParticles('vase-shard', 0, 4, true);
+        brokeVase = game.add.emitter(0, 0, 100);
+        brokeVase.makeParticles('vase-shard', 0, 16, true);
         brokeVase.gravity = 600;
     }
     
     tempMap.update = function () {
         
         game.world.bringToTop(minimap);
+        game.world.bringToTop(hud);
     
         game.physics.arcade.overlap(player, coins, collectCoins, null, this);
         game.physics.arcade.overlap(player, powerup, powerUp, null, this);
