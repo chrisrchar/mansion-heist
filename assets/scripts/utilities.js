@@ -13,16 +13,13 @@ for (var i = 0; i < mapSize; i++)
 }
 
 // PHYSICS VARIABLES
-var speed = 300;
+var speed = 350;
 var gravity = 1000;
 var jumpHeight = -650;
 var player;
 
 // GAME OBJECTS
-var platforms, jumpthruPlatforms, coins, enemies, vases, spikes, vases;
-
-// DRAWN OBJECTS
-var healthHUD, moneyHUD, minimap;
+var platforms, jumpthruPlatforms, coins, enemies, vases, spikes, saves;
 
 //====================================
 
@@ -50,7 +47,7 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         var map = game.add.tilemap(tilemapName);
         map.addTilesetImage('tileset', 'tiles');
 
-        var background = map.createLayer('background');
+        //var background = map.createLayer('background');
         var background2 = map.createLayer('background2');
         platforms = map.createLayer('platforms');
         jumpthruPlatforms = map.createLayer('jumpthru');
@@ -58,69 +55,17 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         // HAZARDS
         spikes = game.add.group();
         spikes.enableBody = true;
-        
-        lasers = game.add.group();
-        lasers.enableBody = true;
 
         map.createFromObjects('sprites', 84, 'spikes', 0, true, false, spikes);
         spikes.setAll('body.immovable', true);
         
+        lasers = game.add.group();
+        lasers.enableBody = true;
+
         map.createFromObjects('sprites', 86, 'laser', 0, true, false, lasers);
         lasers.setAll('body.immovable', true);
-        
-        lasers.forEach(function (laserBase)
-        {
-            laserBase.anchor.x = 0.5;
-            laserBase.x += 16;
-            
-            laserBase.ray = new Phaser.Line(laserBase.x, laserBase.y, laserBase.x, 2000);
-            var intersection = getWallIntersection(laserBase.ray);
-            var endSet = false;
-            
-            laserBase.update = function ()
-            {
-                if (intersection && !endSet)
-                {
-                    console.log(intersection.x)
-                    endSet = true;
-                    laserBase.ray = laserBase.ray.setTo(laserBase.ray.start.x, laserBase.ray.start.y, laserBase.ray.end.x, intersection.y);
-                    
-                    var laserWidth = 8;
-                    
-                    laserBase.laserRect = game.add.graphics(laserBase.x, laserBase.y);
-                    laserBase.laserRect.beginFill(0xff0000, .6);
-                    laserBase.laserRect.drawRect(0 - laserWidth/2, 10, laserWidth, laserBase.ray.height - 10);
-                    laserBase.laserRect.endFill();
-                    
-                    game.physics.enable(laserBase, Phaser.Physics.ARCADE);
-                    laserBase.body.setSize(laserWidth, laserBase.ray.height, -1*laserWidth/2 + 16, 0);
-                    if (laserBase.timer)
-                    {
-                        if (laserBase.delay)
-                        {
-                            var delayTimer = game.time.create(true);
-                            delayTimer.add(laserBase.delay, function () {
-                                var laserTimer = game.time.create(false);
-                                laserTimer.loop(laserBase.timer, function () {
-                                    laserBase.body.enable = !laserBase.body.enable;
-                                    laserBase.laserRect.visible = !laserBase.laserRect.visible;
-                                }, this);
-                                laserTimer.start();
-                            }, this);
-                            delayTimer.start();
-                        }
-                        else {
-                            var laserTimer = game.time.create(false);
-                            laserTimer.loop(laserBase.timer, function () {
-                                laserBase.body.enable = !laserBase.body.enable;
-                                laserBase.laserRect.visible = !laserBase.laserRect.visible;
-                            }, this);
-                            laserTimer.start();
-                        }
-                    }
-                }
-            }
-        });
+
+        createLasers(lasers);
         
         // COIN GROUP
         
@@ -135,6 +80,18 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         vases.physicsBodyType = Phaser.Physics.ARCADE;
         
         map.createFromObjects('sprites', 45, 'vase', 0, true, false, vases);
+        
+        saves = game.add.group();
+        saves.enableBody = true;
+        
+        map.createFromObjects('sprites', 10, 'toilet', 0, true, false, saves);
+        
+        saves.forEachAlive(function (toilet)
+        {
+            toilet.x -= 68;
+            toilet.body.setSize(128,64,0,64);
+            toilet.body.immovable = true;
+        });
         
         //===============
         
@@ -209,10 +166,14 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         
         drawHUD();
 
+        game.camera.focusOn(player);
         game.camera.follow(player);
+        game.camera.lerp.x = .1;
     }
     
     tempMap.update = function () {
+        
+        game.world.bringToTop(minimap);
     
         game.physics.arcade.overlap(player, coins, collectCoins, null, this);
         game.physics.arcade.overlap(player, powerup, powerUp, null, this);
@@ -222,12 +183,10 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         game.physics.arcade.collide(enemies, jumpthruPlatforms);
         game.physics.arcade.collide(coins, jumpthruPlatforms);
         
-        healthHUD.text = "HP: "+playerGlobals.hp;
-        
-        if (playerGlobals.hp < 1)
+        /*if (playerGlobals.hp < 1)
         {
             resetGame();
-        }
+        }*/
 
         exits.forEach(checkExits);
     }
@@ -357,69 +316,7 @@ function setTileCollision(mapLayer, idxOrArray, dirs) {
  
 }
 
-// MINI MAP
-function drawMiniMap (gridX, gridY)
-{
-    var mmap_size = 180;
-    var mmap_units = 5;
-    var mmap_unit_size = mmap_size/mmap_units;
-    var minimap = game.add.graphics(game.camera.width - mmap_size - 25, 25);
-    minimap.fixedToCamera = true;
 
-    minimap.beginFill(0x000000, 1);
-    minimap.drawRect(0, 0, mmap_size, mmap_size);
-    minimap.endFill();
-
-    minimap.lineStyle(2, 0xffffff, 1);
-
-    for (var i = 0; i < mmap_units+1; i++)
-    {
-        minimap.moveTo(i*mmap_unit_size,0);
-        minimap.lineTo(i*mmap_unit_size, mmap_size);
-    }
-    
-    for (var i = 0; i < mmap_units+1; i++)
-    {
-        minimap.moveTo(0, i*mmap_unit_size);
-        minimap.lineTo(mmap_size, i*mmap_unit_size);
-    }
-    
-    minimap.lineStyle(0, 0xffffff, 0);
-    minimap.beginFill(0xffffff, .6);
-    
-    for (var i = -1*Math.floor(mmap_units/2); i < Math.ceil(mmap_units/2); i++)
-    {
-        for (var j = -1*Math.floor(mmap_units/2); j < Math.ceil(mmap_units/2); j++)
-        {
-            if (mapVisited[(gridY+i)][(gridX+j)])
-            {
-                if (i == 0 && j == 0)
-                {
-                    minimap.beginFill(0xffffff, 1);
-                    minimap.drawRect(mmap_unit_size*(j+2),mmap_unit_size*(i+2),mmap_unit_size,mmap_unit_size);
-                }
-                else
-                {
-                    minimap.beginFill(0xffffff, .6);
-                    minimap.drawRect(mmap_unit_size*(j+2),mmap_unit_size*(i+2),mmap_unit_size,mmap_unit_size);
-                }
-            }
-        }
-    }
-    
-    minimap.endFill();
-    
-    minimap.alpha = 0.8;
-}
-
-function drawHUD()
-{
-    healthHUD = game.add.text(16, 16, 'HP: '+playerGlobals.hp, { fontSize: '32px', fill: '#fff', stroke: 'black', strokeThickness: 8 });
-    healthHUD.fixedToCamera = true;
-    
-    moneyHUD = game.add.text(16, 64, '$: '+playerGlobals.money, { fontSize: '32px', fill: '#fff', stroke: 'black', strokeThickness: 8 });
-    moneyHUD.fixedToCamera = true;
-}
 
 function hurt (painReceiver) 
 {
@@ -464,39 +361,6 @@ function powerUp (player, power)
     console.log(playerGlobals.powerUps[1]);
     power.kill();
 }
-
-// LASER COLLISION WITH WALL
-function getWallIntersection (ray) {
-    var distanceToWall = Number.POSITIVE_INFINITY;
-    var closestIntersection = null;
-
-    // For each of the walls...
-    var tiles = platforms.getTiles(ray.x, ray.y, 32, ray.height);
-    console.log(tiles);
-    
-    tiles.forEach(function(tile) {
-        if (tile.index != -1)
-        {
-        // Create an array of lines that represent the four edges of each wall
-        var tileTop = new Phaser.Line(tile.x*32, tile.y*32, tile.x*32+32, tile.y*32);
-
-        // Test each of the edges in this wall against the ray.
-        // If the ray intersects any of the edges then the wall must be in the way.
-        var intersect = ray.intersects(tileTop);
-        //console.log(tileTop.y);
-        if (intersect) {
-            // Find the closest intersection
-            distance = this.game.math.distance(ray.start.x, ray.start.y, intersect.x, intersect.y);
-            if (distance < distanceToWall) {
-                distanceToWall = distance;
-                closestIntersection = intersect;
-            }
-        }
-        }
-    }, this);
-
-    return closestIntersection;
-};
 
 //SAVE AND LOAD
 function saveGame ()

@@ -79,6 +79,14 @@ addMap('10x9', '10x9', [{
     bound1: 578,
     bound2: 740,
     spawn: {x: 1036, y: 700}
+},
+{
+    map: '11x9',
+    direction: 'right',
+    point: 1280,
+    bound1: 522,
+    bound2: 676,
+    spawn: {x: 32, y: 420}
 }],10,9);
 
 addMap('10x8', '10x8', [
@@ -110,6 +118,17 @@ addMap('9x8', '9x8', [
     spawn: {x: 32, y: -1}
 }
 ],9,8);
+
+addMap('11x9', '11x9', [
+{
+    map: '10x9',
+    direction: 'left',
+    point: 0,
+    bound1: 328,
+    bound2: 516,
+    spawn: {x: 1250, y: 608}
+}
+],11,9);
 
 
 // start new phaser game

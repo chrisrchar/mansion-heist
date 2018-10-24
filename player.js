@@ -3,7 +3,7 @@
 */
 var pad1, jumpButton, leftButton, rightButton, atkButton, ablButton;
 
-var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible, attacking, jumpDown;
+var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible, attacking, jumpDown, resting;
 
 var jumpsfx;
 
@@ -14,7 +14,8 @@ var playerGlobals = {
     lastY: 300,
     xVel: 600,
     yVel: -500,
-    hp: 4,
+    hp: 100,
+    maxhp: 100,
     money: 0,
     jumps: 0,
     maxJumps: 1,
@@ -85,6 +86,7 @@ function createPlayer() {
     atkButton.onDown.add(attack);
     ablButton.onDown.add(abilityDown);
     ablButton.onUp.add(abilityUp);
+    downButton.onDown.add(downBtnPress);
     saveTestBtn.onDown.add(saveGame);
     loadTestBtn.onDown.add(loadGame);
     
@@ -131,18 +133,21 @@ function createPlayer() {
             atkButton.onDown.add(attack);
             ablButton.onDown.add(abilityDown);
             ablButton.onUp.add(abilityUp);
+            downButton.onDown.add(downBtnPress);
             saveTestBtn.onDown.add(saveGame);
         }
         
         game.physics.arcade.collide(player, platforms);
+        resting = game.physics.arcade.collide(player, saves) && player.body.touching.down;
+        
         if (!jumpDown)
         {
             game.physics.arcade.collide(player, jumpthruPlatforms);
         }
         
-        
         game.physics.arcade.collide(player, spikes);
         game.physics.arcade.collide(player, enemies);
+        
         if (!invisible)
         {
             game.physics.arcade.collide(player, lasers);
@@ -158,7 +163,7 @@ function createPlayer() {
         
         //var clipping = game.physics.arcade.overlap(player, platforms);
         
-        grounded = player.body.blocked.down;
+        grounded = player.body.blocked.down || player.body.touching.down;
         
         // Left Right Movement
         if (firstCheck)
@@ -201,7 +206,7 @@ function createPlayer() {
         }
 
         // Check to see if the player is falling up or down
-        if (!grounded && player.body.velocity.y > -100) 
+        if (player.body.velocity.y > -100) 
         {
             // If the player is falling but hasn't jumped, make it so they can't jump
             if (playerGlobals.jumps < 1)
@@ -210,10 +215,6 @@ function createPlayer() {
             }
             
             // Show jumping animation if player isn't attacking
-            if (!attacking)
-            {
-                player.frame = 9;
-            }
             player.body.gravity.y = 1.8*gravity;
         }
         else 
@@ -221,10 +222,16 @@ function createPlayer() {
             player.body.gravity.y = gravity;
         }
         
+        if (!grounded && !attacking)
+        {
+            player.frame = 9;
+        }
+            
         // Reset playerGlobals.jumps
         if (grounded)
         {
             playerGlobals.jumps = 0;
+            
             if (player.body.velocity.x == 0)
             {
                 player.state = playerStates.IDLE;
@@ -252,23 +259,30 @@ function checkButtons (pad)
 function jump ()
 {
     //Variable Jumping
-    if (downButton.isDown && grounded)
+    if (playerGlobals.jumps < playerGlobals.maxJumps)
+    {
+        jumpsfx.play();
+        player.animations.play('jump');
+        player.body.velocity.y = jumpHeight;
+        playerGlobals.jumps++;
+        player.state = playerStates.JUMPING;
+    }
+}
+
+function downBtnPress ()
+{
+    console.log(resting);
+    if (resting)
+    {
+        saveGame();
+    }
+    
+    else if (grounded)
     {
         jumpDown = true
         var groundTimer = game.time.create(true);
         groundTimer.add(200, function () {jumpDown = false;} , this);
         groundTimer.start();
-    }
-    else
-    {
-        if (playerGlobals.jumps < playerGlobals.maxJumps)
-        {
-            jumpsfx.play();
-            player.animations.play('jump');
-            player.body.velocity.y = jumpHeight;
-            playerGlobals.jumps++;
-            player.state = playerStates.JUMPING;
-        }
     }
 }
 
@@ -324,7 +338,7 @@ function collide (collider, other)
             if (playerGlobals.hurt != true)
             {
                 game.camera.shake(0.005, 100);
-                playerGlobals.hp -= 1;
+                playerGlobals.hp -= playerGlobals.maxhp * .2;
                 player.tint = 0xff0000;
                 player.body.velocity.x = Math.sign(player.body.velocity.x) * -1 * 50;
                 player.body.velocity.y = jumpHeight*.75;
@@ -360,6 +374,7 @@ function collide (collider, other)
             }
             break;
     }
+    updateHPHUD();
 }
 
 function attackHit (atkHitbox, other)
@@ -379,8 +394,8 @@ function attackHit (atkHitbox, other)
         }
         other.hurt = true;
         other.tint = 0xff0000;
-        other.body.velocity.x = 300 * Math.sign(other.body.x - player.body.x);
-        other.body.velocity.y = jumpHeight*.5;
+        other.body.velocity.x = 200 * Math.sign(other.body.x - player.body.x);
+        other.body.velocity.y = jumpHeight*.2;
         hurt(other);
     }
     if (other.key == 'vase')

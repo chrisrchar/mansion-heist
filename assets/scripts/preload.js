@@ -13,6 +13,7 @@ var preload = {
         game.load.image('vase', 'assets/tilemaps/tiles/vase.png');
         game.load.image('laser', 'assets/tilemaps/tiles/laserTop.png');
         game.load.image('spikes', 'assets/sprites/spikes.png');
+        game.load.image('toilet', 'assets/sprites/toilet.png');
         
         game.load.tilemap('9x10', 'assets/tilemaps/9x10.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.tilemap('10x10', 'assets/tilemaps/10x10.json', null, Phaser.Tilemap.TILED_JSON);
@@ -21,11 +22,12 @@ var preload = {
         game.load.tilemap('10x9', 'assets/tilemaps/10x9.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.tilemap('10x8', 'assets/tilemaps/10x8.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.tilemap('9x8', 'assets/tilemaps/9x8.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('11x9', 'assets/tilemaps/11x9.json', null, Phaser.Tilemap.TILED_JSON);
         
     },
 
     create: function ()
     {
-        game.state.start('9x10');
+        game.state.start('11x9');
     }
 };
