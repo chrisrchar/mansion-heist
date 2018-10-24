@@ -331,8 +331,82 @@
          "width":0,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":22,
+         "name":"transitions",
+         "objects":[
+                {
+                 "gid":87,
+                 "height":32,
+                 "id":38,
+                 "name":"",
+                 "properties":
+                    {
+                     "side":"right",
+                     "toMap":"10x8"
+                    },
+                 "propertytypes":
+                    {
+                     "side":"string",
+                     "toMap":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":2072,
+                 "y":328
+                }, 
+                {
+                 "gid":88,
+                 "height":32,
+                 "id":39,
+                 "name":"",
+                 "properties":
+                    {
+                     "toMap":"10x8"
+                    },
+                 "propertytypes":
+                    {
+                     "toMap":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":2072,
+                 "y":536
+                }, 
+                {
+                 "gid":89,
+                 "height":32,
+                 "id":40,
+                 "name":"",
+                 "properties":
+                    {
+                     "fromMap":"10x8"
+                    },
+                 "propertytypes":
+                    {
+                     "fromMap":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":2008,
+                 "y":424
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":65,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":38,
+ "nextobjectid":41,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

@@ -1,3 +1,4 @@
+var loadedMaps = [];
 var preload = {
 
     preload: function ()
@@ -15,14 +16,21 @@ var preload = {
         game.load.image('spikes', 'assets/sprites/spikes.png');
         game.load.image('toilet', 'assets/sprites/toilet.png');
         
-        game.load.tilemap('9x10', 'assets/tilemaps/9x10.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('10x10', 'assets/tilemaps/10x10.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('11x10', 'assets/tilemaps/11x10.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('12x10', 'assets/tilemaps/12x10.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('10x9', 'assets/tilemaps/10x9.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('10x8', 'assets/tilemaps/10x8.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('9x8', 'assets/tilemaps/9x8.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('11x9', 'assets/tilemaps/11x9.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('vase-shard', 'assets/sprites/vaseshard.png');
+        
+        for (var i = 5; i <= 15; i++)
+        {
+            for (var j = 5; j <= 15; j++)
+            {
+                try {
+                    game.load.tilemap(i+'x'+j, 'assets/tilemaps/'+i+'x'+j+'.json', null, Phaser.Tilemap.TILED_JSON);
+                    loadedMaps.push(i+'x'+j);
+                }
+                catch (err) {
+                    console.log('No map for '+i+'x'+j);
+                }
+            }
+        }
         
     },
 

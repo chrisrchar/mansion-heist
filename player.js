@@ -24,14 +24,15 @@ var playerGlobals = {
     xDir: 0,
     hurt: false,
     powerUps: [false, false], // 0 - Double Jump 1 - Invisibility
+    lastMap: null,
     lastSave: null
 };
 
 var abiTimer, refreshTimer;
 
-function createPlayer() {
+function createPlayer(spawn) {
     // create player object and enable physics
-    player = game.add.sprite(playerGlobals.lastX, playerGlobals.lastY - 8, 'fox');
+    player = game.add.sprite(spawn.x, spawn.y + playerHeight/2 - 8, 'fox');
     game.physics.enable(player, Phaser.Physics.ARCADE);
     
     // Add player animations based on sprite sheet
@@ -131,14 +132,12 @@ function createPlayer() {
         {
             playerGlobals.stamina = playerGlobals.stamina.clamp(playerGlobals.stamina + 2, playerGlobals.maxSta);
             updateStaHUD();
-            console.log(playerGlobals.stamina);
         }
     }, this);
     
     abiTimer.start();
     abiTimer.pause();
     refreshTimer.start();
-    refreshTimer.pause();
         
     // PLAYER UPDATE
     player.update = function () {
@@ -304,7 +303,6 @@ function jump ()
 
 function downBtnPress ()
 {
-    console.log(resting);
     if (resting)
     {
         saveGame();
@@ -379,7 +377,6 @@ function collide (collider, other)
                 player.tint = 0xff0000;
                 player.body.velocity.x = Math.sign(player.body.velocity.x) * -1 * 50;
                 player.body.velocity.y = jumpHeight*.75;
-                console.log(player.body.velocity.y);
                 playerGlobals.hurt = true;
                 hurt(collider);   
             }
@@ -393,7 +390,6 @@ function collide (collider, other)
                 playerGlobals.hurt = true;
                 player.body.velocity.x = 200 * Math.sign(player.body.x - other.body.x);
                 player.body.velocity.y = jumpHeight*.75;
-                console.log(player.body.velocity.y);
                 hurt(collider);   
             }
             break;
@@ -406,7 +402,6 @@ function collide (collider, other)
                 playerGlobals.hurt = true;
                 player.body.velocity.x = 200 * Math.sign(player.body.x - other.body.x);
                 player.body.velocity.y = jumpHeight*.75;
-                console.log(player.body.velocity.y);
                 hurt(collider);   
             }
             break;
@@ -441,6 +436,9 @@ function attackHit (atkHitbox, other)
         spoils.body.gravity.y = gravity;
         spoils.body.drag.x = 500;
         spoils.body.velocity.x = 150 * Math.sign(other.body.x - player.body.x);
+        brokeVase.x = other.body.x;
+        brokeVase.y = other.body.y;
+        brokeVase.start(true, 2000, null, 10);
         other.destroy();
     }
 }

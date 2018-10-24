@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="65" height="22" tilewidth="32" tileheight="32" nextobjectid="38">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="65" height="22" tilewidth="32" tileheight="32" nextobjectid="41">
  <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" tilecount="400" columns="20">
   <image source="tileset_library.png" width="640" height="640"/>
  </tileset>
@@ -174,6 +174,24 @@
   <object id="37" gid="9" x="400" y="448" width="32" height="32">
    <properties>
     <property name="ability" type="int" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="transitions">
+  <object id="38" gid="87" x="2072" y="328" width="32" height="32">
+   <properties>
+    <property name="side" value="right"/>
+    <property name="toMap" value="10x8"/>
+   </properties>
+  </object>
+  <object id="39" gid="88" x="2072" y="536" width="32" height="32">
+   <properties>
+    <property name="toMap" value="10x8"/>
+   </properties>
+  </object>
+  <object id="40" gid="89" x="2008" y="424" width="32" height="32">
+   <properties>
+    <property name="fromMap" value="10x8"/>
    </properties>
   </object>
  </objectgroup>

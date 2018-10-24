@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" nextobjectid="28">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" nextobjectid="37">
  <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" tilecount="400" columns="20">
   <image source="tileset_library.png" width="640" height="640"/>
  </tileset>
@@ -185,5 +185,58 @@
   <object id="23" gid="45" x="1000" y="262" width="32" height="32"/>
   <object id="24" gid="45" x="232" y="262" width="32" height="32"/>
   <object id="26" gid="47" x="552" y="480" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup name="transitions">
+  <object id="28" gid="87" x="552" y="8" width="32" height="32">
+   <properties>
+    <property name="side" value="up"/>
+    <property name="toMap" value="10x8"/>
+   </properties>
+  </object>
+  <object id="29" gid="88" x="728" y="8" width="32" height="32">
+   <properties>
+    <property name="side" value="up"/>
+    <property name="toMap" value="10x8"/>
+   </properties>
+  </object>
+  <object id="30" gid="87" x="1272" y="488" width="32" height="32">
+   <properties>
+    <property name="side" value="right"/>
+    <property name="toMap" value="11x9"/>
+   </properties>
+  </object>
+  <object id="31" gid="88" x="1272" y="696" width="32" height="32">
+   <properties>
+    <property name="side" value="right"/>
+    <property name="toMap" value="11x9"/>
+   </properties>
+  </object>
+  <object id="32" gid="89" x="640" y="32" width="32" height="32">
+   <properties>
+    <property name="fromMap" value="10x8"/>
+   </properties>
+  </object>
+  <object id="33" gid="89" x="1248" y="584" width="32" height="32">
+   <properties>
+    <property name="fromMap" value="11x9"/>
+   </properties>
+  </object>
+  <object id="34" gid="87" x="552" y="1304" width="32" height="32">
+   <properties>
+    <property name="side" value="down"/>
+    <property name="toMap" value="10x10"/>
+   </properties>
+  </object>
+  <object id="35" gid="88" x="728" y="1304" width="32" height="32">
+   <properties>
+    <property name="side" value="down"/>
+    <property name="toMap" value="10x10"/>
+   </properties>
+  </object>
+  <object id="36" gid="89" x="640" y="1272" width="32" height="32">
+   <properties>
+    <property name="fromMap" value="10x10"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

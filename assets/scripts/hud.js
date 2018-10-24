@@ -1,5 +1,6 @@
 // DRAWN OBJECTS
 var moneyHUD, minimap, hud;
+var hpTween, staTween;
 
 function drawHUD()
 {
@@ -19,8 +20,10 @@ function drawHUD()
     healthBarOuter.endFill();
     
     healthBarInner.beginFill(0xff0000, 1);
-    healthBarInner.drawRoundedRect(0,0,playerGlobals.hp/playerGlobals.maxhp * playerGlobals.maxhp * 3, 32, 8);
+    healthBarInner.drawRoundedRect(0,0,playerGlobals.maxhp * 3, 32, 8);
     healthBarInner.endFill();
+    
+    healthBarInner.scale = {x: playerGlobals.hp/playerGlobals.maxhp, y: 1};
     
     var healthText = game.add.text(playerGlobals.maxhp * 3 + 16, 0, playerGlobals.hp, { fontSize: '24px', fill: '#fff', stroke: 'black', strokeThickness: 4 });
     hud.addChild(healthText);
@@ -37,11 +40,13 @@ function drawHUD()
     staBarOuter.endFill();
     
     staBarInner.beginFill(0x4ecbff, 1);
-    staBarInner.drawRoundedRect(0,0,playerGlobals.stamina/playerGlobals.maxSta * playerGlobals.maxSta * 5, 16, 4);
+    staBarInner.drawRoundedRect(0,0,playerGlobals.maxSta * 5, 16, 4);
     staBarInner.endFill();
     
+    staBarInner.scale = {x: playerGlobals.stamina/playerGlobals.maxSta, y: 1};
+    
     moneyHUD = game.add.text(16, 64, '$: '+playerGlobals.money, { fontSize: '32px', fill: '#fff', stroke: 'black', strokeThickness: 8 });
-    moneyHUD.fixedToCamera = true;
+    hud.addChild(moneyHUD);
     
     console.log(hud);
 }
@@ -50,13 +55,11 @@ function updateHPHUD ()
 {
     var barMaxLen = playerGlobals.maxhp * 3;
     
-    var hpBar = hud.children[1];
+    var bar = hud.children[1];
     var hpText = hud.children[2];
     
-    hpBar.clear();
-    hpBar.beginFill(0xff0000, 1);
-    hpBar.drawRoundedRect(0,0,(playerGlobals.hp/playerGlobals.maxhp * barMaxLen).clamp(0, barMaxLen), 32, 8);
-    hpBar.endFill();
+    game.add.tween(bar.scale).to({x: playerGlobals.hp/playerGlobals.maxhp, y: 1.0}, 200, Phaser.Easing.Linear.None, true);
+    
     hpText.text = playerGlobals.hp.clamp(0, playerGlobals.maxhp);
 }
 
@@ -72,15 +75,10 @@ function updateMaxHPHUD ()
 }
 
 function updateStaHUD ()
-{
-    var barMaxLen = playerGlobals.maxSta * 5;
-    
+{   
     var bar = hud.children[4];
     
-    bar.clear();
-    bar.beginFill(0x4ecbff, 1);
-    bar.drawRoundedRect(0,0,playerGlobals.stamina/playerGlobals.maxSta * playerGlobals.maxSta * 5, 16, 4);
-    bar.endFill();
+    game.add.tween(bar.scale).to({x: playerGlobals.stamina/playerGlobals.maxSta, y: 1.0}, 200, Phaser.Easing.Linear.None, true);
 }
 
 // MINI MAP

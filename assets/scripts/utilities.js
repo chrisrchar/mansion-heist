@@ -21,15 +21,18 @@ var player;
 // GAME OBJECTS
 var platforms, jumpthruPlatforms, coins, enemies, vases, spikes, saves;
 
+var brokeVase;
+
 //====================================
 
 // Map creation
-function addMap (mapName, tilemapName, exits, gridX, gridY)
+function addMap (gridX, gridY)
 {
     // Create empty state object to add to
     var tempMap = {}
     
-    tempMap.mapName = mapName;
+    tempMap.mapName = gridX+'x'+gridY;
+    tempMap.exits = [];
     
     tempMap.create = function () {
         if (!mapVisited[gridY][gridX])
@@ -46,8 +49,46 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         
         game.stage.backgroundColor = 0x3c4f6d;
 
-        var map = game.add.tilemap(tilemapName);
+        var map = game.add.tilemap(gridX+'x'+gridY);
         map.addTilesetImage('tileset', 'tiles');
+        
+        var exits1 = game.add.group();
+        var exits2 = game.add.group();
+        var entrances = game.add.group();
+        
+        map.createFromObjects('transitions', 87, null, 0, false, false, exits1);
+        map.createFromObjects('transitions', 88, null, 0, false, false, exits2);
+        map.createFromObjects('transitions', 89, null, 0, false, false, entrances);
+        
+        exits1.forEach(function (exit) {
+            var exit2 = exits2.children.find(function (element)
+            {
+                return element.toMap == exit.toMap;
+            });
+            
+            tempMap.exits.push(
+                {
+                    side: exit.side,
+                    bound1: {x: exit.x, y: exit.y},
+                    bound2: {x: exit2.x, y: exit2.y},
+                    toMap: exit.toMap
+                }
+            );
+        });
+        
+        var roomSpawn;
+        
+        entrances.forEach(function (entrance) {
+           if (entrance.fromMap == playerGlobals.lastMap)
+            {
+                roomSpawn = {x: entrance.x, y: entrance.y};
+            }
+        });
+        
+        if (!roomSpawn)
+        {
+            roomSpawn = {x: 300, y: 300};
+        }
 
         //var background = map.createLayer('background');
         var background2 = map.createLayer('background2');
@@ -146,7 +187,7 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
 
         platforms.resizeWorld();
 
-        createPlayer();
+        createPlayer(roomSpawn);
         
         powerup = game.add.group();
         powerup.enableBody = true;
@@ -171,6 +212,10 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         game.camera.focusOn(player);
         game.camera.follow(player);
         game.camera.lerp.x = .1;
+        
+        brokeVase = game.add.emitter(0, 0, 16);
+        brokeVase.makeParticles('vase-shard', 0, 4, true);
+        brokeVase.gravity = 600;
     }
     
     tempMap.update = function () {
@@ -182,6 +227,7 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         
         game.physics.arcade.collide(enemies, platforms);
         game.physics.arcade.collide(coins, platforms);
+        game.physics.arcade.collide(brokeVase, platforms);
         game.physics.arcade.collide(enemies, jumpthruPlatforms);
         game.physics.arcade.collide(coins, jumpthruPlatforms);
         
@@ -190,7 +236,7 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
             loadGame();
         }
 
-        exits.forEach(checkExits);
+        tempMap.exits.forEach(checkExits);
     }
     
     // Hitbox Debugging
@@ -222,40 +268,40 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
 // Checks all exits of a given map to see if the player is leaving one
 function checkExits (exit)
 {
-    switch(exit.direction) {
+    switch(exit.side) {
         case "right":
-            if (player.body.x > exit.point && player.body.y > exit.bound1 && player.body.y < exit.bound2)
+            if (player.body.x > exit.bound1.x && player.body.y > exit.bound1.y && player.body.y < exit.bound2.y)
             {
-                goToMap(exit.map, exit.spawn);
+                goToMap(exit.toMap);
             }
             break;
         case "left":
-            if (player.body.x < exit.point && player.body.y > exit.bound1 && player.body.y < exit.bound2)
+            if (player.body.x < exit.bound1.x && player.body.y > exit.bound1.y && player.body.y < exit.bound2.y)
             {
-                goToMap(exit.map, exit.spawn);
+                goToMap(exit.toMap);
             }
             break;
         case "up":
-            if (player.body.y < exit.point && player.body.x > exit.bound1 && player.body.x < exit.bound2)
+            if (player.body.y < exit.bound1.y && player.body.x > exit.bound1.x && player.body.x < exit.bound2.x)
             {
-                goToMap(exit.map, exit.spawn);
+                goToMap(exit.toMap);
             }
             break;
         case "down":
-            if (player.body.y > exit.point && player.body.x > exit.bound1 && player.body.x < exit.bound2)
+            if (player.body.y > exit.bound1.y && player.body.x > exit.bound1.x && player.body.x < exit.bound2.x)
             {
-                goToMap(exit.map, exit.spawn);
+                goToMap(exit.toMap);
             }
             break;
     }
 }
 
 // Transition to a given map with given parameters
-function goToMap (mapName, spawn)
+function goToMap (mapName)
 {
-    if (spawn.y > 0)
+    /*if (spawn.y > 0)
     {
-        playerGlobals.lastY = spawn.y;
+        playerGlobals.lastMap = spawn.y;
     }
     else {
         playerGlobals.lastY = player.body.y + player.height/2;
@@ -266,7 +312,8 @@ function goToMap (mapName, spawn)
     }
     else {
         playerGlobals.lastX = player.body.x;
-    }
+    }*/
+    playerGlobals.lastMap = game.state.current;
     playerGlobals.xVel = player.body.velocity.x;
     playerGlobals.yVel = player.body.velocity.y;
     playerGlobals.xDir = rightButton.isDown - leftButton.isDown;
@@ -360,7 +407,6 @@ function powerUp (player, power)
         playerGlobals.maxJumps += 1;
     }
     playerGlobals.powerUps[power.ability] = true;
-    console.log(playerGlobals.powerUps[1]);
     power.kill();
 }
 
@@ -379,7 +425,6 @@ function saveGame ()
 
 function loadGame ()
 {
-    console.log(localStorage.savegame);
     playerGlobals = JSON.parse(localStorage.savegame);
     mapVisited = playerGlobals.lastSave.mapdata;
     game.state.start(playerGlobals.lastSave.state);

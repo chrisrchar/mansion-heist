@@ -99,8 +99,82 @@
          "width":0,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":22,
+         "name":"transitions",
+         "objects":[
+                {
+                 "gid":87,
+                 "height":32,
+                 "id":25,
+                 "name":"",
+                 "properties":
+                    {
+                     "side":"left",
+                     "toMap":"11x10"
+                    },
+                 "propertytypes":
+                    {
+                     "side":"string",
+                     "toMap":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":-24,
+                 "y":328
+                }, 
+                {
+                 "gid":88,
+                 "height":32,
+                 "id":26,
+                 "name":"",
+                 "properties":
+                    {
+                     "toMap":"11x10"
+                    },
+                 "propertytypes":
+                    {
+                     "toMap":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":-24,
+                 "y":536
+                }, 
+                {
+                 "gid":89,
+                 "height":32,
+                 "id":27,
+                 "name":"",
+                 "properties":
+                    {
+                     "fromMap":"11x10"
+                    },
+                 "propertytypes":
+                    {
+                     "fromMap":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":40,
+                 "y":432
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":40,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":25,
+ "nextobjectid":28,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
