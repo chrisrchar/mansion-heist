@@ -25,6 +25,21 @@ function drawHUD()
     var healthText = game.add.text(playerGlobals.maxhp * 3 + 16, 0, playerGlobals.hp, { fontSize: '24px', fill: '#fff', stroke: 'black', strokeThickness: 4 });
     hud.addChild(healthText);
     
+    var staBarOuter = game.add.graphics(0, 38);
+    var staBarInner = game.add.graphics(0, 38);
+    
+    hud.addChild(staBarOuter);
+    hud.addChild(staBarInner);
+    
+    staBarOuter.lineStyle(6, 0x333333, 1);
+    staBarOuter.beginFill(0x000000, 1);
+    staBarOuter.drawRoundedRect(0,0,playerGlobals.maxSta * 5, 16, 4);
+    staBarOuter.endFill();
+    
+    staBarInner.beginFill(0x4ecbff, 1);
+    staBarInner.drawRoundedRect(0,0,playerGlobals.stamina/playerGlobals.maxSta * playerGlobals.maxSta * 5, 16, 4);
+    staBarInner.endFill();
+    
     moneyHUD = game.add.text(16, 64, '$: '+playerGlobals.money, { fontSize: '32px', fill: '#fff', stroke: 'black', strokeThickness: 8 });
     moneyHUD.fixedToCamera = true;
     
@@ -33,14 +48,18 @@ function drawHUD()
 
 function updateHPHUD ()
 {
+    var barMaxLen = playerGlobals.maxhp * 3;
+    
     var hpBar = hud.children[1];
     var hpText = hud.children[2];
+    
     hpBar.clear();
     hpBar.beginFill(0xff0000, 1);
-    hpBar.drawRoundedRect(0,0,playerGlobals.hp/playerGlobals.maxhp * playerGlobals.maxhp * 3, 32, 8);
+    hpBar.drawRoundedRect(0,0,(playerGlobals.hp/playerGlobals.maxhp * barMaxLen).clamp(0, barMaxLen), 32, 8);
     hpBar.endFill();
-    hpText.text = playerGlobals.hp;
+    hpText.text = playerGlobals.hp.clamp(0, playerGlobals.maxhp);
 }
+
 function updateMaxHPHUD ()
 {
     var hpBar = hud.children[0];
@@ -50,6 +69,18 @@ function updateMaxHPHUD ()
     hpBar.drawRoundedRect(0,0,playerGlobals.maxhp * 3, 32, 8);
     hpBar.endFill();
     hpText.text = playerGlobals.hp;
+}
+
+function updateStaHUD ()
+{
+    var barMaxLen = playerGlobals.maxSta * 5;
+    
+    var bar = hud.children[4];
+    
+    bar.clear();
+    bar.beginFill(0x4ecbff, 1);
+    bar.drawRoundedRect(0,0,playerGlobals.stamina/playerGlobals.maxSta * playerGlobals.maxSta * 5, 16, 4);
+    bar.endFill();
 }
 
 // MINI MAP

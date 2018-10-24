@@ -16,6 +16,8 @@ var playerGlobals = {
     yVel: -500,
     hp: 100,
     maxhp: 100,
+    stamina: 20,
+    maxSta: 20,
     money: 0,
     jumps: 0,
     maxJumps: 1,
@@ -24,6 +26,8 @@ var playerGlobals = {
     powerUps: [false, false], // 0 - Double Jump 1 - Invisibility
     lastSave: null
 };
+
+var abiTimer, refreshTimer;
 
 function createPlayer() {
     // create player object and enable physics
@@ -76,8 +80,8 @@ function createPlayer() {
     rightButton = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     downButton = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    atkButton = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
-    ablButton = game.input.keyboard.addKey(Phaser.Keyboard.CONTROL);
+    atkButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
+    ablButton = game.input.keyboard.addKey(Phaser.Keyboard.S);
     saveTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
     loadTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FIVE);
     
@@ -114,6 +118,27 @@ function createPlayer() {
     hitbox1.body.onOverlap.add(attackHit);
     
     hitbox1.body.enable = false;
+    
+    abiTimer = game.time.create(false);
+    abiTimer.loop(200, function () {
+        playerGlobals.stamina -= 2;
+        updateStaHUD();
+    }, this);
+    
+    refreshTimer = game.time.create(false);
+    refreshTimer.loop(500, function () {
+        if (playerGlobals.stamina < playerGlobals.maxSta)
+        {
+            playerGlobals.stamina = playerGlobals.stamina.clamp(playerGlobals.stamina + 2, playerGlobals.maxSta);
+            updateStaHUD();
+            console.log(playerGlobals.stamina);
+        }
+    }, this);
+    
+    abiTimer.start();
+    abiTimer.pause();
+    refreshTimer.start();
+    refreshTimer.pause();
         
     // PLAYER UPDATE
     player.update = function () {
@@ -245,6 +270,14 @@ function createPlayer() {
         // set to max velocity
         player.body.velocity.y = Math.min(player.body.velocity.y, player.body.maxVelocity);
         
+        if (invisible && playerGlobals.stamina < 1)
+        {
+            invisible = false;
+            player.alpha = 1;
+            abiTimer.pause();
+            refreshTimer.resume();
+        }
+        
     };
 } // PLAYER OBJECT
 
@@ -315,6 +348,8 @@ function abilityDown ()
     {
         invisible = true;
         player.alpha = 0.5;
+        abiTimer.resume();
+        refreshTimer.pause();
     }
 }
 
@@ -324,6 +359,8 @@ function abilityUp ()
     {
         invisible = false;
         player.alpha = 1;
+        abiTimer.pause();
+        refreshTimer.resume();
     }
 }
 

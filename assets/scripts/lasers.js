@@ -30,27 +30,12 @@ function createLasers (lasers)
                 laserBase.body.setSize(laserWidth, laserBase.ray.height, -1*laserWidth/2 + 16, 0);
                 if (laserBase.timer)
                 {
-                    if (laserBase.delay)
-                    {
-                        var delayTimer = game.time.create(true);
-                        delayTimer.add(laserBase.delay, function () {
-                            var laserTimer = game.time.create(false);
-                            laserTimer.loop(laserBase.timer, function () {
-                                laserBase.body.enable = !laserBase.body.enable;
-                                laserBase.laserRect.visible = !laserBase.laserRect.visible;
-                            }, this);
-                            laserTimer.start();
-                        }, this);
-                        delayTimer.start();
-                    }
-                    else {
-                        var laserTimer = game.time.create(false);
-                        laserTimer.loop(laserBase.timer, function () {
-                            laserBase.body.enable = !laserBase.body.enable;
-                            laserBase.laserRect.visible = !laserBase.laserRect.visible;
-                        }, this);
-                        laserTimer.start();
-                    }
+                    var laserTimer = game.time.create(false);
+                    laserTimer.loop(laserBase.timer, function () {
+                        laserBase.body.enable = !laserBase.body.enable;
+                        laserBase.laserRect.visible = !laserBase.laserRect.visible;
+                    }, this);
+                    laserTimer.start(laserBase.delay);
                 }
             }
         }

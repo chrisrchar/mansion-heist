@@ -43,6 +43,8 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.physics.startSystem(Phaser.Physics.ARCADE);
+        
+        game.stage.backgroundColor = 0x3c4f6d;
 
         var map = game.add.tilemap(tilemapName);
         map.addTilesetImage('tileset', 'tiles');
@@ -183,10 +185,10 @@ function addMap (mapName, tilemapName, exits, gridX, gridY)
         game.physics.arcade.collide(enemies, jumpthruPlatforms);
         game.physics.arcade.collide(coins, jumpthruPlatforms);
         
-        /*if (playerGlobals.hp < 1)
+        if (playerGlobals.hp < 1)
         {
-            resetGame();
-        }*/
+            loadGame();
+        }
 
         exits.forEach(checkExits);
     }
@@ -365,8 +367,13 @@ function powerUp (player, power)
 //SAVE AND LOAD
 function saveGame ()
 {
+    playerGlobals.lastSave = {
+        state: game.state.current,
+        mapdata: mapVisited
+    };
+    playerGlobals.lastX = player.x;
+    playerGlobals.lastY = player.y;
     localStorage.setItem("savegame", JSON.stringify(playerGlobals));
-    playerGlobals.maxJumps += 1;
     console.log('game saved');
 }
 
@@ -374,6 +381,8 @@ function loadGame ()
 {
     console.log(localStorage.savegame);
     playerGlobals = JSON.parse(localStorage.savegame);
+    mapVisited = playerGlobals.lastSave.mapdata;
+    game.state.start(playerGlobals.lastSave.state);
 }
 
 // RESET GAME
@@ -395,3 +404,7 @@ function resetGame ()
     };
     game.state.start('9x10');
 }
+
+Number.prototype.clamp = function(min, max) {
+  return Math.min(Math.max(this, min), max);
+};
