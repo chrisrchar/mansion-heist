@@ -31,7 +31,7 @@ function createLasers (lasers)
                 laserBase.laserRect.endFill();
                 
                 laserEmitter.y = laserBase.ray.height;
-                laserEmitter.start(false, 400, 30, 0);
+                laserEmitter.start(false, 200, 30, 0);
 
                 game.physics.enable(laserBase, Phaser.Physics.ARCADE);
                 laserBase.body.setSize(laserWidth, laserBase.ray.height, -1*laserWidth/2 + 16, 0);

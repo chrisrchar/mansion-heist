@@ -136,25 +136,21 @@ function drawMiniMap (gridX, gridY)
                         case 'up':
                             minimap.moveTo(mmap_unit_size*(j+2)+exitOffset,mmap_unit_size*(i+2));
                             minimap.lineTo(mmap_unit_size*(j+3)-exitOffset,mmap_unit_size*(i+2));
-                            console.log('drawing up');
                             break;
                             
                         case 'down':
                             minimap.moveTo(mmap_unit_size*(j+2)+exitOffset,mmap_unit_size*(i+3));
                             minimap.lineTo(mmap_unit_size*(j+3)-exitOffset,mmap_unit_size*(i+3));
-                            console.log('drawing down');
                             break;
                             
                         case 'left':
                             minimap.moveTo(mmap_unit_size*(j+2),mmap_unit_size*(i+2)+exitOffset);
                             minimap.lineTo(mmap_unit_size*(j+2),mmap_unit_size*(i+3)-exitOffset);
-                            console.log('drawing left');
                             break;
                             
                         case 'right':
                             minimap.moveTo(mmap_unit_size*(j+3),mmap_unit_size*(i+2)+exitOffset);
                             minimap.lineTo(mmap_unit_size*(j+3),mmap_unit_size*(i+3)-exitOffset);
-                            console.log('drawing right');
                             break;
                     }
                     

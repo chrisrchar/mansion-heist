@@ -70,7 +70,7 @@
         }, 
         {
          "draworder":"topdown",
-         "height":22,
+         "height":0,
          "name":"transitions",
          "objects":[
                 {
@@ -135,12 +135,12 @@
                  "visible":true,
                  "width":32,
                  "x":8,
-                 "y":432
+                 "y":416
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":40,
+         "width":0,
          "x":0,
          "y":0
         }],

@@ -50,7 +50,7 @@ function createPlayer(spawn) {
     
     // Set player physics variables
     player.body.gravity.y = gravity;
-    player.body.maxVelocity = 925;
+    player.body.maxVelocity = 1000;
     
     // Adjust player velocity for a new room
     player.body.velocity.x = playerGlobals.xVel;
@@ -235,7 +235,7 @@ function createPlayer(spawn) {
             }
             
             // Show jumping animation if player isn't attacking
-            player.body.gravity.y = 1.8*gravity;
+            player.body.gravity.y = 2*gravity;
         }
         else 
         {   
