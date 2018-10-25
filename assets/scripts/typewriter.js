@@ -60,12 +60,12 @@ function Typewriter() {
             letter.alpha = 0;
         }
 
-        if (_that.sound !== null) { // Made some alterations for sound markers here. ~Tilde
+        /*if (_that.sound !== null) { // Made some alterations for sound markers here. ~Tilde
             if (_that.soundMarker !== null)
-                _that.sound.play(_that.soundMarker, null, 1, true, true);
+                _that.sound.play(_that.soundMarker, null, .7, false, true);
             else
-                _that.sound.play('', null, 1, true, true);
-        }
+                _that.sound.play('', null, .7, false, true);
+        }*/
 
         _that.typedText.x = x;
         _that.typedText.y = y;
@@ -100,13 +100,14 @@ function Typewriter() {
     }
 
     function typeWriter(text) {
-        if (_that.sound !== null) {
+        /*if (_that.sound !== null) {
             if (_that.sound.isPlaying === false) {
                 _that.sound.play();
             }
-        }
+        }*/
         var letter = _that.typedText.getChildAt(_that.currentLetter);
         letter.alpha = 1;
+        _that.sound.play('char');
         _that.currentLetter++;
     }
 
@@ -131,7 +132,7 @@ function Typewriter() {
             _that.typedText.children.forEach(function (letter) {
                 letter.alpha = 1;
             });
-            game.time.events.remove(_timer);
+            _timer.destroy();
             textComplete = true;
         },
         moveToTop: function() {

@@ -16,14 +16,11 @@ for (var i = 5; i <= 15; i++)
     }
 }
 
-console.log(maps);
-
 // start new phaser game
 var game = new Phaser.Game(1280, 720, Phaser.AUTO, '', preload);
 
 var score = 0;
 
 maps.forEach(function (mapElement) {
-    console.log(mapElement.mapName);
     game.state.add(mapElement.mapName, mapElement);
 });

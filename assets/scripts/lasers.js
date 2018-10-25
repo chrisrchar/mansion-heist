@@ -19,7 +19,6 @@ function createLasers (lasers)
         {
             if (intersection && !endSet)
             {
-                console.log(intersection.x)
                 endSet = true;
                 laserBase.ray = laserBase.ray.setTo(laserBase.ray.start.x, laserBase.ray.start.y, laserBase.ray.end.x, intersection.y);
 
@@ -64,7 +63,6 @@ function getWallIntersection (ray) {
 
     // For each of the walls...
     var tiles = platforms.getTiles(ray.x, ray.y, 32, ray.height);
-    console.log(tiles);
     
     tiles.forEach(function(tile) {
         if (tile.index != -1)
