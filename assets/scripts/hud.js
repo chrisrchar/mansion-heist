@@ -175,6 +175,7 @@ var msgBoxSprite;
 function showMsgBox(x, y, scale, tweenSpeed)
 {
     var msgBox = game.add.graphics(x, y);
+    msgBox.fixedToCamera = true;
     
     msgBox.beginFill(0x000000, .9);
     msgBox.drawPolygon([{x: x+(50*scale), y: y},{x: x+(1000*scale), y: y},{x: x+(950*scale), y: y+(150*scale)},{x: x, y: y+(150*scale)}]);
@@ -189,14 +190,16 @@ function showMsgBox(x, y, scale, tweenSpeed)
     msgBoxSprite.scale.x = 0;
     msgBoxSprite.scale.y = 0;
     
-    game.add.tween(msgBoxSprite.scale).to({x: 1, y: 1}, tweenSpeed, Phaser.Easing.Back.Out, true);
+    var openTween = game.add.tween(msgBoxSprite.scale).to({x: 1, y: 1}, tweenSpeed, Phaser.Easing.Back.Out, true);
+    openTween.onComplete.add(function () {
+        text.start();
+    });
 }
 
 function closeMsgBox () 
 {
-    game.add.tween(msgBoxSprite.scale).to({x: 0, y: 0}, tweenSpeed, Phaser.Easing.Back.Out, true);
-    var closeTimer = game.time.create(true);
-    closeTimer.add(tweenSpeed, function () {
+    var closeTween = game.add.tween(msgBoxSprite.scale).to({x: 0, y: 0}, tweenSpeed, Phaser.Easing.Back.Out, true);
+    closeTween.onComplete.add(function () {
         msgBoxSprite.destroy();
-    }, this)
+    });
 }

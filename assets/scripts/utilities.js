@@ -21,7 +21,7 @@ var player;
 // GAME OBJECTS
 var platforms, jumpthruPlatforms, coins, enemies, vases, spikes, saves;
 
-var brokeVase;
+var brokeVase, restroomText, restroomTextTween;
 
 //====================================
 
@@ -143,6 +143,12 @@ function addMap (gridX, gridY)
             toilet.x -= 68;
             toilet.body.setSize(128,64,0,64);
             toilet.body.immovable = true;
+            
+            restroomText = game.add.text(toilet.x, toilet.y - 80, "Take a Rest ↓", { fontSize: '24px', fill: '#fff', stroke: 'black', strokeThickness: 4 });
+            restroomText.anchor.x = .5;
+            restroomText.x += toilet.width/2;
+            //restroomText.alpha = 0;
+            restroomTextTween = game.add.tween(restroomText).to({x: restroomText.x, y: toilet.y - 64}, 500, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
         });
         
         //===============
@@ -228,6 +234,23 @@ function addMap (gridX, gridY)
     }
     
     tempMap.update = function () {
+        
+        if (saves.children[0])
+        {
+            if (Math.abs(game.physics.arcade.distanceBetween(saves.children[0], player)) < 100)
+            {
+                restroomText.alpha = 1;
+                game.world.bringToTop(restroomText);
+            }
+            else if (Math.abs(game.physics.arcade.distanceBetween(saves.children[0], player)) > 400)
+            {
+                restroomText.alpha = 0;
+            }
+            else
+            {
+                restroomText.alpha = (1/(Math.abs(game.physics.arcade.distanceBetween(saves.children[0], player))/100)).clamp(0,1);
+            }
+        }
         
         game.world.bringToTop(minimap);
         game.world.bringToTop(hud);
@@ -430,6 +453,16 @@ function saveGame ()
     playerGlobals.lastX = player.x;
     playerGlobals.lastY = player.y;
     localStorage.setItem("savegame", JSON.stringify(playerGlobals));
+    restroomText.text = "Game Saved";
+    restroomTextTween.pause();
+    var saveTween = game.add.tween(restroomText).to({x: restroomText.x ,y: saves.children[0].y-96},2000, Phaser.Easing.Linear.None, true);
+    game.add.tween(restroomText).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
+    
+    saveTween.onComplete.add(function () {
+        restroomText.text = "Take a Rest ↓";
+        restroomTextTween.resume();
+    });
+    
     console.log('game saved');
 }
 

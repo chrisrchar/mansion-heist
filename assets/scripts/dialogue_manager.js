@@ -22,13 +22,6 @@ function callMsg(messageArray) {
         maxWidth: 825,
         text: messages[currentMsg],
       });
-    
-    var openTimer = game.time.create(true);
-    openTimer.add(tweenSpeed, function () {
-        text.start();
-    }, this);
-    openTimer.start();
-    
 }
 
 function handleNextMessage () {
@@ -67,6 +60,6 @@ function showNextMessage ()
 
 function endDialogue ()
 {
-    closeMsgBox(tweenSpeed);
     inMessage = false;
+    closeMsgBox(tweenSpeed);
 }
