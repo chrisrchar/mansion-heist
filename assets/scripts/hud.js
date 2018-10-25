@@ -175,13 +175,13 @@ var msgBoxSprite;
 function showMsgBox(x, y, scale, tweenSpeed)
 {
     var msgBox = game.add.graphics(x, y);
-    msgBox.fixedToCamera = true;
     
     msgBox.beginFill(0x000000, .9);
     msgBox.drawPolygon([{x: x+(50*scale), y: y},{x: x+(1000*scale), y: y},{x: x+(950*scale), y: y+(150*scale)},{x: x, y: y+(150*scale)}]);
     msgBox.endFill();
     
     msgBoxSprite = game.add.sprite(x, y, msgBox.generateTexture());
+    msgBoxSprite.fixedToCamera = true;
     
     msgBox.destroy();
     

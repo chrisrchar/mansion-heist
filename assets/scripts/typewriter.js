@@ -46,8 +46,10 @@ function Typewriter() {
 
         if (_that.writerObj === null) {
             _that.typedText = game.add.bitmapText(x, y, _that.fontFamily, text, _that.fontSize);
+            _that.typedText.fixedToCamera = true;
         } else {
             _that.typedText = _that.writerObj;
+            _that.typedText.fixedToCamera = true;
         }
         _that.typedText.maxWidth = _that.maxWidth;
         _that.currentLetter = 0;

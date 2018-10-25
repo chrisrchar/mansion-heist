@@ -19,6 +19,7 @@ var preload = {
         game.load.image('toilet', 'assets/sprites/toilet.png');
         
         game.load.image('vase-shard', 'assets/sprites/vaseshard.png');
+        game.load.image('laserpart', 'assets/sprites/laserparticle.png');
         
         for (var i = 5; i <= 15; i++)
         {
@@ -38,6 +39,6 @@ var preload = {
 
     create: function ()
     {
-        game.state.start('11x9');
+        game.state.start('9x10');
     }
 };

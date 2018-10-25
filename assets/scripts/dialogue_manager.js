@@ -6,7 +6,7 @@ var tweenSpeed = 500;
 
 function callMsg(messageArray) {
     
-    showMsgBox(game.world.width/2, 600, 1, tweenSpeed);
+    showMsgBox(game.camera.width/2, 600, 1, tweenSpeed);
     
     inMessage = true;
     currentMsg = 0;
@@ -15,10 +15,10 @@ function callMsg(messageArray) {
                'this is a second message that will get passed along hopefully too.'];
     
     text.init(game, {
-        x: game.world.width/2-400,
+        x: game.camera.width/2-400,
         y: 600-60,
         fontFamily: "pearsoda",
-        fontSize: 32,
+        fontSize: 40,
         maxWidth: 825,
         text: messages[currentMsg],
       });
@@ -48,10 +48,10 @@ function showNextMessage ()
 {
     currentMsg += 1;
     text.init(game, {
-        x: game.world.width/2-400,
+        x: game.camera.width/2-400,
         y: 600-60,
         fontFamily: "pearsoda",
-        fontSize: 32,
+        fontSize: 40,
         maxWidth: 825,
         text: messages[currentMsg],
     });

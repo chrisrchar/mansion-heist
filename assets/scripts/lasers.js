@@ -10,6 +10,10 @@ function createLasers (lasers)
         laserBase.ray = new Phaser.Line(laserBase.x, laserBase.y, laserBase.x, 2000);
         var intersection = getWallIntersection(laserBase.ray);
         var endSet = false;
+        var laserEmitter = game.add.emitter(0, 0, 100);
+        laserBase.addChild(laserEmitter);
+        laserEmitter.makeParticles('laserpart');
+        laserEmitter.gravity = 300;
 
         laserBase.update = function ()
         {
@@ -25,6 +29,9 @@ function createLasers (lasers)
                 laserBase.laserRect.beginFill(0xff0000, .6);
                 laserBase.laserRect.drawRect(0 - laserWidth/2, 10, laserWidth, laserBase.ray.height - 10);
                 laserBase.laserRect.endFill();
+                
+                laserEmitter.y = laserBase.ray.height;
+                laserEmitter.start(false, 400, 30, 0);
 
                 game.physics.enable(laserBase, Phaser.Physics.ARCADE);
                 laserBase.body.setSize(laserWidth, laserBase.ray.height, -1*laserWidth/2 + 16, 0);
@@ -34,6 +41,14 @@ function createLasers (lasers)
                     laserTimer.loop(laserBase.timer, function () {
                         laserBase.body.enable = !laserBase.body.enable;
                         laserBase.laserRect.visible = !laserBase.laserRect.visible;
+                        if (laserBase.laserRect.visible)
+                        {
+                            laserEmitter.on = true;
+                        }
+                        else
+                        {
+                            laserEmitter.on = false;
+                        }
                     }, this);
                     laserTimer.start(laserBase.delay);
                 }
