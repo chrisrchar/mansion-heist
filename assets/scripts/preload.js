@@ -10,6 +10,7 @@ var preload = {
         game.load.image('invisPowerup', 'assets/sprites/invisibility.png');
         game.load.audio('jumpsfx', 'assets/sound/jump.wav');
         game.load.image('tiles', 'assets/tilemaps/tileset_library.png');
+        game.load.image('tileBG', 'assets/sprites/tileBG.png');
         
         game.load.spritesheet('enemy', 'assets/spritesheets/final_sheets/guard_100x150.png', 100, 200);
         game.load.image('coin', 'assets/sprites/coin.png');
@@ -34,6 +35,8 @@ var preload = {
                 }
             }
         }
+        
+        game.time.advancedTiming = true;
         
     },
 
