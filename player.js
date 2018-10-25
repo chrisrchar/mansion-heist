@@ -83,7 +83,7 @@ function createPlayer(spawn) {
     leftButton = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
     rightButton = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     downButton = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.UP);
     atkButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
     ablButton = game.input.keyboard.addKey(Phaser.Keyboard.S);
     saveTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
