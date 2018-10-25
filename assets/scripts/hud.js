@@ -169,3 +169,34 @@ function drawMiniMap (gridX, gridY)
     
     minimap.alpha = 0.8;
 }
+
+var msgBoxSprite;
+
+function showMsgBox(x, y, scale, tweenSpeed)
+{
+    var msgBox = game.add.graphics(x, y);
+    
+    msgBox.beginFill(0x000000, .9);
+    msgBox.drawPolygon([{x: x+(50*scale), y: y},{x: x+(1000*scale), y: y},{x: x+(950*scale), y: y+(150*scale)},{x: x, y: y+(150*scale)}]);
+    msgBox.endFill();
+    
+    msgBoxSprite = game.add.sprite(x, y, msgBox.generateTexture());
+    
+    msgBox.destroy();
+    
+    msgBoxSprite.anchor.x = .5;
+    msgBoxSprite.anchor.y = .5;
+    msgBoxSprite.scale.x = 0;
+    msgBoxSprite.scale.y = 0;
+    
+    game.add.tween(msgBoxSprite.scale).to({x: 1, y: 1}, tweenSpeed, Phaser.Easing.Back.Out, true);
+}
+
+function closeMsgBox () 
+{
+    game.add.tween(msgBoxSprite.scale).to({x: 0, y: 0}, tweenSpeed, Phaser.Easing.Back.Out, true);
+    var closeTimer = game.time.create(true);
+    closeTimer.add(tweenSpeed, function () {
+        msgBoxSprite.destroy();
+    }, this)
+}

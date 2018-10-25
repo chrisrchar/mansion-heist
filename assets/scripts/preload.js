@@ -3,6 +3,8 @@ var preload = {
 
     preload: function ()
     {
+        game.load.bitmapFont('pearsoda', 'assets/fonts/pearsoda_0.png', 'assets/fonts/pearsoda.fnt');
+        
         game.load.spritesheet('fox', 'assets/spritesheets/fox_animations_200x140.png', 200, 140);
         game.load.image('djPowerup', 'assets/sprites/doubleJump.png');
         game.load.image('invisPowerup', 'assets/sprites/invisibility.png');

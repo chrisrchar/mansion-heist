@@ -88,6 +88,7 @@ function createPlayer(spawn) {
     ablButton = game.input.keyboard.addKey(Phaser.Keyboard.S);
     saveTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
     loadTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FIVE);
+    testBtn6 = game.input.keyboard.addKey(Phaser.Keyboard.SIX);
     
     // ADDING CONTROL CALLBACKS
     jumpButton.onDown.add(jump);
@@ -97,6 +98,7 @@ function createPlayer(spawn) {
     downButton.onDown.add(downBtnPress);
     saveTestBtn.onDown.add(saveGame);
     loadTestBtn.onDown.add(loadGame);
+    testBtn6.onDown.add(callMsg);
     
     pad1.onConnectCallback = function () {
         console.log('gamepad connected');
@@ -205,7 +207,7 @@ function createPlayer(spawn) {
         
         if (!playerGlobals.hurt)
         {
-            if (xDir != 0)
+            if (xDir != 0 && !inMessage)
             {
                 facing = xDir;
                 player.body.velocity.x = xDir * speed;
@@ -294,7 +296,7 @@ function checkButtons (pad)
 function jump ()
 {
     //Variable Jumping
-    if (playerGlobals.jumps < playerGlobals.maxJumps)
+    if (playerGlobals.jumps < playerGlobals.maxJumps && !inMessage)
     {
         jumpsfx.play();
         player.animations.play('jump');
@@ -302,16 +304,21 @@ function jump ()
         playerGlobals.jumps++;
         player.state = playerStates.JUMPING;
     }
+    
+    if (inMessage)
+    {
+        handleNextMessage();
+    }
 }
 
 function downBtnPress ()
 {
-    if (resting)
+    if (resting && !inMessage)
     {
         saveGame();
     }
     
-    else if (grounded)
+    else if (grounded && !inMessage)
     {
         jumpDown = true
         var groundTimer = game.time.create(true);
@@ -325,7 +332,7 @@ function downBtnPress ()
 
 function attack ()
 {
-    if (!attacking)
+    if (!attacking && !inMessage)
     {
         attacking = true;
         hitbox1.body.enable = true;
@@ -345,7 +352,7 @@ function attack ()
 
 function abilityDown ()
 {
-    if (playerGlobals.powerUps[1])
+    if (playerGlobals.powerUps[1] && !inMessage)
     {
         invisible = true;
         player.alpha = 0.5;
@@ -356,7 +363,7 @@ function abilityDown ()
 
 function abilityUp ()
 {
-    if (playerGlobals.powerUps[1])
+    if (playerGlobals.powerUps[1] && !inMessage)
     {
         invisible = false;
         player.alpha = 1;

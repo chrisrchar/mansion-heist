@@ -1,67 +1,72 @@
-/* global
-    testButton, messageBox
-*/
-
 var inMessage = false;
-var toWrite = "";
-var currentLn;
-var letterCount = 0;
-var messages = [];
-var writeInt;
-var writeSpd = 100;
-var nextListener;
+var text = new Typewriter();
+var messages;
+var currentMsg = 0;
+var tweenSpeed = 500;
 
-function callScene (dialogueObj)
-{
+function callMsg(messageArray) {
+    
+    showMsgBox(game.world.width/2, 600, 1, tweenSpeed);
+    
     inMessage = true;
-    currentLn = -1;
-    messages = dialogueObj.messages;
-    nextListener = testButton.onDown.add(showNext);
-    showNext();
+    currentMsg = 0;
+    messages = ['This is a test to see if the communications work properly. Hopefully this will be enough to check and see.',
+               'this is a second message that will get passed along hopefully too.',
+               'this is a second message that will get passed along hopefully too.'];
+    
+    text.init(game, {
+        x: game.world.width/2-400,
+        y: 600-60,
+        fontFamily: "pearsoda",
+        fontSize: 32,
+        maxWidth: 825,
+        text: messages[currentMsg],
+      });
+    
+    var openTimer = game.time.create(true);
+    openTimer.add(tweenSpeed, function () {
+        text.start();
+    }, this);
+    openTimer.start();
+    
 }
 
-function showNext ()
-{   
-    if (messages[currentLn] != toWrite && letterCount > 1)
+function handleNextMessage () {
+    console.log(textComplete);
+    if (textComplete)
     {
-        toWrite = messages[currentLn];
-        messageBox.text = toWrite;
+        text.destroy();
+        if (messages[currentMsg+1])
+        {
+            showNextMessage();
+        }
+        else
+        {
+            endDialogue();
+        }
     }
     else
     {
-        currentLn += 1;
-        if (messages[currentLn] != null)
-        {
-            letterCount = 0;
-            writeInt = setInterval(writeMessage, writeSpd);
-        }
-        else
-        {
-            endScene();
-        }
+        text.showAll();
     }
 }
 
-function writeMessage()
+function showNextMessage ()
 {
-    if (inMessage)
-    {
-        if (messages[currentLn] == toWrite)
-        {
-            clearInterval(writeInt);
-        }
-        else
-        {
-            letterCount += 1;
-            toWrite = messages[currentLn].substring(0, letterCount);
-            messageBox.text = toWrite;
-        }
-    }
+    currentMsg += 1;
+    text.init(game, {
+        x: game.world.width/2-400,
+        y: 600-60,
+        fontFamily: "pearsoda",
+        fontSize: 32,
+        maxWidth: 825,
+        text: messages[currentMsg],
+    });
+    text.start();
 }
 
-function endScene ()
+function endDialogue ()
 {
+    closeMsgBox(tweenSpeed);
     inMessage = false;
-    messageBox.text = "";
-    testButton.onDown.remove(nextListener);
 }
