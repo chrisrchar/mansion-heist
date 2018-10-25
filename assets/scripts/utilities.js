@@ -14,8 +14,8 @@ for (var i = 0; i < mapSize; i++)
 
 // PHYSICS VARIABLES
 var speed = 350;
-var gravity = 1000;
-var jumpHeight = -650;
+var gravity = 1200;
+var jumpHeight = -700;
 var player;
 
 // GAME OBJECTS
@@ -41,8 +41,7 @@ function addMap (gridX, gridY)
         
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        
-        game.stage.backgroundColor = 0x3c4f6d;
+        game.physics.arcade.TILE_BIAS = 32;
 
         var map = game.add.tilemap(gridX+'x'+gridY);
         map.addTilesetImage('tileset', 'tiles');
@@ -98,9 +97,9 @@ function addMap (gridX, gridY)
         {
             roomSpawn = {x: 300, y: 300};
         }
-
-        //var background = map.createLayer('background');
+        
         var background2 = map.createLayer('background2');
+        
         platforms = map.createLayer('platforms');
         jumpthruPlatforms = map.createLayer('jumpthru');
 
@@ -201,6 +200,9 @@ function addMap (gridX, gridY)
         });
 
         platforms.resizeWorld();
+        
+        var backgroundBack = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'tileBG');
+        game.world.sendToBack(backgroundBack);
 
         createPlayer(roomSpawn);
         
@@ -274,6 +276,9 @@ function addMap (gridX, gridY)
     
     // Hitbox Debugging
     tempMap.render = function () {
+        
+        game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
+        
         /*lasers.forEachAlive(function (obj)
         {
             game.debug.body(obj);
@@ -332,20 +337,6 @@ function checkExits (exit)
 // Transition to a given map with given parameters
 function goToMap (mapName)
 {
-    /*if (spawn.y > 0)
-    {
-        playerGlobals.lastMap = spawn.y;
-    }
-    else {
-        playerGlobals.lastY = player.body.y + player.height/2;
-    }
-    if (spawn.x > 0)
-    {
-        playerGlobals.lastX = spawn.x;
-    }
-    else {
-        playerGlobals.lastX = player.body.x;
-    }*/
     playerGlobals.lastMap = game.state.current;
     playerGlobals.xVel = player.body.velocity.x;
     playerGlobals.yVel = player.body.velocity.y;

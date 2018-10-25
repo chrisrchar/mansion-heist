@@ -194,16 +194,7 @@ function createPlayer(spawn) {
         
         grounded = player.body.blocked.down || player.body.touching.down;
         
-        // Left Right Movement
-        if (firstCheck)
-        {
-            xDir = playerGlobals.xDir;
-            firstCheck = false;
-        }
-        else
-        {
-            xDir = rightButton.isDown - leftButton.isDown;
-        }
+        xDir = rightButton.isDown - leftButton.isDown;
         
         if (!playerGlobals.hurt)
         {

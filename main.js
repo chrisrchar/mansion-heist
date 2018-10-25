@@ -27,6 +27,3 @@ maps.forEach(function (mapElement) {
     console.log(mapElement.mapName);
     game.state.add(mapElement.mapName, mapElement);
 });
-
-//game.state.add('state0', state0);
-//game.state.add('state1', state1);
