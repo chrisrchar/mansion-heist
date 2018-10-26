@@ -19,7 +19,6 @@ function createLasers (lasers)
         {
             if (intersection && !endSet)
             {
-                console.log(intersection.x)
                 endSet = true;
                 laserBase.ray = laserBase.ray.setTo(laserBase.ray.start.x, laserBase.ray.start.y, laserBase.ray.end.x, intersection.y);
 
@@ -31,7 +30,7 @@ function createLasers (lasers)
                 laserBase.laserRect.endFill();
                 
                 laserEmitter.y = laserBase.ray.height;
-                laserEmitter.start(false, 400, 30, 0);
+                laserEmitter.start(false, 200, 30, 0);
 
                 game.physics.enable(laserBase, Phaser.Physics.ARCADE);
                 laserBase.body.setSize(laserWidth, laserBase.ray.height, -1*laserWidth/2 + 16, 0);
@@ -64,7 +63,6 @@ function getWallIntersection (ray) {
 
     // For each of the walls...
     var tiles = platforms.getTiles(ray.x, ray.y, 32, ray.height);
-    console.log(tiles);
     
     tiles.forEach(function(tile) {
         if (tile.index != -1)

@@ -23,6 +23,8 @@ var platforms, jumpthruPlatforms, coins, enemies, vases, spikes, saves;
 
 var brokeVase, restroomText, restroomTextTween;
 
+var coinsfx, breakSFX;
+
 //====================================
 
 // Map creation
@@ -80,8 +82,6 @@ function addMap (gridX, gridY)
             tempMap.exits.forEach(function (exit) {
                 mapVisited[gridY][gridX].exits.push(exit.side);
             });
-            
-            console.log(mapVisited[gridY][gridX].exits);
         }
         
         var roomSpawn;
@@ -233,6 +233,8 @@ function addMap (gridX, gridY)
         brokeVase = game.add.emitter(0, 0, 100);
         brokeVase.makeParticles('vase-shard', 0, 16, true);
         brokeVase.gravity = 600;
+        
+        addAudio();
     }
     
     tempMap.update = function () {
@@ -414,6 +416,8 @@ function collectCoins (player, coin)
     // Removes the star from the screen
     coin.kill();
     
+    coinsfx.play('',0,.7);
+    
     playerGlobals.money += 10;
     moneyHUD.text = '$: '+playerGlobals.money;
 
@@ -432,6 +436,19 @@ function powerUp (player, power)
     }
     playerGlobals.powerUps[power.ability] = true;
     power.kill();
+}
+
+function addAudio()
+{
+    coinsfx = game.add.audio('coinsfx');
+    breakSFX = game.add.audio('breaksfx');
+    
+    letterSFX = game.add.audio('lettersfx');
+    letterSFX.addMarker('char', 0, .05, .8);
+    letterSFX.override = true;
+    letterSFX.loop = false;
+    letterSFX.volume = .8;
+    nextMsgSFX = game.add.audio('lettersfx');
 }
 
 //SAVE AND LOAD

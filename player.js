@@ -5,6 +5,8 @@ var pad1, jumpButton, leftButton, rightButton, atkButton, ablButton;
 
 var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible, attacking, jumpDown, resting;
 
+var atkAnim;
+
 var jumpsfx;
 
 var playerHeight = 124;
@@ -39,7 +41,12 @@ function createPlayer(spawn) {
     player.animations.add('run', [1, 2, 3, 4, 5, 6], 10, true);
     player.animations.add('jump', [7, 9], 10, false);
     player.animations.add('land', [11, 0], 10, false);
-    player.animations.add('attack', [12, 13, 14, 15], 20, false);
+    atkAnim = player.animations.add('attack', [12, 13, 14, 15, 15], 20, false);
+    
+    atkAnim.onComplete.add(function () {
+            attacking = false;
+            hitbox1.body.enable = false;
+    });
     
     // Center the player
     player.anchor.x = .5;
@@ -50,7 +57,7 @@ function createPlayer(spawn) {
     
     // Set player physics variables
     player.body.gravity.y = gravity;
-    player.body.maxVelocity = 925;
+    player.body.maxVelocity = 1000;
     
     // Adjust player velocity for a new room
     player.body.velocity.x = playerGlobals.xVel;
@@ -235,7 +242,7 @@ function createPlayer(spawn) {
             }
             
             // Show jumping animation if player isn't attacking
-            player.body.gravity.y = 1.8*gravity;
+            player.body.gravity.y = 2*gravity;
         }
         else 
         {   
@@ -326,15 +333,12 @@ function attack ()
     if (!attacking && !inMessage)
     {
         attacking = true;
-        hitbox1.body.enable = true;
-        player.animations.play('attack');
-        var atkTimer = game.time.create(true);
-        atkTimer.add(200, function () 
-        {
-            attacking = false;
-            hitbox1.body.enable = false;
-        }, this);
-        atkTimer.start();
+        var atkHitTimer = game.time.create(true);
+        atkHitTimer.add(150, function () {
+            hitbox1.body.enable = true;
+        });
+        atkHitTimer.start();
+        atkAnim.play();
     }
 }
 
@@ -433,6 +437,7 @@ function attackHit (atkHitbox, other)
     }
     if (other.key == 'vase')
     {
+        breakSFX.play();
         var spoils = coins.create(other.body.x, other.body.y, 'coin');
         spoils.body.gravity.y = gravity;
         spoils.body.drag.x = 500;
