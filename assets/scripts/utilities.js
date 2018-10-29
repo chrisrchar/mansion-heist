@@ -44,7 +44,7 @@ function addMap (gridX, gridY)
         
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        game.physics.arcade.TILE_BIAS = 32;
+        game.physics.arcade.TILE_BIAS = 33;
 
         var map = game.add.tilemap(gridX+'x'+gridY);
         map.addTilesetImage('tileset', 'tiles');

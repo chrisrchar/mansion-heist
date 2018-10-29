@@ -79,7 +79,7 @@ function setEvents () {
         {
             text: "Jump again while in the air for some extra height.",
             font: "cartwheel",
-            placement: 'default',
+            placement: 'center',
             size: 32
         },
     ];
