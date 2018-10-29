@@ -18,8 +18,9 @@ var gravity = 1200;
 var jumpHeight = -700;
 var player;
 
+var textPlacement;
 // GAME OBJECTS
-var platforms, jumpthruPlatforms, coins, enemies, vases, spikes, saves;
+var platforms, jumpthruPlatforms, coins, enemies, vases, spikes, saves, eventObjects;
 
 var brokeVase, restroomText, restroomTextTween;
 
@@ -170,7 +171,7 @@ function addMap (gridX, gridY)
             obj.animations.add('walk', [1, 2, 3, 4], 10, true);
             obj.animations.play('walk');
             
-            obj.hp = 3;
+            obj.hp = 2;
             obj.facing = 1;
             obj.update = function ()
             {
@@ -230,6 +231,26 @@ function addMap (gridX, gridY)
         game.camera.follow(player);
         game.camera.lerp.x = .1;
         
+        eventObjects = game.add.group();
+        eventObjects.enableBody = true;
+        
+        map.createFromObjects('sprites', 107, null, 0, false, false, eventObjects);
+        
+        eventObjects.forEach(function (event) {
+            if (event.autoStart)
+            {
+                var eventTimer = game.time.create(true);
+                eventTimer.add(event.delay, function () {
+                    callMsg(events[event.eventNum]);
+                    //event.kill();
+                }, this);
+                eventTimer.start();
+            }
+            else {
+                event.body.setSize(event.bodyWidth, event.bodyHeight, 0, 0);
+            }
+        });
+        
         brokeVase = game.add.emitter(0, 0, 100);
         brokeVase.makeParticles('vase-shard', 0, 16, true);
         brokeVase.gravity = 600;
@@ -261,6 +282,11 @@ function addMap (gridX, gridY)
     
         game.physics.arcade.overlap(player, coins, collectCoins, null, this);
         game.physics.arcade.overlap(player, powerup, powerUp, null, this);
+        game.physics.arcade.overlap(player, eventObjects, function (plyr, event) {
+            console.log('overlapping');
+            callMsg(events[event.eventNum]);
+            event.kill();
+        }, null, this);
         
         game.physics.arcade.collide(enemies, platforms);
         game.physics.arcade.collide(coins, platforms);
@@ -281,12 +307,12 @@ function addMap (gridX, gridY)
         
         game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
         
-        /*lasers.forEachAlive(function (obj)
+        eventObjects.forEachAlive(function (obj)
         {
             game.debug.body(obj);
-        });*/
+        });
         
-        //game.debug.body(player);  
+        game.debug.body(player);  
         /*if (attacking)
         {
             game.debug.body(hitbox1);   
@@ -435,6 +461,12 @@ function powerUp (player, power)
         playerGlobals.maxJumps += 1;
     }
     playerGlobals.powerUps[power.ability] = true;
+    puAnim.onComplete.add(function () {
+        callMsg(events[puEvents[power.ability]]);
+    }, this);
+    
+    puAnim.play();
+    
     power.kill();
 }
 

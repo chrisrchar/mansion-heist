@@ -96,6 +96,42 @@
                  "width":32,
                  "x":1640,
                  "y":454
+                }, 
+                {
+                 "gid":107,
+                 "height":32,
+                 "id":28,
+                 "name":"",
+                 "properties":
+                    {
+                     "autoStart":true,
+                     "delay":200,
+                     "eventNum":0
+                    },
+                 "propertytypes":
+                    {
+                     "autoStart":"bool",
+                     "delay":"int",
+                     "eventNum":"int"
+                    },
+                 "rotation":0,
+                 "type":"Event",
+                 "visible":true,
+                 "width":32,
+                 "x":48,
+                 "y":576
+                }, 
+                {
+                 "gid":107,
+                 "height":32,
+                 "id":29,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":168,
+                 "y":1032
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -106,7 +142,7 @@
         }, 
         {
          "draworder":"topdown",
-         "height":22,
+         "height":0,
          "name":"transitions",
          "objects":[
                 {
@@ -174,11 +210,11 @@
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":65,
+         "width":0,
          "x":0,
          "y":0
         }],
- "nextobjectid":28,
+ "nextobjectid":30,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

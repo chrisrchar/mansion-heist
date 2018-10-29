@@ -25,7 +25,7 @@ function drawHUD()
     
     healthBarInner.scale = {x: playerGlobals.hp/playerGlobals.maxhp, y: 1};
     
-    var healthText = game.add.text(playerGlobals.maxhp * 3 + 16, 0, playerGlobals.hp, { fontSize: '24px', fill: '#fff', stroke: 'black', strokeThickness: 4 });
+    var healthText = game.add.text(playerGlobals.maxhp * 3 + 16, 0, playerGlobals.hp, { font: '24px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 4 });
     hud.addChild(healthText);
     
     var staBarOuter = game.add.graphics(0, 38);
@@ -45,7 +45,7 @@ function drawHUD()
     
     staBarInner.scale = {x: playerGlobals.stamina/playerGlobals.maxSta, y: 1};
     
-    moneyHUD = game.add.text(16, 64, '$: '+playerGlobals.money, { fontSize: '32px', fill: '#fff', stroke: 'black', strokeThickness: 8 });
+    moneyHUD = game.add.text(16, 64, '$: '+playerGlobals.money, { font: '32px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 8 });
     hud.addChild(moneyHUD);
 }
 

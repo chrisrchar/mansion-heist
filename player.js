@@ -5,7 +5,9 @@ var pad1, jumpButton, leftButton, rightButton, atkButton, ablButton;
 
 var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible, attacking, jumpDown, resting;
 
-var atkAnim;
+var textForMove, textForJump, textForAtk;
+
+var atkAnim, puAnim;
 
 var jumpsfx;
 
@@ -30,6 +32,8 @@ var playerGlobals = {
     lastSave: null
 };
 
+var puEvents = [1];
+
 var abiTimer, refreshTimer;
 
 function createPlayer(spawn) {
@@ -44,9 +48,11 @@ function createPlayer(spawn) {
     atkAnim = player.animations.add('attack', [12, 13, 14, 15, 15], 20, false);
     
     atkAnim.onComplete.add(function () {
-            attacking = false;
-            hitbox1.body.enable = false;
+        attacking = false;
+        hitbox1.body.enable = false;
     });
+    
+    puAnim = player.animations.add('drink', [16, 17, 17, 16], 1, false);
     
     // Center the player
     player.anchor.x = .5;
@@ -90,7 +96,7 @@ function createPlayer(spawn) {
     leftButton = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
     rightButton = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     downButton = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     atkButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
     ablButton = game.input.keyboard.addKey(Phaser.Keyboard.S);
     saveTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
@@ -105,7 +111,13 @@ function createPlayer(spawn) {
     downButton.onDown.add(downBtnPress);
     saveTestBtn.onDown.add(saveGame);
     loadTestBtn.onDown.add(loadGame);
-    testBtn6.onDown.add(callMsg);
+    testBtn6.onDown.add(function () {
+        callMsg(events[0]);
+    });
+    
+    textForMove = "arrow keys";
+    textForJump = "spacebar";
+    textForAtk = "A key";
     
     pad1.onConnectCallback = function () {
         console.log('gamepad connected');
@@ -150,6 +162,13 @@ function createPlayer(spawn) {
     abiTimer.start();
     abiTimer.pause();
     refreshTimer.start();
+    
+    textPlacement = {
+            default: {x: game.camera.width/2-400, y: 600-60, anchor: 0},
+            center: {x: game.camera.width/2, y: 600, anchor: 0.5}
+    };
+    
+    setEvents();
         
     // PLAYER UPDATE
     player.update = function () {
@@ -171,6 +190,12 @@ function createPlayer(spawn) {
             ablButton.onUp.add(abilityUp);
             downButton.onDown.add(downBtnPress);
             saveTestBtn.onDown.add(saveGame);
+            
+            textForMove = "D-Pad";
+            textForJump = "X Button";
+            textForAtk = "Square Button";
+            
+            setEvents();
         }
         
         game.physics.arcade.collide(player, platforms);
@@ -205,12 +230,12 @@ function createPlayer(spawn) {
         
         if (!playerGlobals.hurt)
         {
-            if (xDir != 0 && !inMessage)
+            if (xDir != 0 && !inMessage && !puAnim.isPlaying)
             {
                 facing = xDir;
                 player.body.velocity.x = xDir * speed;
                 player.scale.setTo(xDir, 1);
-                if (grounded && !attacking)
+                if (grounded && !attacking && !puAnim.isPlaying)
                 {
                     player.animations.play('run');
                     player.state = playerStates.WALKING;
@@ -218,7 +243,7 @@ function createPlayer(spawn) {
             }
             else 
             {
-                if (grounded && !attacking)
+                if (grounded && !attacking && !puAnim.isPlaying)
                 {
                     player.frame = 0;
                 }
@@ -294,7 +319,7 @@ function checkButtons (pad)
 function jump ()
 {
     //Variable Jumping
-    if (playerGlobals.jumps < playerGlobals.maxJumps && !inMessage)
+    if (playerGlobals.jumps < playerGlobals.maxJumps && !inMessage && !puAnim.isPlaying)
     {
         jumpsfx.play();
         player.animations.play('jump');
@@ -330,7 +355,7 @@ function downBtnPress ()
 
 function attack ()
 {
-    if (!attacking && !inMessage)
+    if (!attacking && !inMessage && !puAnim.isPlaying)
     {
         attacking = true;
         var atkHitTimer = game.time.create(true);

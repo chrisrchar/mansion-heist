@@ -22,6 +22,7 @@ function Typewriter() {
         _that.fontFamily = options.fontFamily || "Arial";
         _that.fontSize = options.fontSize || 28;
         _that.writerObj = options.writerObj || null;
+        _that.anchor = options.anchor || 0;
     }
 
     function start() {
@@ -47,6 +48,7 @@ function Typewriter() {
         if (_that.writerObj === null) {
             _that.typedText = game.add.bitmapText(x, y, _that.fontFamily, text, _that.fontSize);
             _that.typedText.fixedToCamera = true;
+            _that.typedText.anchor.set(_that.anchor);
         } else {
             _that.typedText = _that.writerObj;
             _that.typedText.fixedToCamera = true;
