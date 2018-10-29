@@ -1,5 +1,12 @@
 var events = [];
 
+var eventsDone = [];
+
+for (var i=0; i<3; i++)
+{
+    eventsDone[i] = false;
+}
+
 function setEvents () {
     
     console.log('setting events');

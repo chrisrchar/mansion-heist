@@ -234,19 +234,24 @@ function addMap (gridX, gridY)
         eventObjects = game.add.group();
         eventObjects.enableBody = true;
         
-        map.createFromObjects('sprites', 107, null, 0, false, false, eventObjects);
+        map.createFromObjects('sprites', 107, null, 0, true, false, eventObjects);
         
         eventObjects.forEach(function (event) {
             if (event.autoStart)
             {
                 var eventTimer = game.time.create(true);
                 eventTimer.add(event.delay, function () {
-                    callMsg(events[event.eventNum]);
-                    //event.kill();
+                    if (!eventsDone[event.eventNum])
+                    {
+                        callMsg(events[event.eventNum]);
+                        eventsDone[event.eventNum] = true;
+                    }
+                    event.destroy();
                 }, this);
                 eventTimer.start();
             }
             else {
+                event.anchor.setTo(0.5,0.5);
                 event.body.setSize(event.bodyWidth, event.bodyHeight, 0, 0);
             }
         });
@@ -283,10 +288,13 @@ function addMap (gridX, gridY)
         game.physics.arcade.overlap(player, coins, collectCoins, null, this);
         game.physics.arcade.overlap(player, powerup, powerUp, null, this);
         game.physics.arcade.overlap(player, eventObjects, function (plyr, event) {
-            console.log('overlapping');
-            callMsg(events[event.eventNum]);
-            event.kill();
-        }, null, this);
+            if (!eventsDone[event.eventNum])
+            {
+                callMsg(events[event.eventNum]);
+                eventsDone[event.eventNum] = true;
+            }
+            event.destroy();
+        });
         
         game.physics.arcade.collide(enemies, platforms);
         game.physics.arcade.collide(coins, platforms);
@@ -305,14 +313,14 @@ function addMap (gridX, gridY)
     // Hitbox Debugging
     tempMap.render = function () {
         
-        game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
+        //game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
         
-        eventObjects.forEachAlive(function (obj)
+        /*eventObjects.forEachAlive(function (obj)
         {
             game.debug.body(obj);
         });
         
-        game.debug.body(player);  
+        game.debug.body(player);  */
         /*if (attacking)
         {
             game.debug.body(hitbox1);   
@@ -462,7 +470,10 @@ function powerUp (player, power)
     }
     playerGlobals.powerUps[power.ability] = true;
     puAnim.onComplete.add(function () {
-        callMsg(events[puEvents[power.ability]]);
+        if (events[puEvents[power.ability]])
+        {
+            callMsg(events[puEvents[power.ability]]);
+        }
     }, this);
     
     puAnim.play();
@@ -488,7 +499,8 @@ function saveGame ()
 {
     playerGlobals.lastSave = {
         state: game.state.current,
-        mapdata: mapVisited
+        mapdata: mapVisited,
+        eventsDone: eventsDone
     };
     playerGlobals.lastX = player.x;
     playerGlobals.lastY = player.y;
@@ -510,6 +522,7 @@ function loadGame ()
 {
     playerGlobals = JSON.parse(localStorage.savegame);
     mapVisited = playerGlobals.lastSave.mapdata;
+    eventsDone = playerGlobals.lastSave.eventsDone;
     game.state.start(playerGlobals.lastSave.state);
 }
 
