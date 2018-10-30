@@ -69,6 +69,8 @@ function createPlayer(spawn) {
     player.body.velocity.x = playerGlobals.xVel;
     player.body.velocity.y = playerGlobals.yVel;
     
+    console.log(player.body.velocity.y);
+    
     // Make a group for other hitboxes (such as attacks)
     hitboxes = game.add.group();
     hitboxes.enableBody = true;
@@ -111,9 +113,6 @@ function createPlayer(spawn) {
     downButton.onDown.add(downBtnPress);
     saveTestBtn.onDown.add(saveGame);
     loadTestBtn.onDown.add(loadGame);
-    testBtn6.onDown.add(function () {
-        callMsg(events[0]);
-    });
     
     textForMove = "arrow keys";
     textForJump = "spacebar";
@@ -131,7 +130,6 @@ function createPlayer(spawn) {
         INVISIBLE: "INVISIBLE",
         ATTACKING: "ATTACKING"
     };
-    var firstCheck = true;
     var xDir;
     
     jumpsfx = game.add.audio('jumpsfx');

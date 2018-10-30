@@ -199,13 +199,13 @@
     <property name="toMap" value="10x8"/>
    </properties>
   </object>
-  <object id="30" gid="87" x="1272" y="488" width="32" height="32">
+  <object id="30" gid="87" x="1260" y="489" width="32" height="32">
    <properties>
     <property name="side" value="right"/>
     <property name="toMap" value="11x9"/>
    </properties>
   </object>
-  <object id="31" gid="88" x="1272" y="696" width="32" height="32">
+  <object id="31" gid="88" x="1260" y="697" width="32" height="32">
    <properties>
     <property name="side" value="right"/>
     <property name="toMap" value="11x9"/>
@@ -216,7 +216,7 @@
     <property name="fromMap" value="10x8"/>
    </properties>
   </object>
-  <object id="33" gid="89" x="1248" y="576" width="32" height="32">
+  <object id="33" gid="89" x="1215" y="512" width="32" height="32">
    <properties>
     <property name="fromMap" value="11x9"/>
    </properties>

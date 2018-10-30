@@ -22,7 +22,7 @@ var textPlacement;
 // GAME OBJECTS
 var platforms, jumpthruPlatforms, coins, enemies, vases, spikes, saves, eventObjects;
 
-var brokeVase, restroomText, restroomTextTween;
+var brokeVase, restroomText, restroomTextTween, fadeToBlack, transitionFade;
 
 var coinsfx, breakSFX;
 
@@ -259,6 +259,19 @@ function addMap (gridX, gridY)
         brokeVase = game.add.emitter(0, 0, 100);
         brokeVase.makeParticles('vase-shard', 0, 16, true);
         brokeVase.gravity = 600;
+        brokeVase.particleDrag.x = 100;
+        brokeVase.angularDrag = 300;
+        
+        // Fade in/out room
+        fadeToBlack = game.add.graphics(0,0);
+        fadeToBlack.fixedToCamera = true;
+        fadeToBlack.beginFill(0x000000, 1);
+        fadeToBlack.drawRect(0,0,game.camera.width,game.camera.height);
+        fadeToBlack.endFill();
+        
+        game.add.tween(fadeToBlack).to({alpha: 0}, 500, Phaser.Easing.Quadratic.In, true);
+        
+        transitionFade = game.add.tween(fadeToBlack).to({alpha: 1}, 500, Phaser.Easing.Quadratic.Out, false);
         
         addAudio();
     }
@@ -287,14 +300,17 @@ function addMap (gridX, gridY)
     
         game.physics.arcade.overlap(player, coins, collectCoins, null, this);
         game.physics.arcade.overlap(player, powerup, powerUp, null, this);
-        game.physics.arcade.overlap(player, eventObjects, function (plyr, event) {
-            if (!eventsDone[event.eventNum])
-            {
-                callMsg(events[event.eventNum]);
-                eventsDone[event.eventNum] = true;
-            }
-            event.destroy();
-        });
+        if (eventObjects.children[0])
+        {
+            game.physics.arcade.overlap(player, eventObjects, function (plyr, event) {
+                if (!eventsDone[event.eventNum])
+                {
+                    callMsg(events[event.eventNum]);
+                    eventsDone[event.eventNum] = true;
+                }
+                event.destroy();
+            });
+        }
         
         game.physics.arcade.collide(enemies, platforms);
         game.physics.arcade.collide(coins, platforms);
@@ -307,7 +323,14 @@ function addMap (gridX, gridY)
             loadGame();
         }
 
-        tempMap.exits.forEach(checkExits);
+        if (!transitionFade.isRunning)
+        {
+            tempMap.exits.forEach(checkExits);
+        }
+        else 
+        {
+            player.body.gravity = 0;
+        }
     }
     
     // Hitbox Debugging
@@ -373,11 +396,14 @@ function checkExits (exit)
 // Transition to a given map with given parameters
 function goToMap (mapName)
 {
+    playerGlobals.yVel = player.body.velocity.y;
     playerGlobals.lastMap = game.state.current;
     playerGlobals.xVel = player.body.velocity.x;
-    playerGlobals.yVel = player.body.velocity.y;
     playerGlobals.xDir = rightButton.isDown - leftButton.isDown;
-    game.state.start(mapName);
+    transitionFade.onComplete.add(function () {
+            game.state.start(mapName);
+    });
+    transitionFade.start();
 }
 
 // Set directional collision of tiles

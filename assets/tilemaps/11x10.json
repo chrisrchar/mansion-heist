@@ -724,8 +724,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":24,
-                 "y":408
+                 "x":33,
+                 "y":353
                 }, 
                 {
                  "gid":87,
@@ -786,8 +786,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":2504,
-                 "y":432
+                 "x":2497,
+                 "y":383
                 }],
          "opacity":1,
          "type":"objectgroup",

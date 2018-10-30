@@ -135,7 +135,7 @@
     <property name="toMap" value="9x8"/>
    </properties>
   </object>
-  <object id="37" gid="89" x="40" y="432" width="32" height="32">
+  <object id="37" gid="89" x="33" y="351" width="32" height="32">
    <properties>
     <property name="fromMap" value="9x8"/>
    </properties>

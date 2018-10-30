@@ -128,7 +128,7 @@
     <property name="toMap" value="9x10"/>
    </properties>
   </object>
-  <object id="25" gid="89" x="24" y="408" width="32" height="32">
+  <object id="25" gid="89" x="32" y="384" width="32" height="32">
    <properties>
     <property name="fromMap" value="9x10"/>
    </properties>
@@ -160,7 +160,7 @@
     <property name="toMap" value="11x10"/>
    </properties>
   </object>
-  <object id="31" gid="89" x="1216" y="432" width="32" height="32">
+  <object id="31" gid="89" x="1215" y="385" width="32" height="32">
    <properties>
     <property name="fromMap" value="11x10"/>
    </properties>
