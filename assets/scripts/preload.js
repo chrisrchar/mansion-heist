@@ -19,6 +19,7 @@ var preload = {
         game.load.image('laser', 'assets/tilemaps/tiles/laserTop.png');
         game.load.image('spikes', 'assets/sprites/spikes.png');
         game.load.image('toilet', 'assets/sprites/toilet.png');
+        game.load.image('vending', 'assets/sprites/vending.png');
         
         game.load.image('vase-shard', 'assets/sprites/vaseshard.png');
         game.load.image('laserpart', 'assets/sprites/laserparticle.png');

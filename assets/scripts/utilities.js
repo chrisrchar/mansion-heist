@@ -20,9 +20,11 @@ var player;
 
 var textPlacement;
 // GAME OBJECTS
-var platforms, jumpthruPlatforms, coins, enemies, vases, spikes, saves, eventObjects;
+var platforms, jumpthruPlatforms, coins, enemies, vases, spikes, saves, shopObjects, eventObjects;
 
-var brokeVase, restroomText, restroomTextTween, fadeToBlack, transitionFade;
+var shopText, restroomText, restroomTextTween;
+
+var brokeVase, fadeToBlack, transitionFade;
 
 var coinsfx, breakSFX;
 
@@ -133,6 +135,8 @@ function addMap (gridX, gridY)
         
         map.createFromObjects('sprites', 45, 'vase', 0, true, false, vases);
         
+        // SAVES
+        
         saves = game.add.group();
         saves.enableBody = true;
         
@@ -144,12 +148,33 @@ function addMap (gridX, gridY)
             toilet.body.setSize(128,64,0,64);
             toilet.body.immovable = true;
             
-            restroomText = game.add.text(toilet.x, toilet.y - 80, "Take a Rest ↓", { fontSize: '24px', fill: '#fff', stroke: 'black', strokeThickness: 4 });
+            restroomText = game.add.text(toilet.x, toilet.y - 80, "Take a Rest ↓", { font: '24px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 4 });
             restroomText.anchor.x = .5;
             restroomText.x += toilet.width/2;
             //restroomText.alpha = 0;
             restroomTextTween = game.add.tween(restroomText).to({x: restroomText.x, y: toilet.y - 64}, 500, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
         });
+        
+        // VENDING
+        
+        shopObjects = game.add.group();
+        shopObjects.enableBody = true;
+        
+        map.createFromObjects('sprites', 11, 'vending', 0, true, false, shopObjects);
+        
+        shopObjects.setAll('anchor.x', .5);
+        shopObjects.setAll('anchor.y', 0);
+        
+        if (shopObjects.children[0])
+        {
+            var vendor = shopObjects.children[0];
+            
+            shopText = game.add.text(vendor.x, vendor.y - 80, "Shop ↓", { font: '24px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 4 });
+            shopText.anchor.x = .5;
+            shopText.alpha = 0;
+            game.add.tween(shopText).to({x: vendor.x, y: vendor.y - 64}, 500, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
+        }
+        
         
         //===============
         
@@ -231,6 +256,8 @@ function addMap (gridX, gridY)
         game.camera.follow(player);
         game.camera.lerp.x = .1;
         
+        // Add Events to Room
+        
         eventObjects = game.add.group();
         eventObjects.enableBody = true;
         
@@ -256,6 +283,7 @@ function addMap (gridX, gridY)
             }
         });
         
+        // Vase Particles
         brokeVase = game.add.emitter(0, 0, 100);
         brokeVase.makeParticles('vase-shard', 0, 16, true);
         brokeVase.gravity = 600;
@@ -300,6 +328,22 @@ function addMap (gridX, gridY)
     
         game.physics.arcade.overlap(player, coins, collectCoins, null, this);
         game.physics.arcade.overlap(player, powerup, powerUp, null, this);
+        
+        if (game.physics.arcade.overlap(player, shopObjects) && !shopOpen)
+        {
+            if (shopText.alpha == 0)
+            {
+                game.add.tween(shopText).to({alpha: 1},500, Phaser.Easing.Linear.None, true);
+            }
+        }
+        else if (!game.physics.arcade.overlap(player, shopObjects))
+        {
+            if (shopText && shopText.alpha == 1)
+            {
+                game.add.tween(shopText).to({alpha: 0},500, Phaser.Easing.Linear.None, true);
+            }
+        }
+        
         if (eventObjects.children[0])
         {
             game.physics.arcade.overlap(player, eventObjects, function (plyr, event) {

@@ -110,9 +110,15 @@ function createPlayer(spawn) {
     atkButton.onDown.add(attack);
     ablButton.onDown.add(abilityDown);
     ablButton.onUp.add(abilityUp);
-    downButton.onDown.add(downBtnPress);
+    downButton.onDown.add(downPressed);
     saveTestBtn.onDown.add(saveGame);
     loadTestBtn.onDown.add(loadGame);
+    testBtn6.onDown.add(function () {
+        initShop();
+    });
+    
+    leftButton.onDown.add(leftPressed);
+    rightButton.onDown.add(rightPressed);
     
     textForMove = "arrow keys";
     textForJump = "spacebar";
@@ -186,8 +192,11 @@ function createPlayer(spawn) {
             atkButton.onDown.add(attack);
             ablButton.onDown.add(abilityDown);
             ablButton.onUp.add(abilityUp);
-            downButton.onDown.add(downBtnPress);
+            downButton.onDown.add(downPressed);
             saveTestBtn.onDown.add(saveGame);
+            
+            leftButton.onDown.add(leftPressed);
+            rightButton.onDown.add(rightPressed);
             
             textForMove = "D-Pad";
             textForJump = "X Button";
@@ -228,7 +237,7 @@ function createPlayer(spawn) {
         
         if (!playerGlobals.hurt)
         {
-            if (xDir != 0 && !inMessage && !puAnim.isPlaying)
+            if (xDir != 0 && !inMessage && !puAnim.isPlaying && !shopOpen)
             {
                 facing = xDir;
                 player.body.velocity.x = xDir * speed;
@@ -272,7 +281,7 @@ function createPlayer(spawn) {
             player.body.gravity.y = gravity;
         }
         
-        if (!grounded && !attacking)
+        if (!grounded && !attacking && !playerGlobals.hurt)
         {
             player.frame = 9;
         }
@@ -317,7 +326,7 @@ function checkButtons (pad)
 function jump ()
 {
     //Variable Jumping
-    if (playerGlobals.jumps < playerGlobals.maxJumps && !inMessage && !puAnim.isPlaying)
+    if (playerGlobals.jumps < playerGlobals.maxJumps && !inMessage && !puAnim.isPlaying  && !shopOpen)
     {
         jumpsfx.play();
         player.animations.play('jump');
@@ -326,20 +335,42 @@ function jump ()
         player.state = playerStates.JUMPING;
     }
     
-    if (inMessage)
+    if (inMessage  && !shopOpen)
     {
         handleNextMessage();
     }
 }
 
-function downBtnPress ()
+function leftPressed ()
 {
-    if (resting && !inMessage)
+    if (shopOpen)
+    {
+        shopMoveLeft();
+    }
+}
+
+function rightPressed ()
+{
+    if (shopOpen)
+    {
+        shopMoveRight();
+    }
+}
+
+function downPressed ()
+{
+    if (resting && !inMessage  && !shopOpen)
     {
         saveGame();
     }
     
-    else if (grounded && !inMessage)
+    else if (game.physics.arcade.overlap(player, shopObjects) && !inMessage  && !shopOpen)
+    {
+        shopOpen = true;
+        openShop();
+    }
+    
+    else if (grounded && !inMessage  && !shopOpen)
     {
         jumpDown = true
         var groundTimer = game.time.create(true);
@@ -353,7 +384,7 @@ function downBtnPress ()
 
 function attack ()
 {
-    if (!attacking && !inMessage && !puAnim.isPlaying)
+    if (!attacking && !inMessage && !puAnim.isPlaying  && !shopOpen)
     {
         attacking = true;
         var atkHitTimer = game.time.create(true);
@@ -370,7 +401,7 @@ function attack ()
 
 function abilityDown ()
 {
-    if (playerGlobals.powerUps[1] && !inMessage)
+    if (playerGlobals.powerUps[1] && !inMessage  && !shopOpen)
     {
         invisible = true;
         player.alpha = 0.5;
@@ -381,7 +412,7 @@ function abilityDown ()
 
 function abilityUp ()
 {
-    if (playerGlobals.powerUps[1] && !inMessage)
+    if (playerGlobals.powerUps[1] && !inMessage  && !shopOpen)
     {
         invisible = false;
         player.alpha = 1;
