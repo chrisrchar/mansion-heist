@@ -7,7 +7,7 @@ var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible, atta
 
 var textForMove, textForJump, textForAtk;
 
-var atkAnim, puAnim;
+var atkAnim, puAnim, jumpAnim;
 
 var jumpsfx;
 
@@ -43,7 +43,7 @@ function createPlayer(spawn) {
     
     // Add player animations based on sprite sheet
     player.animations.add('run', [1, 2, 3, 4, 5, 6], 10, true);
-    player.animations.add('jump', [7, 9], 10, false);
+    jumpAnim = player.animations.add('jump', [7, 9], 10, false);
     player.animations.add('land', [11, 0], 10, false);
     atkAnim = player.animations.add('attack', [12, 13, 14, 15, 15], 20, false);
     
@@ -327,7 +327,7 @@ function checkButtons (pad)
 function jump ()
 {
     //Variable Jumping
-    if (playerGlobals.jumps < playerGlobals.maxJumps && !inMessage && !puAnim.isPlaying  && !shopOpen)
+    if (playerGlobals.jumps < playerGlobals.maxJumps && !inMessage && !puAnim.isPlaying  && !shopOpen && !attacking)
     {
         jumpsfx.play();
         player.animations.play('jump');
@@ -520,8 +520,8 @@ function attackHit (atkHitbox, other)
         
         spawnCoins(other);
         
-        brokeVase.x = other.body.x;
-        brokeVase.y = other.body.y;
+        brokeVase.x = other.body.x + 16;
+        brokeVase.y = other.body.y + 16;
         brokeVase.start(true, 2000, null, 4);
         other.destroy();
     }

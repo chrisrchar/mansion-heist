@@ -17,7 +17,7 @@ function checkExits (exit)
         case "up":
             if (player.body.y < exit.bound1.y && player.body.x > exit.bound1.x && player.body.x < exit.bound2.x)
             {
-                player.body.velocity.y += 100;
+                player.body.velocity.y -= 100;
                 goToMap(exit.toMap);
             }
             break;

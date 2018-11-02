@@ -135,6 +135,14 @@ function addMap (gridX, gridY)
         
         map.createFromObjects('sprites', 45, 'vase', 0, true, false, vases);
         
+        vases.setAll('anchor.x', 0.5);
+        vases.setAll('anchor.y', 0.5);
+        
+        vases.forEach(function (vase) {
+            vase.x += vase.width/2;
+            vase.y += vase.height/2;
+        });
+        
         // SAVES
         
         saves = game.add.group();

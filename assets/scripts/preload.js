@@ -19,7 +19,7 @@ var preload = {
         game.load.image('silvercoin', 'assets/sprites/silvercoin.png');
         game.load.image('goldcoin', 'assets/sprites/goldcoin.png');
         
-        game.load.image('vase', 'assets/tilemaps/tiles/vase.png');
+        game.load.image('vase', 'assets/sprites/vase.png');
         game.load.image('laser', 'assets/tilemaps/tiles/laserTop.png');
         game.load.image('spikes', 'assets/sprites/spikes.png');
         game.load.image('toilet', 'assets/sprites/toilet.png');
