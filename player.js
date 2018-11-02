@@ -98,6 +98,7 @@ function createPlayer(spawn) {
     leftButton = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
     rightButton = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     downButton = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+    upButton = game.input.keyboard.addKey(Phaser.Keyboard.UP);
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     atkButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
     ablButton = game.input.keyboard.addKey(Phaser.Keyboard.S);
@@ -119,6 +120,7 @@ function createPlayer(spawn) {
     
     leftButton.onDown.add(leftPressed);
     rightButton.onDown.add(rightPressed);
+    upButton.onDown.add(upPressed);
     
     textForMove = "arrow keys";
     textForJump = "spacebar";
@@ -335,9 +337,14 @@ function jump ()
         player.state = playerStates.JUMPING;
     }
     
-    if (inMessage  && !shopOpen)
+    if (inMessage)
     {
         handleNextMessage();
+    }
+    
+    if (shopOpen)
+    {
+        buyProduct();
     }
 }
 
@@ -357,6 +364,14 @@ function rightPressed ()
     }
 }
 
+function upPressed ()
+{
+    if (shopOpen)
+    {
+        shopMoveUp();
+    }
+}
+
 function downPressed ()
 {
     if (resting && !inMessage  && !shopOpen)
@@ -368,6 +383,11 @@ function downPressed ()
     {
         shopOpen = true;
         openShop();
+    }
+    
+    else if (shopOpen)
+    {
+        shopMoveDown();
     }
     
     else if (grounded && !inMessage  && !shopOpen)
@@ -393,6 +413,11 @@ function attack ()
         });
         atkHitTimer.start();
         atkAnim.play();
+    }
+    else if (shopOpen)
+    {
+        shopOpen = false;
+        closeShop();
     }
 }
 
