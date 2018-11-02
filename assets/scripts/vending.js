@@ -4,12 +4,12 @@ var shopGfx;
 
 // Shop Grid Variables
 var productsArray = [];
-var shopGridWidth = 4;
-var shopGridHeight = 5;
+const shopGridWidth = 4;
+const shopGridHeight = 5;
 
 // Shop Grid Sizing (Pixels)
-var shopGridSize = 64;
-var shopGridSpacing = 16;
+const shopGridSize = 64;
+const shopGridSpacing = 16;
 var shopGridTotalHeight;
 
 // Indexing and Selection
