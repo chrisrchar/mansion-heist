@@ -8,8 +8,9 @@ var shopGridHeight = 5;
 var shopGridSize = 64;
 var shopGridSpacing = 16;
 
-var activeProd = 0;
+var activeProd;
 var currentProd;
+var updatingProduct;
 
 var shopGridTotalHeight;
 
@@ -18,7 +19,7 @@ function initShop ()
     productsArray = [
         {
             name: 'Chips',
-            price: 100,
+            price: 50,
             description: 'A bag of crisps. Not that good for you.\nHeals 40HP',
             key: 'chips',
             sellsout: false,
@@ -59,6 +60,7 @@ function initShop ()
 function openShop () 
 {
     game.add.tween(shopText).to({alpha: 0},500, Phaser.Easing.Linear.None, true);
+    updatingProduct = true;
     drawShop();
 }
 
@@ -78,8 +80,6 @@ function closeShop ()
         });
         squareCloseTween.start();
     });
-    
-    activeProd = 0;
 }
 
 function drawShop ()
@@ -133,11 +133,20 @@ function drawShop ()
         var prodSquarePopInTimer = game.time.create(true);
         prodSquarePopInTimer.add(100*prodIndex, function () {
             game.add.tween(prodSqSprite.scale).to({x: 1, y: 1},500, Phaser.Easing.Bounce.InOut, true);
-            game.add.tween(prodSqSprite).to({angle: 375}, 800, Phaser.Easing.Bounce.Out, true);
+            var lastTween = game.add.tween(prodSqSprite).to({angle: 375}, 800, Phaser.Easing.Bounce.Out);
             
             if (prodIndex == productsArray.length-1)
             {
-                updateActiveProduct();
+                lastTween.onComplete.add(function () {
+                    activeProd = 0;
+                    updatingProduct = false;
+                    updateActiveProduct();
+                });
+                lastTween.start()
+            }
+            else
+            {
+                lastTween.start()
             }
             
         }, this);
@@ -155,7 +164,7 @@ function buyProduct ()
 {
     if (!currentProd.soldout && playerGlobals.money >= currentProd.price)
     {
-        game.add.tween(shopGfx.children[0].children[activeProd].scale).to({x: 1.4, y: 1.4},200, Phaser.Easing.Bounce.InOut, true, 0, 0, true);
+        game.add.tween(shopGfx.children[0].children[activeProd].scale).to({x: 1.8, y: 1.8},150, Phaser.Easing.Bounce.InOut, true, 0, 0, true);
         playerGlobals.money -= currentProd.price;
         moneyHUD.text = '$: '+playerGlobals.money;
         currentProd.action();
@@ -164,8 +173,36 @@ function buyProduct ()
 
 function updateActiveProduct () 
 {
+
+    updatingProduct = true;
     currentProd = productsArray[activeProd];
-    
+
+    setProductName();
+    setProductDescription();
+
+    shopGfx.children[0].children.forEach(function (square, squareInd) {
+        if (activeProd == squareInd)
+        {
+            console.log(activeProd);
+            game.add.tween(square.scale).to({x: 1.2, y: 1.2},100, Phaser.Easing.Linear.None, true);
+            var updatingTween = game.add.tween(square).to({angle: 0}, 100, Phaser.Easing.Linear.None);
+            updatingTween.onComplete.add(function () {
+                updatingProduct = false;
+            });
+            updatingTween.start();
+            square.alpha = 1;
+        }
+        else if (square.angle != 15)
+        {
+            game.add.tween(square.scale).to({x: 1, y: 1},100, Phaser.Easing.Linear.None, true);
+            game.add.tween(square).to({angle: 15}, 100, Phaser.Easing.Linear.None, true);
+            square.alpha = .6;
+        }
+    });
+}
+
+function setProductName()
+{
     if (!shopGfx.children[1])
     {
         var itemName = game.add.text(game.camera.width/2, shopGfx.children[0].y + shopGridTotalHeight, currentProd.name + " $" + currentProd.price, { font: '32px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 8 });
@@ -177,7 +214,10 @@ function updateActiveProduct ()
     {
         shopGfx.children[1].text = currentProd.name + " $" + currentProd.price;
     }
-    
+}
+
+function setProductDescription () 
+{
     if (!shopGfx.children[2])
     {
         var itemDesc = game.add.text(game.camera.width/2, shopGfx.children[0].y + shopGridTotalHeight + 64, currentProd.description, { font: '24px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 8 });
@@ -189,76 +229,72 @@ function updateActiveProduct ()
     {
         shopGfx.children[2].text = currentProd.description;
     }
-    
-    shopGfx.children[0].children.forEach(function (square, squareInd) {
-        if (activeProd == squareInd)
-        {
-            console.log(activeProd);
-            game.add.tween(square.scale).to({x: 1.2, y: 1.2},200, Phaser.Easing.Linear.None, true);
-            game.add.tween(square).to({angle: 0}, 200, Phaser.Easing.Linear.None, true);
-            square.alpha = 1;
-        }
-        else if (square.angle != 15)
-        {
-            game.add.tween(square.scale).to({x: 1, y: 1},200, Phaser.Easing.Linear.None, true);
-            game.add.tween(square).to({angle: 15}, 200, Phaser.Easing.Linear.None, true);
-            square.alpha = .6;
-        }
-    });
 }
 
 function shopMoveLeft ()
 {
-    if (activeProd % shopGridWidth == 0)
+    if (!updatingProduct)
     {
-        activeProd = Math.min(activeProd+shopGridWidth-1, productsArray.length-1);
+        if (activeProd % shopGridWidth == 0)
+        {
+            activeProd = Math.min(activeProd+shopGridWidth-1, productsArray.length-1);
+        }
+        else 
+        {
+            activeProd -= 1;
+        }
+
+        updateActiveProduct();
     }
-    else 
-    {
-        activeProd -= 1;
-    }
-    
-    updateActiveProduct();
 }
 
 function shopMoveRight ()
 {
-    if (activeProd % shopGridWidth == shopGridWidth-1 || activeProd == productsArray.length - 1)
+    if (!updatingProduct)
     {
-        activeProd = Math.floor(activeProd/shopGridWidth)*shopGridWidth;
+        if (activeProd % shopGridWidth == shopGridWidth-1 || activeProd == productsArray.length - 1)
+        {
+            activeProd = Math.floor(activeProd/shopGridWidth)*shopGridWidth;
+        }
+        else 
+        {
+            activeProd += 1;
+        }
+
+        updateActiveProduct();
     }
-    else 
-    {
-        activeProd += 1;
-    }
-    
-    updateActiveProduct();
 }
 
 function shopMoveUp ()
 {
-    if (Math.floor(activeProd/shopGridWidth) == 0)
+    if (!updatingProduct)
     {
-        activeProd = Math.min(activeProd+Math.floor(productsArray.length/shopGridWidth)*shopGridWidth, productsArray.length-1);
+        if (Math.floor(activeProd/shopGridWidth) == 0)
+        {
+            activeProd = Math.min(activeProd+Math.floor(productsArray.length/shopGridWidth)*shopGridWidth, productsArray.length-1);
+        }
+        else 
+        {
+            activeProd -= shopGridWidth;
+        }
+
+        updateActiveProduct();
     }
-    else 
-    {
-        activeProd -= shopGridWidth;
-    }
-    
-    updateActiveProduct();
 }
 
 function shopMoveDown ()
 {
-    if (Math.floor(activeProd/shopGridWidth) == Math.floor(productsArray.length/shopGridWidth) || !productsArray[activeProd+shopGridWidth])
+    if (!updatingProduct)
     {
-        activeProd = activeProd % shopGridWidth;
+        if (Math.floor(activeProd/shopGridWidth) == Math.floor(productsArray.length/shopGridWidth) || !productsArray[activeProd+shopGridWidth])
+        {
+            activeProd = activeProd % shopGridWidth;
+        }
+        else 
+        {
+            activeProd += shopGridWidth;
+        }
+
+        updateActiveProduct();
     }
-    else 
-    {
-        activeProd += shopGridWidth;
-    }
-    
-    updateActiveProduct();
 }

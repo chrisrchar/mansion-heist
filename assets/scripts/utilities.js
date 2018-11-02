@@ -189,10 +189,11 @@ function addMap (gridX, gridY)
         enemies.setAll('body.gravity.y', gravity);
         enemies.setAll('body.drag.x', 500);
         enemies.setAll('body.immovable', true);
+        enemies.setAll('anchor.y', 1);
+        enemies.setAll('anchor.x', .5);
         
         enemies.forEach(function (obj) {
-            obj.anchor.x = .5;
-            obj.anchor.y = .5;
+            obj.y += obj.height;
             obj.animations.add('walk', [1, 2, 3, 4], 10, true);
             obj.animations.play('walk');
             
@@ -380,7 +381,7 @@ function addMap (gridX, gridY)
     // Hitbox Debugging
     tempMap.render = function () {
         
-        //game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
+        game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
         
         /*eventObjects.forEachAlive(function (obj)
         {
@@ -405,50 +406,6 @@ function addMap (gridX, gridY)
     maps.push(tempMap);
 }
 
-
-// Checks all exits of a given map to see if the player is leaving one
-function checkExits (exit)
-{
-    switch(exit.side) {
-        case "right":
-            if (player.body.x > exit.bound1.x && player.body.y > exit.bound1.y && player.body.y < exit.bound2.y)
-            {
-                goToMap(exit.toMap);
-            }
-            break;
-        case "left":
-            if (player.body.x < exit.bound1.x && player.body.y > exit.bound1.y && player.body.y < exit.bound2.y)
-            {
-                goToMap(exit.toMap);
-            }
-            break;
-        case "up":
-            if (player.body.y < exit.bound1.y && player.body.x > exit.bound1.x && player.body.x < exit.bound2.x)
-            {
-                goToMap(exit.toMap);
-            }
-            break;
-        case "down":
-            if (player.body.y > exit.bound1.y && player.body.x > exit.bound1.x && player.body.x < exit.bound2.x)
-            {
-                goToMap(exit.toMap);
-            }
-            break;
-    }
-}
-
-// Transition to a given map with given parameters
-function goToMap (mapName)
-{
-    playerGlobals.yVel = player.body.velocity.y;
-    playerGlobals.lastMap = game.state.current;
-    playerGlobals.xVel = player.body.velocity.x;
-    playerGlobals.xDir = rightButton.isDown - leftButton.isDown;
-    transitionFade.onComplete.add(function () {
-            game.state.start(mapName);
-    });
-    transitionFade.start();
-}
 
 // Set directional collision of tiles
 function setTileCollision(mapLayer, idxOrArray, dirs) {
@@ -518,13 +475,38 @@ function hurtEnd (ref)
 function collectCoins (player, coin) 
 {
     // Removes the star from the screen
-    coin.kill();
-    
     coinsfx.play('',0,.7);
     
-    playerGlobals.money += 10;
+    playerGlobals.money += coin.coinValue;
+    coin.kill();
     moneyHUD.text = '$: '+playerGlobals.money;
+}
 
+function spawnCoins(other)
+{
+    if (Math.floor(Math.random()*3) == 0)
+    {
+        var coinTypeChance = Math.floor(Math.random()*6);
+
+        if (coinTypeChance < 3)
+        {
+            var spoils = coins.create(other.body.x, other.body.y, 'coin');
+            spoils.coinValue = 5;
+        }
+        else if (coinTypeChance < 5)
+        {
+            var spoils = coins.create(other.body.x, other.body.y, 'silvercoin');
+            spoils.coinValue = 10;
+        }
+        else
+        {
+            var spoils = coins.create(other.body.x, other.body.y, 'goldcoin');
+            spoils.coinValue = 25;
+        }
+        spoils.body.gravity.y = gravity;
+        spoils.body.drag.x = 500;
+        spoils.body.velocity.x = 150 * Math.sign(other.body.x - player.body.x);
+    }
 }
 
 function switchDir (ref)

@@ -107,20 +107,19 @@ function createPlayer(spawn) {
     testBtn6 = game.input.keyboard.addKey(Phaser.Keyboard.SIX);
     
     // ADDING CONTROL CALLBACKS
-    jumpButton.onDown.add(jump);
+    jumpButton.onDown.add(confirmPressed);
     atkButton.onDown.add(attack);
     ablButton.onDown.add(abilityDown);
     ablButton.onUp.add(abilityUp);
-    downButton.onDown.add(downPressed);
     saveTestBtn.onDown.add(saveGame);
     loadTestBtn.onDown.add(loadGame);
-    testBtn6.onDown.add(function () {
-        initShop();
-    });
     
     leftButton.onDown.add(leftPressed);
     rightButton.onDown.add(rightPressed);
     upButton.onDown.add(upPressed);
+    downButton.onDown.add(downPressed);
+    
+    jumpButton.onDown.add(jump);
     
     textForMove = "arrow keys";
     textForJump = "spacebar";
@@ -336,7 +335,10 @@ function jump ()
         playerGlobals.jumps++;
         player.state = playerStates.JUMPING;
     }
-    
+}
+
+function confirmPressed ()
+{
     if (inMessage)
     {
         handleNextMessage();
@@ -503,10 +505,8 @@ function attackHit (atkHitbox, other)
         if (other.hp < 1)
         {
             other.kill();
-            var spoils = coins.create(other.body.x, other.body.y, 'coin');
-            spoils.body.gravity.y = gravity;
-            spoils.body.drag.x = 500;
-            spoils.body.velocity.x = 150 * Math.sign(other.body.x - player.body.x);
+            
+            spawnCoins(other);
         }
         other.hurt = true;
         other.tint = 0xff0000;
@@ -517,10 +517,9 @@ function attackHit (atkHitbox, other)
     if (other.key == 'vase')
     {
         breakSFX.play();
-        var spoils = coins.create(other.body.x, other.body.y, 'coin');
-        spoils.body.gravity.y = gravity;
-        spoils.body.drag.x = 500;
-        spoils.body.velocity.x = 150 * Math.sign(other.body.x - player.body.x);
+        
+        spawnCoins(other);
+        
         brokeVase.x = other.body.x;
         brokeVase.y = other.body.y;
         brokeVase.start(true, 2000, null, 4);

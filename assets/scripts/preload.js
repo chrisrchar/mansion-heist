@@ -14,7 +14,11 @@ var preload = {
         game.load.image('tileBG', 'assets/sprites/tileBG.png');
         
         game.load.spritesheet('enemy', 'assets/spritesheets/final_sheets/guard_100x150.png', 100, 200);
+        
         game.load.image('coin', 'assets/sprites/coin.png');
+        game.load.image('silvercoin', 'assets/sprites/silvercoin.png');
+        game.load.image('goldcoin', 'assets/sprites/goldcoin.png');
+        
         game.load.image('vase', 'assets/tilemaps/tiles/vase.png');
         game.load.image('laser', 'assets/tilemaps/tiles/laserTop.png');
         game.load.image('spikes', 'assets/sprites/spikes.png');
