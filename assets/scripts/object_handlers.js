@@ -5,7 +5,7 @@ function spawnObjects(map)
     spikes = game.add.group();
     spikes.enableBody = true;
 
-    map.createFromObjects('sprites', 84, 'spikes', 0, true, false, spikes);
+    map.createFromObjects('sprites', 164, 'spikes', 0, true, false, spikes);
     spikes.setAll('body.immovable', true);
     
     // LASERS
@@ -13,7 +13,7 @@ function spawnObjects(map)
     lasers = game.add.group();
     lasers.enableBody = true;
 
-    map.createFromObjects('sprites', 86, 'laser', 0, true, false, lasers);
+    map.createFromObjects('sprites', 166, 'laser', 0, true, false, lasers);
     
     lasers.forEachAlive(setLaserProperties);
 
@@ -29,7 +29,7 @@ function spawnObjects(map)
     vases.enableBody = true;
     vases.physicsBodyType = Phaser.Physics.ARCADE;
 
-    map.createFromObjects('sprites', 45, 'vase', 0, true, false, vases);
+    map.createFromObjects('sprites', 85, 'vase', 0, true, false, vases);
 
     vases.forEach(setVaseProperties);
     
@@ -65,7 +65,7 @@ function spawnObjects(map)
 
     if (!playerGlobals.powerUps[0])
     {
-        map.createFromObjects('sprites', 29, 'djPowerup', 0, true, false, powerup);
+        map.createFromObjects('sprites', 49, 'djPowerup', 0, true, false, powerup);
     }
     if (!playerGlobals.powerUps[1])
     {
@@ -77,7 +77,7 @@ function spawnObjects(map)
     eventObjects = game.add.group();
     eventObjects.enableBody = true;
 
-    map.createFromObjects('sprites', 107, null, 0, true, false, eventObjects);
+    map.createFromObjects('sprites', 207, null, 0, true, false, eventObjects);
 
     eventObjects.forEach(setEventProperties);
     

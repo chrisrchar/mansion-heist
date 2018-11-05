@@ -4,7 +4,7 @@ function spawnEnemies (map)
     enemies.enableBody = true;
     enemies.physicsBodyType = Phaser.Physics.ARCADE;
 
-    map.createFromObjects('sprites', 47, 'enemy', 0, true, false, enemies);
+    map.createFromObjects('sprites', 87, 'enemy', 0, true, false, enemies);
 
     enemies.setAll('body.gravity.y', gravity);
     enemies.setAll('body.drag.x', 500);

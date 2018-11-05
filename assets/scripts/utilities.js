@@ -67,9 +67,9 @@ function addMap (gridX, gridY)
         var exits2 = game.add.group();
         var entrances = game.add.group();
         
-        map.createFromObjects('transitions', 87, null, 0, false, false, exits1);
-        map.createFromObjects('transitions', 88, null, 0, false, false, exits2);
-        map.createFromObjects('transitions', 89, null, 0, false, false, entrances);
+        map.createFromObjects('transitions', 167, null, 0, false, false, exits1);
+        map.createFromObjects('transitions', 168, null, 0, false, false, exits2);
+        map.createFromObjects('transitions', 169, null, 0, false, false, entrances);
         
         exits1.forEach(function (exit) {
             var exit2 = exits2.children.find(function (element)
@@ -227,7 +227,7 @@ function addMap (gridX, gridY)
         if (playerGlobals.hp < 1)
         {
             game.sound.stopAll();
-            loadGame();
+            game.state.start('titlescreenState');
         }
 
         if (!transitionFade.isRunning)
@@ -243,7 +243,7 @@ function addMap (gridX, gridY)
     // Hitbox Debugging
     tempMap.render = function () {
         
-        game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
+        //game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
         
         /*eventObjects.forEachAlive(function (obj)
         {
@@ -439,9 +439,41 @@ function checkSavedGame()
 
 function loadGame ()
 {
+    // Gamepad integration
+    game.input.gamepad.start();
+    pad1 = game.input.gamepad.pad1;
+    
+    leftButton = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+    rightButton = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+    downButton = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+    upButton = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    atkButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
+    ablButton = game.input.keyboard.addKey(Phaser.Keyboard.S);
+    saveTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
+    loadTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FIVE);
+    testBtn6 = game.input.keyboard.addKey(Phaser.Keyboard.SIX);
+    
+    // ADDING CONTROL CALLBACKS
+    jumpButton.onDown.add(confirmPressed);
+    atkButton.onDown.add(attack);
+    ablButton.onDown.add(abilityDown);
+    ablButton.onUp.add(abilityUp);
+    saveTestBtn.onDown.add(saveGame);
+    loadTestBtn.onDown.add(loadGame);
+    
+    leftButton.onDown.add(leftPressed);
+    rightButton.onDown.add(rightPressed);
+    upButton.onDown.add(upPressed);
+    downButton.onDown.add(downPressed);
+    
+    jumpButton.onDown.add(jump);
+    
     bgMusic = game.add.audio('bgmusic');
     bgMusic.loop = true;
     bgMusic.play();
+    
+    addAudio();
     
     playerGlobals = JSON.parse(localStorage.savegame);
     mapVisited = playerGlobals.lastSave.mapdata;
