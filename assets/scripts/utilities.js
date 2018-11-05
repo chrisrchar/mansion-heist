@@ -1,5 +1,6 @@
 // GAME GLOBALS
 //====================================
+// === Map Variables ===
 var maps = [];
 var mapVisited = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
 var mapSize = 20;
@@ -19,13 +20,22 @@ var jumpHeight = -700;
 var player;
 
 var textPlacement;
-// GAME OBJECTS
-var platforms, jumpthruPlatforms, coins, enemies, vases, spikes, saves, shopObjects, eventObjects;
 
+// ===== GAME OBJECTS =====
+
+// === Map Objects ===
+var platforms, jumpthruPlatforms
+
+// === Interactables ===
+var coins, enemies, vases, spikes, saves, shopObjects, eventObjects;
+
+// === World Text ===
 var shopText, restroomText, restroomTextTween;
 
+// === Particles & Tweens ===
 var brokeVase, fadeToBlack, transitionFade;
 
+// === Sounds ===
 var coinsfx, breakSFX;
 
 //====================================
@@ -106,121 +116,8 @@ function addMap (gridX, gridY)
         platforms = map.createLayer('platforms');
         jumpthruPlatforms = map.createLayer('jumpthru');
 
-        // HAZARDS
-        spikes = game.add.group();
-        spikes.enableBody = true;
-
-        map.createFromObjects('sprites', 84, 'spikes', 0, true, false, spikes);
-        spikes.setAll('body.immovable', true);
-        
-        lasers = game.add.group();
-        lasers.enableBody = true;
-
-        map.createFromObjects('sprites', 86, 'laser', 0, true, false, lasers);
-        lasers.setAll('body.immovable', true);
-
-        createLasers(lasers);
-        
-        // COIN GROUP
-        
-        coins = game.add.group();
-        coins.enableBody = true;
-        coins.physicsBodyType = Phaser.Physics.ARCADE;
-        
-        // SPAWN VASES
-        
-        vases = game.add.group();
-        vases.enableBody = true;
-        vases.physicsBodyType = Phaser.Physics.ARCADE;
-        
-        map.createFromObjects('sprites', 45, 'vase', 0, true, false, vases);
-        
-        vases.setAll('anchor.x', 0.5);
-        vases.setAll('anchor.y', 0.5);
-        
-        vases.forEach(function (vase) {
-            vase.x += vase.width/2;
-            vase.y += vase.height/2;
-        });
-        
-        // SAVES
-        
-        saves = game.add.group();
-        saves.enableBody = true;
-        
-        map.createFromObjects('sprites', 10, 'toilet', 0, true, false, saves);
-        
-        saves.forEachAlive(function (toilet)
-        {
-            toilet.x -= 68;
-            toilet.body.setSize(128,64,0,64);
-            toilet.body.immovable = true;
-            
-            restroomText = game.add.text(toilet.x, toilet.y - 80, "Take a Rest ↓", { font: '24px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 4 });
-            restroomText.anchor.x = .5;
-            restroomText.x += toilet.width/2;
-            //restroomText.alpha = 0;
-            restroomTextTween = game.add.tween(restroomText).to({x: restroomText.x, y: toilet.y - 64}, 500, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
-        });
-        
-        // VENDING
-        
-        shopObjects = game.add.group();
-        shopObjects.enableBody = true;
-        
-        map.createFromObjects('sprites', 11, 'vending', 0, true, false, shopObjects);
-        
-        shopObjects.setAll('anchor.x', .5);
-        shopObjects.setAll('anchor.y', 0);
-        
-        if (shopObjects.children[0])
-        {
-            var vendor = shopObjects.children[0];
-            
-            shopText = game.add.text(vendor.x, vendor.y - 80, "Shop ↓", { font: '24px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 4 });
-            shopText.anchor.x = .5;
-            shopText.alpha = 0;
-            game.add.tween(shopText).to({x: vendor.x, y: vendor.y - 64}, 500, Phaser.Easing.Quadratic.InOut, true, 0, -1, true);
-        }
-        
-        
-        //===============
-        
-        // SPAWN ENEMIES
-        
-        enemies = game.add.group();
-        enemies.enableBody = true;
-        enemies.physicsBodyType = Phaser.Physics.ARCADE;
-        
-        map.createFromObjects('sprites', 47, 'enemy', 0, true, false, enemies);
-        
-        enemies.setAll('body.gravity.y', gravity);
-        enemies.setAll('body.drag.x', 500);
-        enemies.setAll('body.immovable', true);
-        enemies.setAll('anchor.y', 1);
-        enemies.setAll('anchor.x', .5);
-        
-        enemies.forEach(function (obj) {
-            obj.y += obj.height;
-            obj.animations.add('walk', [1, 2, 3, 4], 10, true);
-            obj.animations.play('walk');
-            
-            obj.hp = 2;
-            obj.facing = 1;
-            obj.update = function ()
-            {
-                if (!obj.hurt)
-                {
-                    obj.body.velocity.x = 300*obj.facing;
-                    obj.scale.setTo(obj.facing, 1);
-                }
-
-            }
-            
-            var walkTimer = game.time.create(false);
-            walkTimer.loop(1000, switchDir, this, obj);
-            walkTimer.start();
-        }, this);
+        spawnObjects(map);
+        spawnEnemies(map);
         
         //===============
 
@@ -236,22 +133,10 @@ function addMap (gridX, gridY)
 
         platforms.resizeWorld();
         
-        var backgroundBack = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'tileBG');
-        game.world.sendToBack(backgroundBack);
+        //var backgroundBack = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'tileBG');
+        //game.world.sendToBack(backgroundBack);
 
         createPlayer(roomSpawn);
-        
-        powerup = game.add.group();
-        powerup.enableBody = true;
-        
-        if (!playerGlobals.powerUps[0])
-        {
-            map.createFromObjects('sprites', 29, 'djPowerup', 0, true, false, powerup);
-        }
-        if (!playerGlobals.powerUps[1])
-        {
-            map.createFromObjects('sprites', 9, 'invisPowerup', 0, true, false, powerup);
-        }
         
         // MINI MAP
 
@@ -260,44 +145,12 @@ function addMap (gridX, gridY)
         // HUD
         
         drawHUD();
+        
+        // CAMERA
 
         game.camera.focusOn(player);
         game.camera.follow(player);
         game.camera.lerp.x = .1;
-        
-        // Add Events to Room
-        
-        eventObjects = game.add.group();
-        eventObjects.enableBody = true;
-        
-        map.createFromObjects('sprites', 107, null, 0, true, false, eventObjects);
-        
-        eventObjects.forEach(function (event) {
-            if (event.autoStart)
-            {
-                var eventTimer = game.time.create(true);
-                eventTimer.add(event.delay, function () {
-                    if (!eventsDone[event.eventNum])
-                    {
-                        callMsg(events[event.eventNum]);
-                        eventsDone[event.eventNum] = true;
-                    }
-                    event.destroy();
-                }, this);
-                eventTimer.start();
-            }
-            else {
-                event.anchor.setTo(0.5,0.5);
-                event.body.setSize(event.bodyWidth, event.bodyHeight, 0, 0);
-            }
-        });
-        
-        // Vase Particles
-        brokeVase = game.add.emitter(0, 0, 100);
-        brokeVase.makeParticles('vase-shard', 0, 16, true);
-        brokeVase.gravity = 600;
-        brokeVase.particleDrag.x = 100;
-        brokeVase.angularDrag = 300;
         
         // Fade in/out room
         fadeToBlack = game.add.graphics(0,0);

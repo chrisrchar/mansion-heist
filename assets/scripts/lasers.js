@@ -1,59 +1,57 @@
 // CREATE LASERS
-function createLasers (lasers)
+function setLaserProperties (laserBase)
 {
+    
+    laserBase.body.immovable = true;
+    laserBase.anchor.x = 0.5;
+    laserBase.x += 16;
 
-    lasers.forEach(function (laserBase)
+    laserBase.ray = new Phaser.Line(laserBase.x, laserBase.y, laserBase.x, 2000);
+    var intersection = getWallIntersection(laserBase.ray);
+    var endSet = false;
+    var laserEmitter = game.add.emitter(0, 0, 100);
+    laserBase.addChild(laserEmitter);
+    laserEmitter.makeParticles('laserpart');
+    laserEmitter.gravity = 300;
+
+    laserBase.update = function ()
     {
-        laserBase.anchor.x = 0.5;
-        laserBase.x += 16;
-
-        laserBase.ray = new Phaser.Line(laserBase.x, laserBase.y, laserBase.x, 2000);
-        var intersection = getWallIntersection(laserBase.ray);
-        var endSet = false;
-        var laserEmitter = game.add.emitter(0, 0, 100);
-        laserBase.addChild(laserEmitter);
-        laserEmitter.makeParticles('laserpart');
-        laserEmitter.gravity = 300;
-
-        laserBase.update = function ()
+        if (intersection && !endSet)
         {
-            if (intersection && !endSet)
+            endSet = true;
+            laserBase.ray = laserBase.ray.setTo(laserBase.ray.start.x, laserBase.ray.start.y, laserBase.ray.end.x, intersection.y);
+
+            var laserWidth = 8;
+
+            laserBase.laserRect = game.add.graphics(laserBase.x, laserBase.y);
+            laserBase.laserRect.beginFill(0xff0000, .6);
+            laserBase.laserRect.drawRect(0 - laserWidth/2, 10, laserWidth, laserBase.ray.height - 10);
+            laserBase.laserRect.endFill();
+
+            laserEmitter.y = laserBase.ray.height;
+            laserEmitter.start(false, 200, 30, 0);
+
+            game.physics.enable(laserBase, Phaser.Physics.ARCADE);
+            laserBase.body.setSize(laserWidth, laserBase.ray.height, -1*laserWidth/2 + 16, 0);
+            if (laserBase.timer)
             {
-                endSet = true;
-                laserBase.ray = laserBase.ray.setTo(laserBase.ray.start.x, laserBase.ray.start.y, laserBase.ray.end.x, intersection.y);
-
-                var laserWidth = 8;
-
-                laserBase.laserRect = game.add.graphics(laserBase.x, laserBase.y);
-                laserBase.laserRect.beginFill(0xff0000, .6);
-                laserBase.laserRect.drawRect(0 - laserWidth/2, 10, laserWidth, laserBase.ray.height - 10);
-                laserBase.laserRect.endFill();
-                
-                laserEmitter.y = laserBase.ray.height;
-                laserEmitter.start(false, 200, 30, 0);
-
-                game.physics.enable(laserBase, Phaser.Physics.ARCADE);
-                laserBase.body.setSize(laserWidth, laserBase.ray.height, -1*laserWidth/2 + 16, 0);
-                if (laserBase.timer)
-                {
-                    var laserTimer = game.time.create(false);
-                    laserTimer.loop(laserBase.timer, function () {
-                        laserBase.body.enable = !laserBase.body.enable;
-                        laserBase.laserRect.visible = !laserBase.laserRect.visible;
-                        if (laserBase.laserRect.visible)
-                        {
-                            laserEmitter.on = true;
-                        }
-                        else
-                        {
-                            laserEmitter.on = false;
-                        }
-                    }, this);
-                    laserTimer.start(laserBase.delay);
-                }
+                var laserTimer = game.time.create(false);
+                laserTimer.loop(laserBase.timer, function () {
+                    laserBase.body.enable = !laserBase.body.enable;
+                    laserBase.laserRect.visible = !laserBase.laserRect.visible;
+                    if (laserBase.laserRect.visible)
+                    {
+                        laserEmitter.on = true;
+                    }
+                    else
+                    {
+                        laserEmitter.on = false;
+                    }
+                }, this);
+                laserTimer.start(laserBase.delay);
             }
         }
-    });
+    }
 }
 
 // LASER COLLISION WITH WALL
