@@ -128,17 +128,17 @@
   <object id="81" gid="167" x="2552" y="360" width="32" height="32">
    <properties>
     <property name="side" value="right"/>
-    <property name="toMap" value="12x10"/>
+    <property name="toMap" value="13x8"/>
    </properties>
   </object>
   <object id="82" gid="168" x="2552" y="536" width="32" height="32">
    <properties>
-    <property name="toMap" value="12x10"/>
+    <property name="toMap" value="13x8"/>
    </properties>
   </object>
   <object id="83" gid="169" x="2497" y="383" width="32" height="32">
    <properties>
-    <property name="fromMap" value="12x10"/>
+    <property name="fromMap" value="13x8"/>
    </properties>
   </object>
  </objectgroup>

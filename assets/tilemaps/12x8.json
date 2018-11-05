@@ -131,7 +131,7 @@
                  "properties":
                     {
                      "side":"right",
-                     "toMap":"12x10"
+                     "toMap":"13x8"
                     },
                  "propertytypes":
                     {
@@ -152,7 +152,7 @@
                  "name":"",
                  "properties":
                     {
-                     "toMap":"12x10"
+                     "toMap":"13x8"
                     },
                  "propertytypes":
                     {
@@ -172,7 +172,7 @@
                  "name":"",
                  "properties":
                     {
-                     "fromMap":"12x10"
+                     "fromMap":"13x8"
                     },
                  "propertytypes":
                     {
