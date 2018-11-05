@@ -133,8 +133,8 @@ function addMap (gridX, gridY)
 
         platforms.resizeWorld();
         
-        //var backgroundBack = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'tileBG');
-        //game.world.sendToBack(backgroundBack);
+        var backgroundBack = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'tileBG');
+        game.world.sendToBack(backgroundBack);
 
         createPlayer(roomSpawn);
         
@@ -164,7 +164,7 @@ function addMap (gridX, gridY)
         transitionFade = game.add.tween(fadeToBlack).to({alpha: 1}, 500, Phaser.Easing.Quadratic.Out, false);
         
         addAudio();
-    }
+    };
     
     tempMap.update = function () {
         
@@ -237,7 +237,7 @@ function addMap (gridX, gridY)
         {
             player.body.gravity = 0;
         }
-    }
+    };
     
     // Hitbox Debugging
     tempMap.render = function () {
@@ -261,7 +261,7 @@ function addMap (gridX, gridY)
         {    game.debug.body(member);}*/
         
         //game.debug.cameraInfo(game.camera, 32, 32);
-    }
+    };
     
     // Push the state object to the array of maps
     maps.push(tempMap);
@@ -431,6 +431,11 @@ function saveGame ()
     console.log('game saved');
 }
 
+function checkSavedGame()
+{
+    return JSON.parse(localStorage.savegame);
+}
+
 function loadGame ()
 {
     playerGlobals = JSON.parse(localStorage.savegame);
@@ -447,15 +452,20 @@ function resetGame ()
         lastY: 300,
         xVel: 600,
         yVel: -500,
-        hp: 4,
+        hp: 100,
+        maxhp: 100,
+        stamina: 20,
+        maxSta: 20,
         money: 0,
         jumps: 0,
         maxJumps: 1,
         xDir: 0,
         hurt: false,
         powerUps: [false, false], // 0 - Double Jump 1 - Invisibility
+        lastMap: null,
         lastSave: null
     };
+    
     game.state.start('9x10');
 }
 

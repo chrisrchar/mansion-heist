@@ -5,7 +5,7 @@ var pad1, jumpButton, leftButton, rightButton, atkButton, ablButton;
 
 var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible, attacking, jumpDown, resting;
 
-var textForMove, textForJump, textForAtk;
+var textForMove, textForJump, textForAtk, textForAbl;
 
 var atkAnim, puAnim, jumpAnim;
 
@@ -32,7 +32,7 @@ var playerGlobals = {
     lastSave: null
 };
 
-var puEvents = [1];
+var puEvents = [1, ];
 
 var abiTimer, refreshTimer;
 
@@ -124,6 +124,7 @@ function createPlayer(spawn) {
     textForMove = "arrow keys";
     textForJump = "spacebar";
     textForAtk = "A key";
+    textForAbl = "S key";
     
     pad1.onConnectCallback = function () {
         console.log('gamepad connected');
@@ -187,21 +188,32 @@ function createPlayer(spawn) {
             leftButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_LEFT);
             rightButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_RIGHT);
             downButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_DOWN);
+            upButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_UP);
             saveTestBtn = pad1.getButton(Phaser.Gamepad.XBOX360_START);
             
-            jumpButton.onDown.add(jump);
+            leftAxisX = pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
+            leftAxisY = pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
+            
+            console.log(pad1.deadzone);
+            
+            jumpButton.onDown.add(confirmPressed);
             atkButton.onDown.add(attack);
             ablButton.onDown.add(abilityDown);
             ablButton.onUp.add(abilityUp);
-            downButton.onDown.add(downPressed);
             saveTestBtn.onDown.add(saveGame);
-            
+            loadTestBtn.onDown.add(loadGame);
+
             leftButton.onDown.add(leftPressed);
             rightButton.onDown.add(rightPressed);
+            upButton.onDown.add(upPressed);
+            downButton.onDown.add(downPressed);
+
+            jumpButton.onDown.add(jump);
             
             textForMove = "D-Pad";
             textForJump = "X Button";
             textForAtk = "Square Button";
+            textForAbl = "Right Trigger";
             
             setEvents();
         }

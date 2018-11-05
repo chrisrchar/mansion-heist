@@ -24,3 +24,5 @@ var score = 0;
 maps.forEach(function (mapElement) {
     game.state.add(mapElement.mapName, mapElement);
 });
+
+game.state.add('titlescreenState', titlescreenState);

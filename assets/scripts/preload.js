@@ -30,6 +30,8 @@ var preload = {
         game.load.image('vase-shard', 'assets/sprites/vaseshard.png');
         game.load.image('laserpart', 'assets/sprites/laserparticle.png');
         
+        game.load.image('titlescreen', 'assets/sprites/titlescreen.png');
+        
         // SOUND
         // https://opengameart.org/content/interface-sounds-starter-pack
         // https://opengameart.org/content/different-steps-on-wood-stone-leaves-gravel-and-mud
@@ -61,6 +63,6 @@ var preload = {
     create: function ()
     {
         initShop();
-        game.state.start('9x10');
+        game.state.start('titlescreenState');
     }
 };
