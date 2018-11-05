@@ -38,6 +38,8 @@ var brokeVase, fadeToBlack, transitionFade;
 // === Sounds ===
 var coinsfx, breakSFX;
 
+var bgMusic;
+
 //====================================
 
 // Map creation
@@ -162,8 +164,6 @@ function addMap (gridX, gridY)
         game.add.tween(fadeToBlack).to({alpha: 0}, 500, Phaser.Easing.Quadratic.In, true);
         
         transitionFade = game.add.tween(fadeToBlack).to({alpha: 1}, 500, Phaser.Easing.Quadratic.Out, false);
-        
-        addAudio();
     };
     
     tempMap.update = function () {
@@ -226,6 +226,7 @@ function addMap (gridX, gridY)
         
         if (playerGlobals.hp < 1)
         {
+            game.sound.stopAll();
             loadGame();
         }
 
@@ -438,6 +439,10 @@ function checkSavedGame()
 
 function loadGame ()
 {
+    bgMusic = game.add.audio('bgmusic');
+    bgMusic.loop = true;
+    bgMusic.play();
+    
     playerGlobals = JSON.parse(localStorage.savegame);
     mapVisited = playerGlobals.lastSave.mapdata;
     eventsDone = playerGlobals.lastSave.eventsDone;
@@ -447,6 +452,48 @@ function loadGame ()
 // RESET GAME
 function resetGame ()
 {
+    game.input.reset(true);
+    
+    //================
+    // PLAYER CONTROLS
+    
+    // Gamepad integration
+    game.input.gamepad.start();
+    pad1 = game.input.gamepad.pad1;
+    
+    leftButton = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+    rightButton = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+    downButton = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+    upButton = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    atkButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
+    ablButton = game.input.keyboard.addKey(Phaser.Keyboard.S);
+    saveTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
+    loadTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FIVE);
+    testBtn6 = game.input.keyboard.addKey(Phaser.Keyboard.SIX);
+    
+    // ADDING CONTROL CALLBACKS
+    jumpButton.onDown.add(confirmPressed);
+    atkButton.onDown.add(attack);
+    ablButton.onDown.add(abilityDown);
+    ablButton.onUp.add(abilityUp);
+    saveTestBtn.onDown.add(saveGame);
+    loadTestBtn.onDown.add(loadGame);
+    
+    leftButton.onDown.add(leftPressed);
+    rightButton.onDown.add(rightPressed);
+    upButton.onDown.add(upPressed);
+    downButton.onDown.add(downPressed);
+    
+    jumpButton.onDown.add(jump);
+    
+    // Play Music
+    var bgMusic = game.add.audio('bgmusic');
+    bgMusic.loop = true;
+    bgMusic.play();
+    
+    addAudio();
+    
     playerGlobals = {
         lastX: 300,
         lastY: 300,

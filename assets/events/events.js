@@ -71,7 +71,7 @@ function setEvents () {
             size: 40
         },
         {
-            text: "You can now Double Jump",
+            text: "You can now Double Jump!",
             font: "cartwheel",
             placement: 'center',
             size: 40
@@ -96,6 +96,33 @@ function setEvents () {
             font: "pearsoda",
             placement: 'default',
             size: 40
+        }
+    ];
+    
+    events[3] = [
+        {
+            text: "*bzzz* *bzzz* Hey, Boss. STOP drinking from random cups that are just sitting around. What if they're poisoned?",
+            font: "pearsoda",
+            placement: 'default',
+            size: 40
+        },
+        {
+            text: "You got lucky last time, but continuing to do this is dangerous. There's just NO benefit to doing something so stupid. *bzzz* *bzzz*",
+            font: "pearsoda",
+            placement: 'default',
+            size: 40
+        },
+        {
+            text: "You can now turn Invisible!",
+            font: "cartwheel",
+            placement: 'center',
+            size: 40
+        },
+        {
+            text: "Hold down the "+textForAbl+" in order to turn invisible and walk through lasers.\nGuards will still see you and hurt you if you run into them, though.",
+            font: "cartwheel",
+            placement: 'center',
+            size: 24
         }
     ];
 }

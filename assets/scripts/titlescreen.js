@@ -6,6 +6,7 @@ var updatingMenu;
 
 titlescreenState.create = function () 
 {
+    game.input.resetLocked = true;
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     
     var titlescreenGraphic = game.add.sprite(0,0,'titlescreen');
@@ -78,6 +79,10 @@ function jumpPressedTS ()
     var menuSelectTween = game.add.tween(menuTexts[activeMenuItem].scale).to({x: 1.5, y: 1.5},150, Phaser.Easing.Bounce.InOut, false, 0, 0, true);
     
     menuSelectTween.onComplete.add(function () {
+        leftButton.onDown.removeAll();
+        rightButton.onDown.removeAll();
+        jumpButton.onDown.removeAll();
+        
         switch (activeMenuItem)
         {
             case 0:

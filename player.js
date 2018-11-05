@@ -32,7 +32,7 @@ var playerGlobals = {
     lastSave: null
 };
 
-var puEvents = [1, ];
+var puEvents = [1, 3];
 
 var abiTimer, refreshTimer;
 
@@ -87,39 +87,6 @@ function createPlayer(spawn) {
     }
 
     attacking = false;
-    
-    //================
-    // PLAYER CONTROLS
-    
-    // Gamepad integration
-    game.input.gamepad.start();
-    pad1 = game.input.gamepad.pad1;
-    
-    leftButton = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-    rightButton = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-    downButton = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-    upButton = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    atkButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
-    ablButton = game.input.keyboard.addKey(Phaser.Keyboard.S);
-    saveTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
-    loadTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FIVE);
-    testBtn6 = game.input.keyboard.addKey(Phaser.Keyboard.SIX);
-    
-    // ADDING CONTROL CALLBACKS
-    jumpButton.onDown.add(confirmPressed);
-    atkButton.onDown.add(attack);
-    ablButton.onDown.add(abilityDown);
-    ablButton.onUp.add(abilityUp);
-    saveTestBtn.onDown.add(saveGame);
-    loadTestBtn.onDown.add(loadGame);
-    
-    leftButton.onDown.add(leftPressed);
-    rightButton.onDown.add(rightPressed);
-    upButton.onDown.add(upPressed);
-    downButton.onDown.add(downPressed);
-    
-    jumpButton.onDown.add(jump);
     
     textForMove = "arrow keys";
     textForJump = "spacebar";
@@ -483,7 +450,7 @@ function collide (collider, other)
             if (playerGlobals.hurt != true)
             {
                 game.camera.shake(0.005, 100);
-                playerGlobals.hp -= 1;
+                playerGlobals.hp -= playerGlobals.maxhp * .15;
                 player.tint = 0xff0000;
                 playerGlobals.hurt = true;
                 player.body.velocity.x = 200 * Math.sign(player.body.x - other.body.x);
@@ -495,7 +462,7 @@ function collide (collider, other)
             if (playerGlobals.hurt != true)
             {
                 game.camera.shake(0.005, 100);
-                playerGlobals.hp -= 1;
+                playerGlobals.hp -= playerGlobals.maxhp * .1;
                 player.tint = 0xff0000;
                 playerGlobals.hurt = true;
                 player.body.velocity.x = 200 * Math.sign(player.body.x - other.body.x);

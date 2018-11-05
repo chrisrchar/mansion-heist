@@ -43,6 +43,8 @@ var preload = {
         game.load.audio('coinsfx', 'assets/sound/sfx/coin.wav');
         game.load.audio('breaksfx', 'assets/sound/sfx/break.wav');
         
+        game.load.audio('bgmusic', 'assets/sound/spymusic.mp3');
+        
         for (var i = 5; i <= 15; i++)
         {
             for (var j = 5; j <= 15; j++)
