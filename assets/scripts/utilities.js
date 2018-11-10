@@ -40,6 +40,10 @@ var coinsfx, breakSFX;
 
 var bgMusic;
 
+// === Inputs ===
+var pad1, jumpButton, leftButton, rightButton, atkButton, ablButton;
+var inputs = [];
+
 //====================================
 
 // Map creation
@@ -226,8 +230,7 @@ function addMap (gridX, gridY)
         
         if (playerGlobals.hp < 1)
         {
-            game.sound.stopAll();
-            game.state.start('titlescreenState');
+            playerDeath();
         }
 
         if (!transitionFade.isRunning)
@@ -243,7 +246,7 @@ function addMap (gridX, gridY)
     // Hitbox Debugging
     tempMap.render = function () {
         
-        //game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
+        game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
         
         /*eventObjects.forEachAlive(function (obj)
         {
@@ -471,7 +474,7 @@ function loadGame ()
     
     bgMusic = game.add.audio('bgmusic');
     bgMusic.loop = true;
-    bgMusic.play();
+    //bgMusic.play();
     
     addAudio();
     
@@ -519,10 +522,18 @@ function resetGame ()
     
     jumpButton.onDown.add(jump);
     
+    inputs.push(leftButton);
+    inputs.push(rightButton);
+    inputs.push(downButton);
+    inputs.push(upButton);
+    inputs.push(jumpButton);
+    inputs.push(atkButton);
+    inputs.push(ablButton);
+    
     // Play Music
-    var bgMusic = game.add.audio('bgmusic');
+    bgMusic = game.add.audio('bgmusic');
     bgMusic.loop = true;
-    bgMusic.play();
+    //bgMusic.play();
     
     addAudio();
     
@@ -546,6 +557,26 @@ function resetGame ()
     };
     
     game.state.start('9x10');
+}
+
+function playerDeath ()
+{
+    game.input.reset(true);
+    removeInputCallbacks();
+    
+    game.sound.stopAll();
+    game.state.start('titlescreenState');
+    changeActiveMenuItem();
+}
+
+function removeInputCallbacks ()
+{
+    inputs.forEach(function (button) {
+        button.onDown.removeAll();
+        button.onUp.removeAll();
+    });
+    
+    inputs = [];
 }
 
 Number.prototype.clamp = function(min, max) {

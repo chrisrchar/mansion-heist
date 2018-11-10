@@ -1,11 +1,14 @@
 var titlescreenState = {};
-var activeMenuItem = 0;
+var activeMenuItem;
 var menuItems = ['New Game', 'Load Game', 'Exit'];
-var menuTexts = [];
+var menuTexts;
 var updatingMenu;
 
 titlescreenState.create = function () 
 {
+    activeMenuItem = 0;
+    menuTexts = [];
+    
     game.input.resetLocked = true;
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     
@@ -34,7 +37,13 @@ titlescreenState.create = function ()
     rightButton.onDown.add(rightPressedTS);
     jumpButton.onDown.add(jumpPressedTS);
     
+    inputs.push(leftButton);
+    inputs.push(rightButton);
+    inputs.push(jumpButton);
+    
     changeActiveMenuItem();
+    
+    console.log('starting state');
 };
 
 titlescreenState.update = function () 
@@ -79,9 +88,7 @@ function jumpPressedTS ()
     var menuSelectTween = game.add.tween(menuTexts[activeMenuItem].scale).to({x: 1.5, y: 1.5},150, Phaser.Easing.Bounce.InOut, false, 0, 0, true);
     
     menuSelectTween.onComplete.add(function () {
-        leftButton.onDown.removeAll();
-        rightButton.onDown.removeAll();
-        jumpButton.onDown.removeAll();
+        removeInputCallbacks();
         
         switch (activeMenuItem)
         {

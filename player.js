@@ -1,8 +1,6 @@
 /* global
     Phaser, game, player:true, gravity, speed, cursors, jumpHeight
 */
-var pad1, jumpButton, leftButton, rightButton, atkButton, ablButton;
-
 var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible, attacking, jumpDown, resting;
 
 var textForMove, textForJump, textForAtk, textForAbl;
