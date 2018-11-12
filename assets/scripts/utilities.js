@@ -222,10 +222,14 @@ function addMap (gridX, gridY)
             });
         }
         
-        game.physics.arcade.collide(enemies, platforms);
+        
+        enemyGroups.forEach(function (enemGroup) {
+            game.physics.arcade.collide(enemGroup, platforms);
+            game.physics.arcade.collide(enemGroup, jumpthruPlatforms);
+        });
+        
         game.physics.arcade.collide(coins, platforms);
         game.physics.arcade.collide(brokeVase, platforms);
-        game.physics.arcade.collide(enemies, jumpthruPlatforms);
         game.physics.arcade.collide(coins, jumpthruPlatforms);
         
         if (playerGlobals.hp < 1)

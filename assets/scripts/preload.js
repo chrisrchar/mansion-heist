@@ -65,6 +65,7 @@ var preload = {
     create: function ()
     {
         initShop();
+        initEnemies();
         game.state.start('titlescreenState');
     }
 };

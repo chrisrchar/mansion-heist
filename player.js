@@ -192,14 +192,17 @@ function createPlayer(spawn) {
         }
         
         game.physics.arcade.collide(player, spikes);
-        game.physics.arcade.collide(player, enemies);
+        
+        enemyGroups.forEach(function (enemGroup) {
+            game.physics.arcade.collide(player, enemGroup);
+            game.physics.arcade.overlap(hitbox1, enemGroup);
+        });
         
         if (!invisible)
         {
             game.physics.arcade.collide(player, lasers);
         }
         
-        game.physics.arcade.overlap(hitbox1, enemies);
         game.physics.arcade.overlap(hitbox1, vases);
         
         if (attacking)
