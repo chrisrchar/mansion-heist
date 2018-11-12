@@ -252,12 +252,12 @@ function addMap (gridX, gridY)
         
         game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
         
-        /*eventObjects.forEachAlive(function (obj)
+        bullets.forEachAlive(function (obj)
         {
             game.debug.body(obj);
         });
         
-        game.debug.body(player);  */
+        //game.debug.body(player);
         /*if (attacking)
         {
             game.debug.body(hitbox1);   
@@ -581,6 +581,10 @@ function removeInputCallbacks ()
     });
     
     inputs = [];
+}
+
+function inCamera (sprite) {
+    return game.world.camera.view.intersectsRaw(sprite.left, sprite.right, sprite.top, sprite.bottom);
 }
 
 Number.prototype.clamp = function(min, max) {

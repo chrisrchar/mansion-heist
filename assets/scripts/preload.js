@@ -13,6 +13,10 @@ var preload = {
         game.load.image('tiles', 'assets/tilemaps/tileset_library.png');
         game.load.image('tileBG', 'assets/sprites/tileBG.png');
         
+        // ENEMIES
+        
+        game.load.image('bullet', 'assets/sprites/nerfgunbullet.png');
+        game.load.image('enemy2', 'assets/sprites/nerfgun_150x150.png');
         game.load.spritesheet('enemy', 'assets/spritesheets/final_sheets/guard_100x150.png', 100, 200);
         
         game.load.image('coin', 'assets/sprites/coin.png');

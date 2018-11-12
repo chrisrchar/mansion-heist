@@ -201,6 +201,7 @@ function createPlayer(spawn) {
         if (!invisible)
         {
             game.physics.arcade.collide(player, lasers);
+            game.physics.arcade.collide(player, bullets);
         }
         
         game.physics.arcade.overlap(hitbox1, vases);
@@ -447,6 +448,8 @@ function collide (collider, other)
                 hurt(collider);   
             }
             break;
+        case 'bullet':
+        case 'enemy2':
         case 'enemy':
             if (playerGlobals.hurt != true)
             {
@@ -456,7 +459,11 @@ function collide (collider, other)
                 playerGlobals.hurt = true;
                 player.body.velocity.x = 200 * Math.sign(player.body.x - other.body.x);
                 player.body.velocity.y = jumpHeight*.75;
-                hurt(collider);   
+                hurt(collider);
+                if (other.key == 'bullet')
+                {
+                    other.destroy();
+                }
             }
             break;
         case 'laser':
@@ -478,16 +485,9 @@ function collide (collider, other)
 function attackHit (atkHitbox, other)
 {
     console.log('hit '+other.key)
-    if (!other.hurt && other.key == 'enemy')
+    if (!other.hurt && (other.key == 'enemy' || other.key == 'enemy2'))
     {
         other.hp -= 1;
-        console.log(other.hp);
-        if (other.hp < 1)
-        {
-            other.kill();
-            
-            spawnCoins(other);
-        }
         other.hurt = true;
         other.tint = 0xff0000;
         other.body.velocity.x = 200 * Math.sign(other.body.x - player.body.x);
