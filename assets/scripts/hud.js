@@ -188,6 +188,7 @@ function showMsgBox(x, y, scale, tweenSpeed)
     
     var openTween = game.add.tween(msgBoxSprite.scale).to({x: 1, y: 1}, tweenSpeed, Phaser.Easing.Back.Out, true);
     openTween.onComplete.add(function () {
+        inMessage = true;
         text.start();
     });
 }

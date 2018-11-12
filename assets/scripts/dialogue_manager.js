@@ -9,7 +9,6 @@ function callMsg(messageArray) {
     
     showMsgBox(game.camera.width/2, 600, 1, tweenSpeed);
     
-    inMessage = true;
     currentMsg = 0;
 
     messages = messageArray;

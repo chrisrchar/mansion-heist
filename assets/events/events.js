@@ -2,7 +2,7 @@ var events = [];
 
 var eventsDone = [];
 
-for (var i=0; i<3; i++)
+for (var i=0; i<events.length; i++)
 {
     eventsDone[i] = false;
 }

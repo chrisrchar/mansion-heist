@@ -50,6 +50,8 @@ titlescreenState.update = function ()
 {
     if (pad1.connected && !checkButtons(pad1))
         {
+            removeInputCallbacks();
+            
             jumpButton = pad1.getButton(Phaser.Gamepad.XBOX360_A);
             leftButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_LEFT);
             rightButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_RIGHT);
@@ -57,6 +59,10 @@ titlescreenState.update = function ()
             leftButton.onDown.add(leftPressedTS);
             rightButton.onDown.add(rightPressedTS);
             jumpButton.onDown.add(jumpPressedTS);
+            
+            inputs.push(leftButton);
+            inputs.push(rightButton);
+            inputs.push(jumpButton);
         }
 };
 

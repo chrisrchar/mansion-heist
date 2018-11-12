@@ -250,12 +250,12 @@ function addMap (gridX, gridY)
     // Hitbox Debugging
     tempMap.render = function () {
         
-        game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
+        //game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
         
-        bullets.forEachAlive(function (obj)
+        /*bullets.forEachAlive(function (obj)
         {
             game.debug.body(obj);
-        });
+        });*/
         
         //game.debug.body(player);
         /*if (attacking)
@@ -446,6 +446,8 @@ function checkSavedGame()
 
 function loadGame ()
 {
+    removeInputCallbacks();
+    
     // Gamepad integration
     game.input.gamepad.start();
     pad1 = game.input.gamepad.pad1;
@@ -476,9 +478,17 @@ function loadGame ()
     
     jumpButton.onDown.add(jump);
     
+    inputs.push(leftButton);
+    inputs.push(rightButton);
+    inputs.push(downButton);
+    inputs.push(upButton);
+    inputs.push(jumpButton);
+    inputs.push(atkButton);
+    inputs.push(ablButton);
+    
     bgMusic = game.add.audio('bgmusic');
     bgMusic.loop = true;
-    //bgMusic.play();
+    bgMusic.play();
     
     addAudio();
     
@@ -492,6 +502,12 @@ function loadGame ()
 function resetGame ()
 {
     game.input.reset(true);
+    removeInputCallbacks();
+    
+    for (var i=0; i<events.length; i++)
+    {
+        eventsDone[i] = false;
+    }
     
     //================
     // PLAYER CONTROLS
@@ -537,7 +553,7 @@ function resetGame ()
     // Play Music
     bgMusic = game.add.audio('bgmusic');
     bgMusic.loop = true;
-    //bgMusic.play();
+    bgMusic.play();
     
     addAudio();
     

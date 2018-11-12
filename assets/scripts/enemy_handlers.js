@@ -26,13 +26,6 @@ function initEnemies () {
                 this.body.velocity.x = 300*this.facing;
                 this.scale.setTo(this.facing, 1);
             }
-            
-            if (this.hp < 1)
-            {
-                this.kill();
-
-                spawnCoins(other);
-            }
         }
     },
     {
@@ -63,14 +56,6 @@ function initEnemies () {
             else if (!shootingTimer.paused)
             {
                 shootingTimer.pause();
-            }
-            
-            if (this.hp < 1)
-            {
-                shootingTimer.destroy();
-                this.kill();
-
-                spawnCoins(other);
             }
         }
     }];

@@ -146,6 +146,8 @@ function createPlayer(spawn) {
         
         if (pad1.connected && !checkButtons(pad1))
         {
+            removeInputCallbacks();
+            
             console.log('setting controller buttons');
             ablButton = pad1.getButton(Phaser.Gamepad.XBOX360_RIGHT_TRIGGER);
             jumpButton = pad1.getButton(Phaser.Gamepad.XBOX360_A);
@@ -179,6 +181,14 @@ function createPlayer(spawn) {
             textForJump = "X Button";
             textForAtk = "Square Button";
             textForAbl = "Right Trigger";
+            
+            inputs.push(leftButton);
+            inputs.push(rightButton);
+            inputs.push(downButton);
+            inputs.push(upButton);
+            inputs.push(jumpButton);
+            inputs.push(atkButton);
+            inputs.push(ablButton);
             
             setEvents();
         }
@@ -493,6 +503,17 @@ function attackHit (atkHitbox, other)
         other.body.velocity.x = 200 * Math.sign(other.body.x - player.body.x);
         other.body.velocity.y = jumpHeight*.2;
         hurt(other);
+        if (other.hp < 1)
+        {
+            other.kill();
+
+            if (other.key == 'enemy2')
+            {
+                shootingTimer.destroy();
+            }
+
+            spawnCoins(other);
+        }
     }
     if (other.key == 'vase')
     {
