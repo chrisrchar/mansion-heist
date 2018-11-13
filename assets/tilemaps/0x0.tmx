@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="65" height="22" tilewidth="32" tileheight="32" nextobjectid="79">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="65" height="22" tilewidth="32" tileheight="32" nextobjectid="85">
  <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" tilecount="800" columns="40">
   <image source="tileset_library.png" width="1280" height="640"/>
  </tileset>
@@ -107,16 +107,25 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup name="sprites">
-  <object id="60" gid="166" x="896" y="96.6667" width="32" height="32"/>
-  <object id="68" gid="166" x="926.667" y="96.6667" width="32" height="32"/>
- </objectgroup>
- <objectgroup name="transitions">
-  <object id="39" gid="168" x="2072" y="536" width="32" height="32">
+ <objectgroup name="sprites" offsetx="32" offsety="0">
+  <object id="60" gid="166" x="896" y="96.6667" width="32" height="32">
    <properties>
-    <property name="toMap" value="10x8"/>
+    <property name="delay" type="int" value="0"/>
+    <property name="timer" type="int" value="2000"/>
    </properties>
   </object>
+  <object id="68" gid="166" x="926.667" y="96.6667" width="32" height="32">
+   <properties>
+    <property name="delay" type="int" value="0"/>
+    <property name="timer" type="int" value="2000"/>
+   </properties>
+  </object>
+  <object id="79" gid="164" x="768" y="640" width="32" height="32"/>
+  <object id="80" gid="164" x="800" y="640" width="32" height="32"/>
+  <object id="81" gid="164" x="832" y="640" width="32" height="32"/>
+  <object id="84" gid="2147483738" x="1668" y="620" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup name="transitions">
   <object id="70" gid="169" x="44.6061" y="409.939" width="32" height="32"/>
   <object id="71" gid="169" x="2005.21" y="179.636" width="32" height="32"/>
   <object id="73" gid="167" x="2071" y="133" width="32" height="32"/>
