@@ -143,17 +143,17 @@
   <object id="23" gid="167" x="-24" y="487" width="32" height="32">
    <properties>
     <property name="side" value="left"/>
-    <property name="toMap" value="9x10"/>
+    <property name="toMap" value="12x8"/>
    </properties>
   </object>
   <object id="24" gid="168" x="-24" y="670" width="32" height="32">
    <properties>
-    <property name="toMap" value="9x10"/>
+    <property name="toMap" value="12x8"/>
    </properties>
   </object>
   <object id="25" gid="169" x="20" y="527" width="32" height="32">
    <properties>
-    <property name="fromMap" value="9x10"/>
+    <property name="fromMap" value="12x8"/>
    </properties>
   </object>
   <object id="29" gid="167" x="1272" y="511" width="32" height="32">
