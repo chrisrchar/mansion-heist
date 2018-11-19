@@ -36,7 +36,7 @@ var shopText, restroomText, restroomTextTween;
 var brokeVase, fadeToBlack, transitionFade;
 
 // === Sounds ===
-var coinsfx, breakSFX;
+var coinsfx, breakSFX, atkSFX, shotSFX;
 
 var bgMusic;
 
@@ -406,6 +406,8 @@ function addAudio()
 {
     coinsfx = game.add.audio('coinsfx');
     breakSFX = game.add.audio('breaksfx');
+    atkSFX = game.add.audio('atksfx');
+    shotSFX = game.add.audio('shotsfx');
     
     letterSFX = game.add.audio('lettersfx');
     letterSFX.addMarker('char', 0, .05, .8);
@@ -516,8 +518,7 @@ function playerDeath ()
     removeInputCallbacks();
     
     game.sound.stopAll();
-    game.state.start('titlescreenState');
-    changeActiveMenuItem();
+    game.state.start('gameoverState');
 }
 
 function addGameControls() 

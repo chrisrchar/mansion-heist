@@ -35,6 +35,7 @@ var preload = {
         game.load.image('laserpart', 'assets/sprites/laserparticle.png');
         
         game.load.image('titlescreen', 'assets/sprites/titlescreen.png');
+        game.load.image('gameoverImg', 'assets/sprites/gameover.png');
         
         // SOUND
         // https://opengameart.org/content/interface-sounds-starter-pack
@@ -46,6 +47,8 @@ var preload = {
         game.load.audio('lettersfx', 'assets/sound/sfx/letter.ogg');
         game.load.audio('coinsfx', 'assets/sound/sfx/coin.wav');
         game.load.audio('breaksfx', 'assets/sound/sfx/break.wav');
+        game.load.audio('atksfx', 'assets/sound/sfx/boss-attack.wav');
+        game.load.audio('shotsfx', 'assets/sound/sfx/enemy-nerf-shot.wav');
         
         game.load.audio('bgmusic', 'assets/sound/spymusic.mp3');
         
