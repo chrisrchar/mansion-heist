@@ -516,8 +516,7 @@ function playerDeath ()
     removeInputCallbacks();
     
     game.sound.stopAll();
-    game.state.start('titlescreenState');
-    changeActiveMenuItem();
+    game.state.start('gameoverState');
 }
 
 function addGameControls() 

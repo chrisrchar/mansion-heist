@@ -33,3 +33,4 @@ var startingMap = maps.find(obj => {
 game.state.add(startingMapName, startingMap);
 
 game.state.add('titlescreenState', titlescreenState);
+game.state.add('gameoverState', gameoverState);

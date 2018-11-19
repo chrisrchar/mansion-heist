@@ -1,29 +1,29 @@
-var titlescreenState = {};
-var activeMenuItemTS;
-var menuItemsTS = ['New Game', 'Load Game', 'Exit'];
-var menuTextsTS;
+var gameoverState = {};
+var activeMenuItemGO;
+var menuItemsGO = ['Load Game', 'Give Up'];
+var menuTextsGO;
 var updatingMenu;
 
-titlescreenState.create = function () 
+gameoverState.create = function () 
 {
-    activeMenuItemTS = 0;
-    menuTextsTS = [];
+    activeMenuItemGO = 0;
+    menuTextsGO = [];
     
     game.input.resetLocked = true;
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     
-    var titlescreenGraphic = this.add.sprite(0,0,'titlescreen');
+    var titlescreenGraphic = this.add.sprite(0,0,'gameoverImg');
     
-    var gameTitleText = game.add.text(game.camera.width/2, 64, 'Mansion Heist', { font: '64px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 0 });
+    var gameTitleText = this.add.text(game.camera.width/2, 64, 'GAME OVER', { font: '64px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 0 });
     gameTitleText.anchor.x = 0.5;
     
-    menuItemsTS.forEach(function (menuItem, menuIndex) {
-        var menuItemText = game.add.text(game.camera.width/2 + (Math.floor(menuItemsTS.length/2)*300)*(menuIndex-1), game.camera.height - 128, menuItem, { font: '48px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 0 });
+    menuItemsGO.forEach(function (menuItem, menuIndex) {
+        var menuItemText = game.add.text(game.camera.width/2 + (Math.floor(menuItemsGO.length/2)*300)*(Math.pow((-1), (menuIndex-1))), game.camera.height - 128, menuItem, { font: '48px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 0 });
         menuItemText.anchor.x = 0.5;
         menuItemText.anchor.y = 0.5;
         menuItemText.alpha = 0.6;
         
-        menuTextsTS.push(menuItemText);
+        menuTextsGO.push(menuItemText);
     });
     
     game.input.gamepad.start();
@@ -33,20 +33,20 @@ titlescreenState.create = function ()
     rightButton = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     
-    leftButton.onDown.add(leftPressedTS);
-    rightButton.onDown.add(rightPressedTS);
-    jumpButton.onDown.add(jumpPressedTS);
+    leftButton.onDown.add(leftPressedGO);
+    rightButton.onDown.add(rightPressedGO);
+    jumpButton.onDown.add(jumpPressedGO);
     
     inputs.push(leftButton);
     inputs.push(rightButton);
     inputs.push(jumpButton);
     
-    changeactiveMenuItemTS();
+    changeactiveMenuItemGO();
     
     console.log('starting state');
 };
 
-titlescreenState.update = function () 
+gameoverState.update = function () 
 {
     if (pad1.connected)
         {
@@ -56,9 +56,9 @@ titlescreenState.update = function ()
             leftButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_LEFT);
             rightButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_RIGHT);
 
-            leftButton.onDown.add(leftPressedTS);
-            rightButton.onDown.add(rightPressedTS);
-            jumpButton.onDown.add(jumpPressedTS);
+            leftButton.onDown.add(leftPressedGO);
+            rightButton.onDown.add(rightPressedGO);
+            jumpButton.onDown.add(jumpPressedGO);
             
             inputs.push(leftButton);
             inputs.push(rightButton);
@@ -66,12 +66,12 @@ titlescreenState.update = function ()
         }
 };
 
-function changeactiveMenuItemTS ()
+function changeactiveMenuItemGO ()
 {
-    console.log(activeMenuItemTS);
+    console.log(activeMenuItemGO);
     
-    menuTextsTS.forEach(function (menuItem, menuIndex) {
-        if (activeMenuItemTS == menuIndex)
+    menuTextsGO.forEach(function (menuItem, menuIndex) {
+        if (activeMenuItemGO == menuIndex)
         {
             game.add.tween(menuItem.scale).to({x: 1.2, y: 1.2},100, Phaser.Easing.Linear.None, true);
             var updatingTween = game.add.tween(menuItem).to({alpha: 1}, 100, Phaser.Easing.Linear.None);
@@ -89,26 +89,23 @@ function changeactiveMenuItemTS ()
     });
 }
 
-function jumpPressedTS ()
+function jumpPressedGO ()
 {
-    var menuSelectTween = game.add.tween(menuTextsTS[activeMenuItemTS].scale).to({x: 1.5, y: 1.5},150, Phaser.Easing.Bounce.InOut, false, 0, 0, true);
+    var menuSelectTween = game.add.tween(menuTextsGO[activeMenuItemGO].scale).to({x: 1.5, y: 1.5},150, Phaser.Easing.Bounce.InOut, false, 0, 0, true);
     
     menuSelectTween.onComplete.add(function () {
         removeInputCallbacks();
         
-        switch (activeMenuItemTS)
+        switch (activeMenuItemGO)
         {
             case 0:
-                resetGame();
-                break;
-            case 1:
                 if (checkSavedGame())
                 {
                     loadGame();
                 }
                 break;
-            case 2:
-                game.destroy();
+            case 1:
+                game.state.start('titlescreenState');
                 break;
         }
     });
@@ -116,34 +113,34 @@ function jumpPressedTS ()
     menuSelectTween.start();
 }
 
-function leftPressedTS ()
+function leftPressedGO ()
 {
     if (!updatingMenu)
     {
-        if (activeMenuItemTS == 0)
+        if (activeMenuItemGO == 0)
         {
-            activeMenuItemTS = menuItemsTS.length - 1;
+            activeMenuItemGO = menuItemsGO.length - 1;
         }
         else
         {
-            activeMenuItemTS -= 1
+            activeMenuItemGO -= 1
         }
-        changeactiveMenuItemTS();
+        changeactiveMenuItemGO();
     }
 }
 
-function rightPressedTS ()
+function rightPressedGO ()
 {
     if (!updatingMenu)
     {
-        if (activeMenuItemTS == menuItemsTS.length - 1)
+        if (activeMenuItemGO == menuItemsGO.length - 1)
         {
-            activeMenuItemTS = 0;
+            activeMenuItemGO = 0;
         }
         else
         {
-            activeMenuItemTS += 1;
+            activeMenuItemGO += 1;
         }
-        changeactiveMenuItemTS();
+        changeactiveMenuItemGO();
     }
 }

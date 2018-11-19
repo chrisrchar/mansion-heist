@@ -35,6 +35,7 @@ var preload = {
         game.load.image('laserpart', 'assets/sprites/laserparticle.png');
         
         game.load.image('titlescreen', 'assets/sprites/titlescreen.png');
+        game.load.image('gameoverImg', 'assets/sprites/gameover.png');
         
         // SOUND
         // https://opengameart.org/content/interface-sounds-starter-pack
