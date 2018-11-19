@@ -48,7 +48,7 @@ titlescreenState.create = function ()
 
 titlescreenState.update = function () 
 {
-    if (pad1.connected && !checkButtons(pad1))
+    if (pad1.connected)
         {
             removeInputCallbacks();
             

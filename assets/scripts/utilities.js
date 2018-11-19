@@ -67,9 +67,9 @@ function addMap (gridX, gridY)
         var map = game.add.tilemap(gridX+'x'+gridY);
         map.addTilesetImage('tileset', 'tiles');
         
-        var exits1 = game.add.group();
-        var exits2 = game.add.group();
-        var entrances = game.add.group();
+        var exits1 = this.add.group();
+        var exits2 = this.add.group();
+        var entrances = this.add.group();
         
         map.createFromObjects('transitions', 167, null, 0, false, false, exits1);
         map.createFromObjects('transitions', 168, null, 0, false, false, exits2);
@@ -165,9 +165,9 @@ function addMap (gridX, gridY)
         fadeToBlack.drawRect(0,0,game.camera.width,game.camera.height);
         fadeToBlack.endFill();
         
-        game.add.tween(fadeToBlack).to({alpha: 0}, 500, Phaser.Easing.Quadratic.In, true);
+        this.add.tween(fadeToBlack).to({alpha: 0}, 500, Phaser.Easing.Quadratic.In, true);
         
-        transitionFade = game.add.tween(fadeToBlack).to({alpha: 1}, 500, Phaser.Easing.Quadratic.Out, false);
+        transitionFade = this.add.tween(fadeToBlack).to({alpha: 1}, 500, Phaser.Easing.Quadratic.Out, false);
     };
     
     tempMap.update = function () {
@@ -448,43 +448,7 @@ function loadGame ()
 {
     removeInputCallbacks();
     
-    // Gamepad integration
-    game.input.gamepad.start();
-    pad1 = game.input.gamepad.pad1;
-    
-    leftButton = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-    rightButton = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-    downButton = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-    upButton = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    atkButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
-    ablButton = game.input.keyboard.addKey(Phaser.Keyboard.S);
-    saveTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
-    loadTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FIVE);
-    testBtn6 = game.input.keyboard.addKey(Phaser.Keyboard.SIX);
-    
-    // ADDING CONTROL CALLBACKS
-    jumpButton.onDown.add(confirmPressed);
-    atkButton.onDown.add(attack);
-    ablButton.onDown.add(abilityDown);
-    ablButton.onUp.add(abilityUp);
-    saveTestBtn.onDown.add(saveGame);
-    loadTestBtn.onDown.add(loadGame);
-    
-    leftButton.onDown.add(leftPressed);
-    rightButton.onDown.add(rightPressed);
-    upButton.onDown.add(upPressed);
-    downButton.onDown.add(downPressed);
-    
-    jumpButton.onDown.add(jump);
-    
-    inputs.push(leftButton);
-    inputs.push(rightButton);
-    inputs.push(downButton);
-    inputs.push(upButton);
-    inputs.push(jumpButton);
-    inputs.push(atkButton);
-    inputs.push(ablButton);
+    addGameControls();
     
     bgMusic = game.add.audio('bgmusic');
     bgMusic.loop = true;
@@ -495,6 +459,12 @@ function loadGame ()
     playerGlobals = JSON.parse(localStorage.savegame);
     mapVisited = playerGlobals.lastSave.mapdata;
     eventsDone = playerGlobals.lastSave.eventsDone;
+    
+    var mapObj = maps.find(obj => {
+      return obj.mapName === playerGlobals.lastSave.state;
+    });
+    game.state.add(playerGlobals.lastSave.state, mapObj);
+    
     game.state.start(playerGlobals.lastSave.state);
 }
 
@@ -509,6 +479,49 @@ function resetGame ()
         eventsDone[i] = false;
     }
     
+    addGameControls();
+    
+    // Play Music
+    bgMusic = game.add.audio('bgmusic');
+    bgMusic.loop = true;
+    bgMusic.play();
+    
+    addAudio();
+    
+    playerGlobals = {
+        lastX: 300,
+        lastY: 300,
+        xVel: 600,
+        yVel: -500,
+        hp: 100,
+        maxhp: 100,
+        stamina: 20,
+        maxSta: 20,
+        money: 0,
+        jumps: 0,
+        maxJumps: 1,
+        xDir: 0,
+        hurt: false,
+        powerUps: [false, false], // 0 - Double Jump 1 - Invisibility
+        lastMap: null,
+        lastSave: null
+    };
+    
+    game.state.start('9x10');
+}
+
+function playerDeath ()
+{
+    game.input.reset(true);
+    removeInputCallbacks();
+    
+    game.sound.stopAll();
+    game.state.start('titlescreenState');
+    changeActiveMenuItem();
+}
+
+function addGameControls() 
+{
     //================
     // PLAYER CONTROLS
     
@@ -549,44 +562,6 @@ function resetGame ()
     inputs.push(jumpButton);
     inputs.push(atkButton);
     inputs.push(ablButton);
-    
-    // Play Music
-    bgMusic = game.add.audio('bgmusic');
-    bgMusic.loop = true;
-    bgMusic.play();
-    
-    addAudio();
-    
-    playerGlobals = {
-        lastX: 300,
-        lastY: 300,
-        xVel: 600,
-        yVel: -500,
-        hp: 100,
-        maxhp: 100,
-        stamina: 20,
-        maxSta: 20,
-        money: 0,
-        jumps: 0,
-        maxJumps: 1,
-        xDir: 0,
-        hurt: false,
-        powerUps: [false, false], // 0 - Double Jump 1 - Invisibility
-        lastMap: null,
-        lastSave: null
-    };
-    
-    game.state.start('9x10');
-}
-
-function playerDeath ()
-{
-    game.input.reset(true);
-    removeInputCallbacks();
-    
-    game.sound.stopAll();
-    game.state.start('titlescreenState');
-    changeActiveMenuItem();
 }
 
 function removeInputCallbacks ()

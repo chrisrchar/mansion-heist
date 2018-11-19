@@ -107,7 +107,7 @@ function drawShop ()
     shopGfx = game.add.group();
     
     // Create container for the shop grid, position based on grid size, centered on screen
-    var shopGrid = game.add.graphics(game.camera.width/2 - (shopGridWidth-1)*(shopGridSize+shopGridSpacing)/2, game.camera.height/2 - shopGridHeight*(shopGridSize+shopGridSpacing)/2);
+    var shopGrid = game.add.graphics(game.camera.x + game.camera.width/2 - (shopGridWidth-1)*(shopGridSize+shopGridSpacing)/2, game.camera.y + game.camera.height/2 - shopGridHeight*(shopGridSize+shopGridSpacing)/2);
     
     // Calculate total height of the grid cells for later use with text
     shopGridTotalHeight = Math.ceil(productsArray.length/shopGridWidth) * (shopGridSize+shopGridSpacing);
@@ -265,7 +265,7 @@ function setProductName()
     if (!shopGfx.children[1])
     {
         // If not, create a text object below the grid and center it, then add it to the shop container
-        var itemName = game.add.text(game.camera.width/2, shopGfx.children[0].y + shopGridTotalHeight, currentProd.name + " $" + currentProd.price, { font: '32px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 8 });
+        var itemName = game.add.text(game.camera.x + game.camera.width/2, shopGfx.children[0].y + shopGridTotalHeight, currentProd.name + " $" + currentProd.price, { font: '32px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 8 });
         itemName.anchor.x = .5;
         itemName.anchor.y = .5;
         shopGfx.addChild(itemName);
@@ -284,7 +284,7 @@ function setProductDescription ()
     if (!shopGfx.children[2])
     {
         // If not, create a text object below the grid and center it, then add it to the shop container
-        var itemDesc = game.add.text(game.camera.width/2, shopGfx.children[0].y + shopGridTotalHeight + 64, currentProd.description, { font: '24px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 8 });
+        var itemDesc = game.add.text(game.camera.x + game.camera.width/2, shopGfx.children[0].y + shopGridTotalHeight + 64, currentProd.description, { font: '24px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 8 });
         itemDesc.anchor.x = .5;
         itemDesc.anchor.y = .5;
         shopGfx.addChild(itemDesc);

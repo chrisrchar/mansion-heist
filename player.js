@@ -158,11 +158,6 @@ function createPlayer(spawn) {
             upButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_UP);
             saveTestBtn = pad1.getButton(Phaser.Gamepad.XBOX360_START);
             
-            leftAxisX = pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
-            leftAxisY = pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
-            
-            console.log(pad1.deadzone);
-            
             jumpButton.onDown.add(confirmPressed);
             atkButton.onDown.add(attack);
             ablButton.onDown.add(abilityDown);
@@ -193,8 +188,16 @@ function createPlayer(spawn) {
             setEvents();
         }
         
+        leftAxisX = pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
+        leftAxisY = pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
+        
         game.physics.arcade.collide(player, platforms);
         resting = game.physics.arcade.collide(player, saves) && player.body.touching.down;
+        
+        if (!jumpDown && leftAxisY >= .8)
+        {
+            downPressed();
+        }
         
         if (!jumpDown)
         {
@@ -225,7 +228,7 @@ function createPlayer(spawn) {
         
         grounded = player.body.blocked.down || player.body.touching.down;
         
-        xDir = rightButton.isDown - leftButton.isDown;
+        xDir = rightButton.isDown - leftButton.isDown || Math.sign(leftAxisX);
         
         if (!playerGlobals.hurt)
         {

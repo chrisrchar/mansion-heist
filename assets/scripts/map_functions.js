@@ -38,7 +38,15 @@ function goToMap (mapName)
     playerGlobals.xVel = player.body.velocity.x;
     playerGlobals.xDir = rightButton.isDown - leftButton.isDown;
     transitionFade.onComplete.add(function () {
-            game.state.start(mapName);
+        var mapObj = maps.find(obj => {
+          return obj.mapName === mapName;
+        });
+        game.state.add(mapName, mapObj);
+        
+        console.log(game.cache);
+        
+        game.state.remove(game.state.current);
+        game.state.start(mapName);
     });
     transitionFade.start();
 }

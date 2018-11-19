@@ -2,6 +2,8 @@
     Phaser
 */
 
+var startingMapName = '9x10';
+
 
 for (var i = 5; i <= 15; i++)
 {
@@ -21,8 +23,13 @@ var game = new Phaser.Game(1280, 720, Phaser.AUTO, '', preload);
 
 var score = 0;
 
-maps.forEach(function (mapElement) {
+/*maps.forEach(function (mapElement) {
     game.state.add(mapElement.mapName, mapElement);
+});*/
+
+var startingMap = maps.find(obj => {
+  return obj.mapName === startingMapName;
 });
+game.state.add(startingMapName, startingMap);
 
 game.state.add('titlescreenState', titlescreenState);

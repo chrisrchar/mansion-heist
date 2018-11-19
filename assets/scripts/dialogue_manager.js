@@ -7,14 +7,11 @@ var letterSFX, nextMsgSFX;
 
 function callMsg(messageArray) {
     
-    showMsgBox(game.camera.width/2, 600, 1, tweenSpeed);
+    showMsgBox(game.camera.x + game.camera.width/2, game.camera.y + 600, 1, tweenSpeed);
     
     currentMsg = 0;
 
     messages = messageArray;
-        ////Once you reach double jump: 'you have now collected the double jump power up'
-        ////Once you reach invisibility: 'You have just collected the invisibility ability. It will allow you to phase through lasers unharmed. Hold the "S" key to use but beware, you must let it recharge between uses'
-        ////Once you reach the bathroom: 'To save please hit the "4" key and if you want to reload from the save point hit the "5" key at any point'
     
     text.init(game, {
         x: textPlacement[messages[currentMsg].placement].x,
