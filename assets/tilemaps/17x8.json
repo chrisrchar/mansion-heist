@@ -93,7 +93,7 @@
                  "properties":
                     {
                      "side":"left",
-                     "toMap":"12x8"
+                     "toMap":"16x8"
                     },
                  "propertytypes":
                     {
@@ -114,7 +114,7 @@
                  "name":"",
                  "properties":
                     {
-                     "toMap":"12x8"
+                     "toMap":"16x8"
                     },
                  "propertytypes":
                     {
@@ -134,7 +134,7 @@
                  "name":"",
                  "properties":
                     {
-                     "fromMap":"12x8"
+                     "fromMap":"16x8"
                     },
                  "propertytypes":
                     {
@@ -155,7 +155,7 @@
                  "properties":
                     {
                      "side":"right",
-                     "toMap":"14x8"
+                     "toMap":"18x8"
                     },
                  "propertytypes":
                     {
@@ -176,7 +176,7 @@
                  "name":"",
                  "properties":
                     {
-                     "toMap":"14x8"
+                     "toMap":"18x8"
                     },
                  "propertytypes":
                     {
@@ -196,7 +196,7 @@
                  "name":"",
                  "properties":
                     {
-                     "fromMap":"14x8"
+                     "fromMap":"18x8"
                     },
                  "propertytypes":
                     {

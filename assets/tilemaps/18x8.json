@@ -69,7 +69,7 @@
                  "properties":
                     {
                      "side":"left",
-                     "toMap":"13x8"
+                     "toMap":"17x8"
                     },
                  "propertytypes":
                     {
@@ -90,7 +90,7 @@
                  "name":"",
                  "properties":
                     {
-                     "toMap":"13x8"
+                     "toMap":"17x8"
                     },
                  "propertytypes":
                     {
@@ -110,7 +110,7 @@
                  "name":"",
                  "properties":
                     {
-                     "fromMap":"13x8"
+                     "fromMap":"17x8"
                     },
                  "propertytypes":
                     {
