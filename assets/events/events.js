@@ -123,6 +123,12 @@ function setEvents () {
             font: "cartwheel",
             placement: 'center',
             size: 24
+        },
+        {
+            text: "Keep an eye out for the blue stamina bar at the top to make sure you don't use up your ability",
+            font: "cartwheel",
+            placement: 'center',
+            size: 24
         }
     ];
 }
