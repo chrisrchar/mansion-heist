@@ -403,6 +403,7 @@ function attack ()
     if (!attacking && !inMessage && !puAnim.isPlaying  && !shopOpen)
     {
         attacking = true;
+        atkSFX.play();
         var atkHitTimer = game.time.create(true);
         atkHitTimer.add(150, function () {
             hitbox1.body.enable = true;

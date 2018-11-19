@@ -117,6 +117,8 @@ function fireBullet(spawnLoc, facing)
     bullet.body.drag.x = 0;
     bullet.scale.setTo(facing, 1);
     
+    shotSFX.play();
+    
     console.log(bullet);
     
     bullet.update = function () {
