@@ -16,6 +16,7 @@ var shopGridTotalHeight;
 var activeProd;
 var currentProd;
 var updatingProduct;
+var toClose;
 
 // SHOP INITIALIZATION (RUN AT GAME START)
 function initShop ()
@@ -79,6 +80,8 @@ function closeShop ()
     shopGfx.children[2].destroy();
     shopGfx.children[1].destroy();
     
+    toClose.destroy();
+    
     // Destroy Children of the Shop Grid Child
     shopGfx.children[0].children.forEach(function (square, squareIndex) {
         
@@ -114,6 +117,8 @@ function drawShop ()
     
     // Add the grid container as a child to the shop graphics container
     shopGfx.add(shopGrid);
+    
+    toClose = game.add.text(game.camera.x + game.camera.width/2, shopGfx.children[0].y - 80, "Atk to close", { font: '24px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 8 });
     
     // Loop through each initialized product
     productsArray.forEach(function (product, prodIndex) {

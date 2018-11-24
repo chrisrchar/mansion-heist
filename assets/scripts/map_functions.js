@@ -43,8 +43,6 @@ function goToMap (mapName)
         });
         game.state.add(mapName, mapObj);
         
-        console.log(game.cache);
-        
         game.state.remove(game.state.current);
         game.state.start(mapName);
     });

@@ -5,9 +5,9 @@
 var startingMapName = '9x10';
 
 
-for (var i = 5; i <= 15; i++)
+for (var i = 5; i <= 20; i++)
 {
-    for (var j = 5; j <= 15; j++)
+    for (var j = 5; j <= 20; j++)
     {
         try {
             addMap(i, j)

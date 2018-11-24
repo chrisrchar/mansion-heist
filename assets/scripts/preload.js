@@ -50,11 +50,15 @@ var preload = {
         game.load.audio('atksfx', 'assets/sound/sfx/boss-attack.wav');
         game.load.audio('shotsfx', 'assets/sound/sfx/enemy-nerf-shot.wav');
         
+        game.load.audio('bosshurtsfx', 'assets/sound/sfx/boss-hurt.wav');
+        game.load.audio('enemyhurtsfx', 'assets/sound/sfx/enemy-hurt.wav');
+        game.load.audio('enemydeathsfx', 'assets/sound/sfx/enemy-death.wav');
+        
         game.load.audio('bgmusic', 'assets/sound/spymusic.mp3');
         
-        for (var i = 5; i <= 15; i++)
+        for (var i = 5; i <= 20; i++)
         {
-            for (var j = 5; j <= 15; j++)
+            for (var j = 5; j <= 20; j++)
             {
                 try {
                     game.load.tilemap(i+'x'+j, 'assets/tilemaps/'+i+'x'+j+'.json', null, Phaser.Tilemap.TILED_JSON);

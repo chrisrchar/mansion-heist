@@ -36,7 +36,7 @@ var shopText, restroomText, restroomTextTween;
 var brokeVase, fadeToBlack, transitionFade;
 
 // === Sounds ===
-var coinsfx, breakSFX, atkSFX, shotSFX;
+var coinsfx, breakSFX, atkSFX, shotSFX, bossHurtSFX, enemyHurtSFX, enemyDeathSFX;
 
 var bgMusic;
 
@@ -408,6 +408,9 @@ function addAudio()
     breakSFX = game.add.audio('breaksfx');
     atkSFX = game.add.audio('atksfx');
     shotSFX = game.add.audio('shotsfx');
+    bossHurtSFX = game.add.audio('bosshurtsfx');
+    enemyHurtSFX = game.add.audio('enemyhurtsfx');
+    enemyDeathSFX = game.add.audio('enemydeathsfx');
     
     letterSFX = game.add.audio('lettersfx');
     letterSFX.addMarker('char', 0, .05, .8);
@@ -415,6 +418,11 @@ function addAudio()
     letterSFX.loop = false;
     letterSFX.volume = .8;
     nextMsgSFX = game.add.audio('lettersfx');
+    
+    bgMusic = game.add.audio('bgmusic');
+    bgMusic.loop = true;
+    bgMusic.volume = .6;
+    bgMusic.play();
 }
 
 //SAVE AND LOAD
@@ -452,10 +460,6 @@ function loadGame ()
     
     addGameControls();
     
-    bgMusic = game.add.audio('bgmusic');
-    bgMusic.loop = true;
-    bgMusic.play();
-    
     addAudio();
     
     playerGlobals = JSON.parse(localStorage.savegame);
@@ -484,10 +488,6 @@ function resetGame ()
     addGameControls();
     
     // Play Music
-    bgMusic = game.add.audio('bgmusic');
-    bgMusic.loop = true;
-    bgMusic.play();
-    
     addAudio();
     
     playerGlobals = {

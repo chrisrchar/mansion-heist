@@ -186,6 +186,8 @@ function createPlayer(spawn) {
             inputs.push(ablButton);
             
             setEvents();
+            
+            console.log(textForAbl);
         }
         
         leftAxisX = pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
@@ -193,6 +195,11 @@ function createPlayer(spawn) {
         
         game.physics.arcade.collide(player, platforms);
         resting = game.physics.arcade.collide(player, saves) && player.body.touching.down;
+        
+        if (inMessage)
+        {
+            attacking = false;
+        }
         
         if (!jumpDown && leftAxisY >= .8)
         {
@@ -467,6 +474,7 @@ function collide (collider, other)
         case 'enemy':
             if (playerGlobals.hurt != true)
             {
+                bossHurtSFX.play();
                 game.camera.shake(0.005, 100);
                 playerGlobals.hp -= playerGlobals.maxhp * .15;
                 player.tint = 0xff0000;
@@ -509,6 +517,7 @@ function attackHit (atkHitbox, other)
         hurt(other);
         if (other.hp < 1)
         {
+            enemyDeathSFX.play();
             other.kill();
 
             if (other.key == 'enemy2')
@@ -517,6 +526,10 @@ function attackHit (atkHitbox, other)
             }
 
             spawnCoins(other);
+        }
+        else
+        {
+            enemyHurtSFX.play();
         }
     }
     if (other.key == 'vase')
