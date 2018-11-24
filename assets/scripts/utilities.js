@@ -400,6 +400,8 @@ function powerUp (player, power)
     puAnim.play();
     
     power.kill();
+    
+    saveGame();
 }
 
 function addAudio()
@@ -436,15 +438,19 @@ function saveGame ()
     playerGlobals.lastX = player.x;
     playerGlobals.lastY = player.y;
     localStorage.setItem("savegame", JSON.stringify(playerGlobals));
-    restroomText.text = "Game Saved";
-    restroomTextTween.pause();
-    var saveTween = game.add.tween(restroomText).to({x: restroomText.x ,y: saves.children[0].y-96},2000, Phaser.Easing.Linear.None, true);
-    game.add.tween(restroomText).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
     
-    saveTween.onComplete.add(function () {
-        restroomText.text = "Take a Rest ↓";
-        restroomTextTween.resume();
-    });
+    if (saves.children[0])
+    {
+        restroomText.text = "Game Saved";
+        restroomTextTween.pause();
+        var saveTween = game.add.tween(restroomText).to({x: restroomText.x ,y: saves.children[0].y-96},2000, Phaser.Easing.Linear.None, true);
+        game.add.tween(restroomText).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
+
+        saveTween.onComplete.add(function () {
+            restroomText.text = "Take a Rest ↓";
+            restroomTextTween.resume();
+        });
+    }
     
     console.log('game saved');
 }
