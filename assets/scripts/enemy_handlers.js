@@ -19,7 +19,9 @@ function initEnemies () {
             loop: true
         }],
         defaultAnim: 'walk',
-        create: function () {},
+        create: function () {
+            this.body.setSize(this.width - 32, this.height, 16);
+        },
         update: function () {
             if (!this.hurt)
             {
@@ -35,6 +37,8 @@ function initEnemies () {
         animations: [],
         defaultAnim: '',
         create: function () {
+            this.body.setSize(this.width - 96, this.height, 32);
+            
             shootingTimer = game.time.create(false);
             shootingTimer.loop(1500, function () {
                 console.log('shooting');

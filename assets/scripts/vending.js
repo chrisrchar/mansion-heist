@@ -118,7 +118,7 @@ function drawShop ()
     // Add the grid container as a child to the shop graphics container
     shopGfx.add(shopGrid);
     
-    toClose = game.add.text(game.camera.x + game.camera.width/2, shopGfx.children[0].y - 80, "Atk to close", { font: '24px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 8 });
+    toClose = game.add.text(game.camera.x + game.camera.width/2, shopGfx.children[0].y - 80, textForAtk + " to close", { font: '24px Cartwheel', fill: '#fff', stroke: 'black', strokeThickness: 8 });
     
     // Loop through each initialized product
     productsArray.forEach(function (product, prodIndex) {

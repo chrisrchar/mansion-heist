@@ -5,7 +5,7 @@ var playerStates, grounded, facing, hitboxes, hitbox1, atkTimer, invisible, atta
 
 var textForMove, textForJump, textForAtk, textForAbl;
 
-var atkAnim, puAnim, jumpAnim;
+var atkAnim, puAnim, jumpAnim, rollAnim;
 
 var jumpsfx;
 
@@ -25,7 +25,9 @@ var playerGlobals = {
     maxJumps: 1,
     xDir: 0,
     hurt: false,
-    powerUps: [false, false], // 0 - Double Jump 1 - Invisibility
+    powerUps: [false, false, false], // 0 - Double Jump 1 - Invisibility 2 - Roll
+    currentPU: 1,
+    rolling: false,
     lastMap: null,
     lastSave: null
 };
@@ -44,6 +46,7 @@ function createPlayer(spawn) {
     jumpAnim = player.animations.add('jump', [7, 9], 10, false);
     player.animations.add('land', [11, 0], 10, false);
     atkAnim = player.animations.add('attack', [12, 13, 14, 15, 15], 20, false);
+    rollAnim = player.animations.add('roll', [19, 20, 21, 22, 23, 24, 25, 26, 27, 28], 20, true);
     
     atkAnim.onComplete.add(function () {
         attacking = false;
@@ -57,8 +60,15 @@ function createPlayer(spawn) {
     player.anchor.y = .5;
 
     // Adjust player hitbox
-    player.body.setSize(player.width/6, player.height-16, player.width/3+20, 16);
-    
+    if (playerGlobals.rolling)
+    {
+        player.body.setSize(player.width/6, (player.height-16)/2, player.width/3+20, (player.height-16)/2+16);
+    }
+    else
+    {
+        player.body.setSize(player.width/6, player.height-16, player.width/3+20, 16);
+    }
+        
     // Set player physics variables
     player.body.gravity.y = gravity;
     player.body.maxVelocity = 1000;
@@ -157,6 +167,7 @@ function createPlayer(spawn) {
             downButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_DOWN);
             upButton = pad1.getButton(Phaser.Gamepad.XBOX360_DPAD_UP);
             saveTestBtn = pad1.getButton(Phaser.Gamepad.XBOX360_START);
+            ablCycleButton = pad1.getButton(Phaser.Gamepad.XBOX360_RIGHT_BUMPER);
             
             jumpButton.onDown.add(confirmPressed);
             atkButton.onDown.add(attack);
@@ -164,11 +175,13 @@ function createPlayer(spawn) {
             ablButton.onUp.add(abilityUp);
             saveTestBtn.onDown.add(saveGame);
             loadTestBtn.onDown.add(loadGame);
+            ablCycleButton.onDown.add(cycleAbility);
 
             leftButton.onDown.add(leftPressed);
             rightButton.onDown.add(rightPressed);
             upButton.onDown.add(upPressed);
             downButton.onDown.add(downPressed);
+            downButton.onUp.add(downReleased);
 
             jumpButton.onDown.add(jump);
             
@@ -184,6 +197,7 @@ function createPlayer(spawn) {
             inputs.push(jumpButton);
             inputs.push(atkButton);
             inputs.push(ablButton);
+            inputs.push(ablCycleButton);
             
             setEvents();
             
@@ -244,17 +258,30 @@ function createPlayer(spawn) {
                 facing = xDir;
                 player.body.velocity.x = xDir * speed;
                 player.scale.setTo(xDir, 1);
-                if (grounded && !attacking && !puAnim.isPlaying)
+                if (grounded && !attacking && !puAnim.isPlaying && !playerGlobals.rolling)
                 {
                     player.animations.play('run');
                     player.state = playerStates.WALKING;
                 }
+                if (playerGlobals.rolling && !rollAnim.isPlaying)
+                {
+                    rollAnim.play();
+                }
+                else if (playerGlobals.rolling && rollAnim.isPaused)
+                {
+                    rollAnim.paused = false;
+                }
+                    
             }
             else 
             {
-                if (grounded && !attacking && !puAnim.isPlaying)
+                if (grounded && !attacking && !puAnim.isPlaying && !playerGlobals.rolling)
                 {
                     player.frame = 0;
+                }
+                else if (playerGlobals.rolling)
+                {
+                    rollAnim.paused = true;
                 }
                 player.body.velocity.x = 0
             }
@@ -335,6 +362,12 @@ function jump ()
         player.body.velocity.y = jumpHeight;
         playerGlobals.jumps++;
         player.state = playerStates.JUMPING;
+        
+        if (playerGlobals.rolling)
+        {
+            playerGlobals.rolling = false;
+            player.body.setSize(player.body.width, player.body.height*2, player.body.offset.x, 16);
+        }
     }
 }
 
@@ -395,10 +428,30 @@ function downPressed ()
     
     else if (grounded && !inMessage  && !shopOpen)
     {
-        jumpDown = true
-        var groundTimer = game.time.create(true);
-        groundTimer.add(200, function () {jumpDown = false;} , this);
-        groundTimer.start();
+        if (player.body.velocity.x == 0)
+        {
+            jumpDown = true
+            var groundTimer = game.time.create(true);
+            groundTimer.add(200, function () {jumpDown = false;} , this);
+            groundTimer.start();
+        }
+        else
+        {
+            if (!playerGlobals.rolling)
+            {
+                playerGlobals.rolling = true;
+                player.body.setSize(player.body.width, player.body.height/2, player.body.offset.x, player.body.height/2 + 16);
+            }
+        }
+    }
+}
+
+function downReleased ()
+{
+    if (playerGlobals.rolling)
+    {
+        playerGlobals.rolling = false;
+        player.body.setSize(player.body.width, player.body.height*2, player.body.offset.x, 16);
     }
 }
 
@@ -450,6 +503,15 @@ function abilityUp ()
     }
 }
 
+function cycleAbility()
+{
+    playerGlobals.currentPU += 1;
+    if (playerGlobals.currentPU > playerGlobals.powerUps.length)
+    {
+        playerGlobals.currentPU = 1;
+    }
+}
+
 //===================
 // COLLISION
 
@@ -479,8 +541,8 @@ function collide (collider, other)
                 playerGlobals.hp -= playerGlobals.maxhp * .15;
                 player.tint = 0xff0000;
                 playerGlobals.hurt = true;
-                player.body.velocity.x = 200 * Math.sign(player.body.x - other.body.x);
-                player.body.velocity.y = jumpHeight*.75;
+                player.body.velocity.x = 100 * Math.sign(player.body.x - other.body.x);
+                player.body.velocity.y = jumpHeight*.6;
                 hurt(collider);
                 if (other.key == 'bullet')
                 {

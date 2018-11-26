@@ -257,16 +257,17 @@ function addMap (gridX, gridY)
             game.debug.body(obj);
         });*/
         
-        //game.debug.body(player);
+        game.debug.body(player);
         /*if (attacking)
         {
             game.debug.body(hitbox1);   
         }*/
         
-        /*
-        enemies.forEachAlive(renderGroup, this);
-        function renderGroup(member) 
-        {    game.debug.body(member);}*/
+        enemyGroups.forEach(function (enemGroup) {
+            enemGroup.forEachAlive( function (member) {    
+                game.debug.body(member);
+            }, this);
+        });
         
         //game.debug.cameraInfo(game.camera, 32, 32);
     };
@@ -353,7 +354,7 @@ function collectCoins (player, coin)
 
 function spawnCoins(other)
 {
-    if (Math.floor(Math.random()*3) == 0)
+    if (Math.floor(Math.random()*2) == 0)
     {
         var coinTypeChance = Math.floor(Math.random()*6);
 
@@ -510,7 +511,9 @@ function resetGame ()
         maxJumps: 1,
         xDir: 0,
         hurt: false,
-        powerUps: [false, false], // 0 - Double Jump 1 - Invisibility
+        powerUps: [false, false, false], // 0 - Double Jump 1 - Invisibility
+        currentPU: 1,
+        rolling: false,
         lastMap: null,
         lastSave: null
     };
@@ -546,6 +549,7 @@ function addGameControls()
     saveTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
     loadTestBtn = game.input.keyboard.addKey(Phaser.Keyboard.FIVE);
     testBtn6 = game.input.keyboard.addKey(Phaser.Keyboard.SIX);
+    ablCycleButton = game.input.keyboard.addKey(Phaser.Keyboard.Q);
     
     // ADDING CONTROL CALLBACKS
     jumpButton.onDown.add(confirmPressed);
@@ -554,11 +558,13 @@ function addGameControls()
     ablButton.onUp.add(abilityUp);
     saveTestBtn.onDown.add(saveGame);
     loadTestBtn.onDown.add(loadGame);
+    ablCycleButton.onDown.add(cycleAbility);
     
     leftButton.onDown.add(leftPressed);
     rightButton.onDown.add(rightPressed);
     upButton.onDown.add(upPressed);
     downButton.onDown.add(downPressed);
+    downButton.onUp.add(downReleased);
     
     jumpButton.onDown.add(jump);
     
@@ -569,6 +575,7 @@ function addGameControls()
     inputs.push(jumpButton);
     inputs.push(atkButton);
     inputs.push(ablButton);
+    inputs.push(ablCycleButton);
 }
 
 function removeInputCallbacks ()
