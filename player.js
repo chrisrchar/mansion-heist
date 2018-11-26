@@ -220,6 +220,11 @@ function createPlayer(spawn) {
             downPressed();
         }
         
+        if (leftAxisY > 0 && leftAxisY < .8)
+        {
+            downReleased();
+        }
+        
         if (!jumpDown)
         {
             game.physics.arcade.collide(player, jumpthruPlatforms);
