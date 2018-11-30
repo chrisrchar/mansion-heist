@@ -378,7 +378,7 @@ function jump ()
 
 function confirmPressed ()
 {
-    if (inMessage)
+    if (inMessage && !msgOpenTween.isRunning)
     {
         handleNextMessage();
     }
@@ -539,7 +539,7 @@ function collide (collider, other)
         case 'bullet':
         case 'enemy2':
         case 'enemy':
-            if (playerGlobals.hurt != true)
+            if (playerGlobals.hurt != true && !transitionFade.isRunning)
             {
                 bossHurtSFX.play();
                 game.camera.shake(0.005, 100);

@@ -7,6 +7,8 @@ var letterSFX, nextMsgSFX;
 
 function callMsg(messageArray) {
     
+    inMessage = true;
+    
     showMsgBox(game.camera.x + game.camera.width/2, game.camera.y + 600, 1, tweenSpeed);
     
     currentMsg = 0;
