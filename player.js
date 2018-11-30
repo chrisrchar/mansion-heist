@@ -46,7 +46,7 @@ function createPlayer(spawn) {
     jumpAnim = player.animations.add('jump', [7, 9], 10, false);
     player.animations.add('land', [11, 0], 10, false);
     atkAnim = player.animations.add('attack', [12, 13, 14, 15, 15], 20, false);
-    rollAnim = player.animations.add('roll', [19, 20, 21, 22, 23, 24, 25, 26, 27, 28], 20, true);
+    rollAnim = player.animations.add('roll', [19, 20, 21, 22, 23, 24, 25, 26, 27, 28], 15, true);
     
     atkAnim.onComplete.add(function () {
         attacking = false;
@@ -220,7 +220,7 @@ function createPlayer(spawn) {
             downPressed();
         }
         
-        if (leftAxisY > 0 && leftAxisY < .8)
+        if (leftAxisY > 0 && leftAxisY < .5)
         {
             downReleased();
         }
@@ -465,7 +465,7 @@ function downReleased ()
 
 function attack ()
 {
-    if (!attacking && !inMessage && !puAnim.isPlaying  && !shopOpen)
+    if (!attacking && !inMessage && !puAnim.isPlaying  && !shopOpen && !playerGlobals.rolling)
     {
         attacking = true;
         atkSFX.play();
