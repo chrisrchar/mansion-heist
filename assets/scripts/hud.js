@@ -1,6 +1,6 @@
 // DRAWN OBJECTS
 var moneyHUD, minimap, hud;
-var hpTween, staTween;
+var hpTween, staTween, msgOpenTween;
 
 function drawHUD()
 {
@@ -186,9 +186,8 @@ function showMsgBox(x, y, scale, tweenSpeed)
     msgBoxSprite.scale.x = 0;
     msgBoxSprite.scale.y = 0;
     
-    var openTween = game.add.tween(msgBoxSprite.scale).to({x: 1, y: 1}, tweenSpeed, Phaser.Easing.Back.Out, true);
-    openTween.onComplete.add(function () {
-        inMessage = true;
+    msgOpenTween = game.add.tween(msgBoxSprite.scale).to({x: 1, y: 1}, tweenSpeed, Phaser.Easing.Back.Out, true);
+    msgOpenTween.onComplete.add(function () {
         text.start();
     });
 }

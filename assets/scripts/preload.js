@@ -18,7 +18,10 @@ var preload = {
         game.load.image('bullet', 'assets/sprites/nerfgunbullet.png');
         game.load.image('enemy2', 'assets/sprites/nerfgun_150x150.png');
         game.load.spritesheet('enemy', 'assets/spritesheets/final_sheets/guard_100x150.png', 100, 200);
+        game.load.image('turretBase', 'assets/sprites/turretbase.png');
+        game.load.image('turretBarrel', 'assets/sprites/turretbarrel.png');
         
+        // COLLECTIBLES
         game.load.image('coin', 'assets/sprites/coin.png');
         game.load.image('silvercoin', 'assets/sprites/silvercoin.png');
         game.load.image('goldcoin', 'assets/sprites/goldcoin.png');

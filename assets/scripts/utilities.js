@@ -257,17 +257,17 @@ function addMap (gridX, gridY)
             game.debug.body(obj);
         });*/
         
-        game.debug.body(player);
+        //game.debug.body(player);
         /*if (attacking)
         {
             game.debug.body(hitbox1);   
         }*/
         
-        enemyGroups.forEach(function (enemGroup) {
+        /*enemyGroups.forEach(function (enemGroup) {
             enemGroup.forEachAlive( function (member) {    
                 game.debug.body(member);
             }, this);
-        });
+        });*/
         
         //game.debug.cameraInfo(game.camera, 32, 32);
     };
