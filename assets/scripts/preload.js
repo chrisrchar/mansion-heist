@@ -9,6 +9,7 @@ var preload = {
         game.load.spritesheet('fox', 'assets/spritesheets/fox_animations_200x140.png', 200, 140);
         game.load.image('djPowerup', 'assets/sprites/doubleJump.png');
         game.load.image('invisPowerup', 'assets/sprites/invisibility.png');
+        game.load.spritesheet('sparklesFX', 'assets/spritesheets/sparkle-effect.png', 32, 32);
         
         game.load.image('tiles', 'assets/tilemaps/tileset_library.png');
         game.load.image('tileBG', 'assets/sprites/tileBG.png');

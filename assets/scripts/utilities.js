@@ -33,7 +33,7 @@ var coins, enemies, vases, spikes, saves, shopObjects, eventObjects;
 var shopText, restroomText, restroomTextTween;
 
 // === Particles & Tweens ===
-var brokeVase, fadeToBlack, transitionFade;
+var brokeVase, chaliceParts, fadeToBlack, transitionFade;
 
 // === Sounds ===
 var coinsfx, breakSFX, atkSFX, shotSFX, bossHurtSFX, enemyHurtSFX, enemyDeathSFX;
@@ -400,6 +400,7 @@ function powerUp (player, power)
     
     puAnim.play();
     
+    chaliceParts.destroy();
     power.kill();
     
     saveGame();

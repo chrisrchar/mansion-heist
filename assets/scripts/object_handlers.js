@@ -72,6 +72,22 @@ function spawnObjects(map)
         map.createFromObjects('sprites', 9, 'invisPowerup', 0, true, false, powerup);
     }
     
+    if (powerup.children[0])
+    {
+        var chalice = powerup.children[0];
+        chaliceParts = game.add.emitter(chalice.x + chalice.width/2, chalice.y, 100);
+        chaliceParts.makeParticles('sparklesFX', [3, 4, 5, 6, 7, 8, 9], 16, false);
+        
+        chaliceParts.gravity = -100;
+        
+        chaliceParts.setAlpha(1, 0, 2000, Phaser.Easing.Cubic.In);
+        chaliceParts.autoAlpha = true;
+        chaliceParts.setScale(1, 0, 1, 0, 2000, Phaser.Easing.Cubic.In);
+        chaliceParts.autoScale = true;
+        
+        chaliceParts.start(false, 2000, 200);
+    }
+    
     // EVENTS
     
     eventObjects = game.add.group();
