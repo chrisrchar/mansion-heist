@@ -493,6 +493,14 @@ function resetGame ()
         eventsDone[i] = false;
     }
     
+    for (var i = 0; i < mapSize; i++)
+    {
+        for (var j = 0; j < mapSize; j++)
+        {
+            mapVisited[i][j] = null;
+        }
+    }
+    
     addGameControls();
     
     // Play Music

@@ -40,6 +40,7 @@ var preload = {
         
         game.load.image('titlescreen', 'assets/sprites/titlescreen.png');
         game.load.image('gameoverImg', 'assets/sprites/gameover.png');
+        game.load.image('gamewinImg', 'assets/sprites/gamewin.png');
         
         // SOUND
         // https://opengameart.org/content/interface-sounds-starter-pack

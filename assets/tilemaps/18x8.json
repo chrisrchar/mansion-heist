@@ -357,7 +357,7 @@
                  "properties":
                     {
                      "side":"left",
-                     "toMap":"17x8"
+                     "toMap":"gamewinState"
                     },
                  "propertytypes":
                     {
@@ -378,7 +378,7 @@
                  "name":"",
                  "properties":
                     {
-                     "toMap":"17x8"
+                     "toMap":"gamewinState"
                     },
                  "propertytypes":
                     {

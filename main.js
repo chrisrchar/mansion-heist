@@ -34,3 +34,4 @@ game.state.add(startingMapName, startingMap);
 
 game.state.add('titlescreenState', titlescreenState);
 game.state.add('gameoverState', gameoverState);
+game.state.add('gamewinState', gamewinState);
