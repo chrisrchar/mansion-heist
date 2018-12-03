@@ -132,28 +132,6 @@
                  "width":32,
                  "x":704,
                  "y":512
-                }, 
-                {
-                 "gid":51,
-                 "height":32,
-                 "id":32,
-                 "name":"",
-                 "properties":
-                    {
-                     "firerate":"1000",
-                     "side":"1"
-                    },
-                 "propertytypes":
-                    {
-                     "firerate":"string",
-                     "side":"string"
-                    },
-                 "rotation":0,
-                 "type":"Turret",
-                 "visible":true,
-                 "width":32,
-                 "x":320,
-                 "y":96
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -360,7 +338,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":37,
+ "nextobjectid":38,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
