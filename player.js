@@ -20,6 +20,7 @@ var playerGlobals = {
     maxhp: 100,
     stamina: 20,
     maxSta: 20,
+    attack: 1,
     money: 0,
     jumps: 0,
     maxJumps: 1,
@@ -576,7 +577,7 @@ function attackHit (atkHitbox, other)
     console.log('hit '+other.key)
     if (!other.hurt && (other.key == 'enemy' || other.key == 'enemy2'))
     {
-        other.hp -= 1;
+        other.hp -= playerGlobals.attack;
         other.hurt = true;
         other.tint = 0xff0000;
         other.body.velocity.x = 200 * Math.sign(other.body.x - player.body.x);

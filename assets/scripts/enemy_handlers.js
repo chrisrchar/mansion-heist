@@ -122,6 +122,7 @@ function initEnemies () {
             console.log(this.firerate);
             shootTimer.loop(this.firerate, function () {
                 console.log('timer');
+                shotSFX.play();
                 turretFire(this.children[0]);
             }, this);
             shootTimer.start();

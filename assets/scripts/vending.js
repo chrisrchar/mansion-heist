@@ -36,27 +36,28 @@ function initShop ()
             }
         },
         {
-            name: 'hpUpgrade',
-            price: 500,
-            description: '',
+            name: 'Better Chips',
+            price: 80,
+            description: 'Similar, but name-brand.\nHeals 80HP',
             key: 'chips',
-            sellsout: true,
+            sellsout: false,
             soldout: false,
             action: function () 
             {
-                
+                playerGlobals.hp = Math.min(playerGlobals.maxhp, playerGlobals.hp + 80);
+                updateHPHUD();
             }
         },
         {
             name: 'atkBoost',
-            price: 1000,
-            description: '',
+            price: 100,
+            description: "Looks like chips, but only because we don't have\nanother graphic.",
             key: 'chips',
             sellsout: true,
             soldout: false,
             action: function () 
             {
-                
+                playerGlobals.attack = 2;
             }
         }
     ];
@@ -215,6 +216,12 @@ function buyProduct ()
         // Subtract money from the player and update the HUD
         playerGlobals.money -= currentProd.price;
         moneyHUD.text = '$: '+playerGlobals.money;
+        
+        if (currentProd.sellsout)
+        {
+            currentProd.soldout = true;
+            currentProd.description += " SOLDOUT";
+        }
         
         // Call the product's function
         currentProd.action();

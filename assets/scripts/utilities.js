@@ -515,6 +515,7 @@ function resetGame ()
         maxhp: 100,
         stamina: 20,
         maxSta: 20,
+        attack: 1,
         money: 0,
         jumps: 0,
         maxJumps: 1,
